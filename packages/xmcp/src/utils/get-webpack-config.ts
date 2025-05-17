@@ -48,10 +48,17 @@ class InjectRuntimePlugin {
     compiler.hooks.beforeCompile.tap('InjectRuntimePlugin', (_compilationParams) => {
       if (hasRun) return
       hasRun = true
+      createFolder(runtimeFolderPath)
       // @ts-expect-error: injected by compiler
       fs.writeFileSync(path.join(runtimeFolderPath, 'stdio.js'), RUNTIME_STDIO)
       // @ts-expect-error: injected by compiler
       fs.writeFileSync(path.join(runtimeFolderPath, 'sse.js'), RUNTIME_SSE)
     })
+  }
+}
+
+function createFolder(folderPath: string) {
+  if (!fs.existsSync(folderPath)) {
+    fs.mkdirSync(folderPath, { recursive: true })
   }
 }

@@ -8,7 +8,6 @@ import nodeExternals from "webpack-node-externals"
 import { CleanWebpackPlugin } from "clean-webpack-plugin"
 import webpack from "webpack"
 import type { Configuration } from "webpack"
-import { fileURLToPath } from "url"
 import { outputPath, runtimeOutputPath } from "./constants"
 import { srcPath } from "./constants"
 
@@ -29,8 +28,8 @@ const config: Configuration = {
     stdio: path.join(srcPath, "runtime", "stdio.ts"),
     sse: path.join(srcPath, "runtime", "sse.ts"),
   },
-  mode,
-  devtool: mode === 'production' ? false : 'source-map',
+  mode: "production",
+  devtool: false,
   target: "node",
   externalsPresets: { node: true },
   externals: [nodeExternals({
@@ -78,7 +77,7 @@ const config: Configuration = {
     ignored: /node_modules/,
   },
   optimization: {
-    minimize: mode === 'production'
+    minimize: true
   },
   plugins: [
     new ForkTsCheckerWebpackPlugin(),
@@ -86,11 +85,6 @@ const config: Configuration = {
       cleanStaleWebpackAssets: false,
       cleanOnceBeforeBuildPatterns: [outputPath],
     }),
-    // new CopyPlugin({
-    //   patterns: [
-    //     { from: path.resolve(__dirname, "src/static"), to: path.resolve(__dirname, "dist/static") },
-    //   ],
-    // }),
   ],
   watch: mode === 'development'
 }

@@ -1,8 +1,11 @@
 #!/usr/bin/env node
 import { Command } from "commander"
 import { compile } from "./index"
+import chalk from "chalk"
 
 const program = new Command()
+
+const xmcpLogo = chalk.bold.bgBlue(' XMCP ')
 
 program
   .name("xmcp")
@@ -13,7 +16,7 @@ program
   .command("dev")
   .description("Start development mode")
   .action(() => {
-    console.log("Starting development mode...")
+    console.log(`${xmcpLogo} Starting development mode...`)
     compile({ mode: "development" })
   })
 
@@ -21,7 +24,7 @@ program
   .command("build")
   .description("Build for production")
   .action(() => {
-    console.log("Building for production...")
+    console.log(`${xmcpLogo} Building for production...`)
     compile({ mode: "production" })
   })
 

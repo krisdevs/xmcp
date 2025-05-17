@@ -5,7 +5,8 @@
     "build": "xmcp build",
     "dev": "xmcp dev",
     "start-sse": "node dist/sse.js",
-    "start-stdio": "node dist/stdio.js"
+    "start-stdio": "node dist/stdio.js",
+    "inspect": "npx @modelcontextprotocol/inspector node dist/stdio.js"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.11.4",
