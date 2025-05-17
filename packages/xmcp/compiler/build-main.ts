@@ -24,10 +24,13 @@ const libsToExcludeFromCompilation = [
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
+const srcPath = path.join(__dirname, "..", "src")
+const outputPath = path.join(__dirname, "..", "dist")
+
 const config: Configuration = {
   entry: {
-    index: path.join(__dirname, "src", "index.ts"),
-    cli: path.join(__dirname, "src", "cli.ts")
+    index: path.join(srcPath, "index.ts"),
+    cli: path.join(srcPath, "cli.ts")
   },
   mode,
   devtool: mode === 'production' ? false : 'source-map',
@@ -38,17 +41,9 @@ const config: Configuration = {
       return !(libsToExcludeFromCompilation.includes(modulePath));
     }
   })],
-  // output: {
-  //   filename: "index.js",
-  //   path: path.join(__dirname, "dist"),
-  //   globalObject: "this",
-  //   library: {
-  //     type: "umd",
-  //   }
-  // },
   output: {
     filename: "[name].js",
-    path: path.join(__dirname, "dist"),
+    path: outputPath,
     globalObject: "this",
     library: {
       type: "umd",
@@ -90,15 +85,6 @@ const config: Configuration = {
   },
   plugins: [
     new ForkTsCheckerWebpackPlugin(),
-    new CleanWebpackPlugin({
-      cleanStaleWebpackAssets: false,
-      cleanOnceBeforeBuildPatterns: [path.resolve(__dirname, "./dist")],
-    }),
-    // new CopyPlugin({
-    //   patterns: [
-    //     { from: path.resolve(__dirname, "src/static"), to: path.resolve(__dirname, "dist/static") },
-    //   ],
-    // }),
   ],
   watch: mode === 'development'
 }
@@ -115,21 +101,23 @@ if (process.platform !== "darwin") {
 }
 
 // ✨
-webpack(config, (err, stats) => {
-  if (err) {
-    console.error(err)
-  }
+export function buildMain() {
+  webpack(config, (err, stats) => {
+    if (err) {
+      console.error(err)
+    }
 
-  if (stats?.hasErrors()) {
-    console.error(stats.toString({
+    if (stats?.hasErrors()) {
+      console.error(stats.toString({
+        colors: true,
+        chunks: false
+      }))
+      return
+    }
+
+    console.log(stats?.toString({
       colors: true,
       chunks: false
     }))
-    return
-  }
-
-  console.log(stats?.toString({
-    colors: true,
-    chunks: false
-  }))
-})
+  })
+}

@@ -11,8 +11,8 @@
     "dist"
   ],
   "scripts": {
-    "build": "cross-env NODE_ENV=production tsx --tsconfig ./compiler.tsconfig.json ./build.ts",
-    "dev": "cross-env NODE_ENV=development tsx --watch --tsconfig ./compiler.tsconfig.json ./build.ts"
+    "build": "cross-env NODE_ENV=production tsx --tsconfig ./compiler.tsconfig.json ./compiler/index.ts",
+    "dev": "cross-env NODE_ENV=development tsx --watch --tsconfig ./compiler.tsconfig.json ./compiler/index.ts"
   },
   "dependencies": {
     "@swc/core": "^1.11.24",
