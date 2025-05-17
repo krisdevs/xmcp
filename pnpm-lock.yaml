@@ -29,9 +29,6 @@ importers:
       '@types/express':
         specifier: ^5.0.1
         version: 5.0.2
-      '@types/node':
-        specifier: ^22
-        version: 22.15.18
       '@types/webpack-node-externals':
         specifier: ^3.0.4
         version: 3.0.4(@swc/core@1.11.24)
@@ -81,6 +78,9 @@ importers:
         specifier: ^0.5.0
         version: 0.5.0
     devDependencies:
+      '@types/node':
+        specifier: ^22
+        version: 22.15.18
       copy-webpack-plugin:
         specifier: ^12.0.2
         version: 12.0.2(webpack@5.99.8(@swc/core@1.11.24))
