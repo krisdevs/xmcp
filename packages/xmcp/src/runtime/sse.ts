@@ -7,6 +7,7 @@ import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js"
 interface SSETransportOptions {
   port?: number;
   bodySizeLimit?: string;
+  debug?: boolean;
 }
 
 class SSETransport {
@@ -16,15 +17,29 @@ class SSETransport {
   private port: number;
   private mcpServer: McpServer;
   private activeTransports = new Map<string, SSEServerTransport>();
+  private debug: boolean;
 
   constructor(mcpServer: McpServer, options: SSETransportOptions = {}) {
     this.mcpServer = mcpServer;
     this.app = express();
     this.server = http.createServer(this.app);
     this.port = options.port ?? parseInt(process.env.PORT || "3001", 10); // 3001 port by default supported by debugger
+    this.debug = options.debug ?? false;
     
     this.setupMiddleware(options.bodySizeLimit || '10mb');
     this.setupRoutes();
+  }
+  
+  private log(message: string, ...args: any[]): void {
+    if (this.debug) {
+      console.log(`[SSE] ${message}`, ...args);
+    }
+  }
+  
+  private logError(message: string, ...args: any[]): void {
+    if (this.debug) {
+      console.error(`[SSE] ${message}`, ...args);
+    }
   }
   
   private setupMiddleware(bodySizeLimit: string): void {
@@ -48,7 +63,7 @@ class SSETransport {
     
     // Logging helper
     this.app.use((req: Request, res: Response, next: NextFunction) => {
-      console.log(`[SSE] ${req.method} ${req.path}`);
+      this.log(`${req.method} ${req.path}`);
       next();
     });
   }
@@ -77,27 +92,27 @@ class SSETransport {
   }
   
   private async handleConnection(req: Request, res: Response): Promise<void> {
-    console.log('[SSE] Client connected to SSE endpoint');
+    this.log('Client connected to SSE endpoint');
     const transport = new SSEServerTransport('/message', res);
     
     try {
       this.mcpServer.connect(transport);
       
       const sessionId = transport.sessionId;
-      console.log(`[SSE] Created transport with session ID: ${sessionId}`);
+      this.log(`Created transport with session ID: ${sessionId}`);
       
       this.activeTransports.set(sessionId, transport);
       
       // cleanup when client disconnects
       req.on('close', () => {
-        console.log(`[SSE] Client disconnected for session ID: ${sessionId}`);
+        this.log(`Client disconnected for session ID: ${sessionId}`);
         this.activeTransports.delete(sessionId);
         transport.close().catch(err => {
-          console.error('[SSE] Error closing transport:', err);
+          this.logError('Error closing transport:', err);
         });
       });
     } catch (error) {
-      console.error('[SSE] Error starting transport:', error);
+      this.logError('Error starting transport:', error);
       res.status(500).end('Internal Server Error');
     }
   }
@@ -106,6 +121,7 @@ class SSETransport {
     const sessionId = req.query.sessionId as string;
     
     if (!sessionId) {
+      this.log('Missing sessionId parameter');
       res.status(400).json({
         jsonrpc: "2.0",
         error: {
@@ -120,6 +136,7 @@ class SSETransport {
     const transport = this.activeTransports.get(sessionId);
     
     if (!transport) {
+      this.log(`No active session found for sessionId: ${sessionId}`);
       res.status(404).json({
         jsonrpc: "2.0",
         error: {
@@ -134,7 +151,7 @@ class SSETransport {
     try {
       await transport.handlePostMessage(req, res, req.body);
     } catch (error: any) {
-      console.error('[SSE] Error handling message:', error);
+      this.logError('Error handling message:', error);
       res.status(500).json({
         jsonrpc: "2.0",
         error: {
@@ -151,6 +168,9 @@ class SSETransport {
     this.server.listen(this.port, () => {
       console.log(`[SSE] MCP Server running with SDK transport on http://localhost:${this.port}`);
       console.log(`[SSE] - SSE endpoint: http://localhost:${this.port}/sse`);
+      if (this.debug) {
+        console.log('[SSE] Debug mode: enabled');
+      }
       
       this.setupShutdownHandlers();
     });
@@ -162,7 +182,7 @@ class SSETransport {
   }
   
   public shutdown(): void {
-    console.log("[SSE] Shutting down server");
+    this.log("Shutting down server");
     this.server.close();
     process.exit(0);
   }
