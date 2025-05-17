@@ -10,7 +10,8 @@
     "outDir": "./dist",
     "typeRoots": [
       "../node_modules/@types",
-      "./node_modules/@types"
+      "./node_modules/@types",
+      "./types"
     ],
     "types": [
       "node"
@@ -19,6 +20,6 @@
   "include": [
     "src/index.ts",
     "src/cli.ts",
-    "src/**/*.ts"
+    "src/runtime/**/*.ts",
   ]
 }
