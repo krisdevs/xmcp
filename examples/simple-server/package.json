@@ -1,0 +1,10 @@
+{
+  "name": "simple-server",
+  "description": "A simple mcp server",
+  "scripts": {
+    "dev": "xmcp"
+  },
+  "dependencies": {
+    "xmcp": "workspace:*"
+  }
+}
