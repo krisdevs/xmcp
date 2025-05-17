@@ -2,7 +2,8 @@
   "name": "simple-server",
   "description": "A simple mcp server",
   "scripts": {
-    "dev": "xmcp",
+    "build": "xmcp build",
+    "dev": "xmcp dev",
     "start-sse": "node dist/sse.js",
     "start-stdio": "node dist/stdio.js"
   },
