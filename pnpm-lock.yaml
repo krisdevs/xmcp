@@ -27,6 +27,18 @@ importers:
         specifier: ^3.24.4
         version: 3.24.4
 
+  examples/with-config-json:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.11.4
+        version: 1.11.4
+      xmcp:
+        specifier: workspace:*
+        version: link:../../packages/xmcp
+      zod:
+        specifier: ^3.24.4
+        version: 3.24.4
+
   packages/xmcp:
     dependencies:
       '@modelcontextprotocol/inspector':

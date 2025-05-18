@@ -1,7 +1,7 @@
 import { webpack } from "webpack"
 import { getWebpackConfig } from "./utils/get-webpack-config"
 import chalk from "chalk"
-import { getConfig } from "./utils/parse-config"
+import { getConfig, XmcpConfig } from "./utils/parse-config"
 
 export type CompilerMode = "development" | "production"
 
@@ -41,16 +41,23 @@ export async function compile({ mode, configFilePath = 'xmcp.config.json' }: Com
       const endTime = Date.now()
       const duration = endTime - startTime
       console.log(`Compiled in ${chalk.bold.green(`${duration}ms`)}`)
-      onFirstBuild(mode)
+      onFirstBuild(mode, xmpcConfig)
     }
   })
 }
 
-function onFirstBuild(mode: CompilerMode) {
+function onFirstBuild(mode: CompilerMode, xmcpConfig: XmcpConfig) {
   if (mode === 'development') {
     console.log(chalk.bold.green('Starting inspector...'))
     const { spawn } = require('child_process')
-    const inspector = spawn('npx', ['@modelcontextprotocol/inspector@latest', 'node', 'dist/stdio.js'], {
+
+    const inspectorArgs = ['@modelcontextprotocol/inspector@latest']
+
+    if (xmcpConfig.stdio) {
+      inspectorArgs.push('node', 'dist/stdio.js')
+    }
+
+    const inspector = spawn('npx', inspectorArgs, {
       stdio: 'inherit',
       shell: true
     })
@@ -59,4 +66,18 @@ function onFirstBuild(mode: CompilerMode) {
       console.error('Failed to start inspector:', err)
     })
   }
+
+  const builtResults = []
+
+  if (xmcpConfig.sse) {
+    builtResults.push('- SSE server')
+  }
+  if (xmcpConfig.stdio) {
+    builtResults.push('- STDIO server')
+  }
+
+  console.log(chalk.bold.green('Built:'))
+  builtResults.forEach(result => {
+    console.log(chalk.bold(result))
+  })
 }
