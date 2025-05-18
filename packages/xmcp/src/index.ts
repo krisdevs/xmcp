@@ -1,17 +1,26 @@
 import { webpack } from "webpack"
 import { getWebpackConfig } from "./utils/get-webpack-config"
 import chalk from "chalk"
+import { getConfig } from "./utils/parse-config"
 
 export type CompilerMode = "development" | "production"
 
 export interface CompileOptions {
   mode: CompilerMode,
+  configFilePath?: string
 }
 
 
-export async function compile({ mode }: CompileOptions) {
+export async function compile({ mode, configFilePath = 'xmcp.config.json' }: CompileOptions) {
   const startTime = Date.now()
-  const config = getWebpackConfig(mode)
+
+  const xmpcConfig = getConfig(configFilePath)
+  let config = getWebpackConfig(mode, xmpcConfig)
+
+  if (xmpcConfig.webpack) {
+    config = xmpcConfig.webpack(config)
+  }
+
   let firstBuild = true
 
   webpack(config, (err, stats) => {
@@ -27,11 +36,11 @@ export async function compile({ mode }: CompileOptions) {
       return
     }
 
-    const endTime = Date.now()
-    const duration = endTime - startTime
-    console.log(`Compiled in ${chalk.bold.green(`${duration}ms`)}`)
     if (firstBuild) {
       firstBuild = false
+      const endTime = Date.now()
+      const duration = endTime - startTime
+      console.log(`Compiled in ${chalk.bold.green(`${duration}ms`)}`)
       onFirstBuild(mode)
     }
   })
