@@ -195,6 +195,5 @@ class SSETransport {
 // @ts-expect-error: injected by compiler
 const mcpServer = INJECTED_MCP_SERVER as McpServer;
 
-// Create and start the SSE transport
 const sseTransport = new SSETransport(mcpServer);
 sseTransport.start();
