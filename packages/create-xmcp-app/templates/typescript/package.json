@@ -1,0 +1,16 @@
+{
+  "name": "my-xmcp-app",
+  "version": "0.1.0",
+  "description": "An XMCP application",
+  "scripts": {
+    "build": "xmcp build",
+    "dev": "xmcp dev",
+    "start-sse": "node dist/sse.js",
+    "start-stdio": "node dist/stdio.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.11.4",
+    "xmcp": "^0.1.0",
+    "zod": "^3.24.4"
+  }
+} 
