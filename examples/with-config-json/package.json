@@ -1,0 +1,14 @@
+{
+  "name": "with-config-json",
+  "description": "A simple mcp server with mcp.config.json",
+  "scripts": {
+    "build": "xmcp build",
+    "dev": "xmcp dev",
+    "start-sse": "node dist/sse.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.11.4",
+    "xmcp": "workspace:*",
+    "zod": "^3.24.4"
+  }
+}
