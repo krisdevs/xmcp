@@ -1,6 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import server from "./server";
+import { createServer } from "./server";
 
 class StdioTransport {
   private mcpServer: McpServer;
@@ -33,7 +33,7 @@ class StdioTransport {
   }
 }
 
-const mcpServer = server;
-
-const stdioTransport = new StdioTransport(mcpServer);
-stdioTransport.start();
+createServer().then((mcpServer) => {
+  const stdioTransport = new StdioTransport(mcpServer);
+  stdioTransport.start();
+});
