@@ -29,17 +29,13 @@ export function getWebpackConfig(mode: CompilerMode, xmcpConfig: XmcpConfig): Co
       },
     },
     plugins: [
-      new CleanWebpackPlugin({
-        cleanStaleWebpackAssets: false,
-        cleanOnceBeforeBuildPatterns: [outputPath],
-      }),
       new InjectRuntimePlugin(),
     ]
   }
 
   const providedPackages = {
     // connects the user exports with our runtime
-    INJECTED_MCP_SERVER: [path.resolve(processFolder, 'src/index.ts'), 'default'],
+    INJECTED_TOOLS: [path.resolve(processFolder, '.xmcp/import-map.js'), 'default'],
   }
 
   // thsi will inject definitions for the following variables when bundling the code
@@ -82,7 +78,6 @@ class InjectRuntimePlugin {
     compiler.hooks.beforeCompile.tap('InjectRuntimePlugin', (_compilationParams) => {
       if (hasRun) return
       hasRun = true
-      createFolder(runtimeFolderPath)
       // @ts-expect-error: injected by compiler
       fs.writeFileSync(path.join(runtimeFolderPath, 'stdio.js'), RUNTIME_STDIO)
       // @ts-expect-error: injected by compiler
@@ -91,8 +86,3 @@ class InjectRuntimePlugin {
   }
 }
 
-function createFolder(folderPath: string) {
-  if (!fs.existsSync(folderPath)) {
-    fs.mkdirSync(folderPath, { recursive: true })
-  }
-}

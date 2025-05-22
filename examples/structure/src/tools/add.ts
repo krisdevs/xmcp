@@ -20,5 +20,7 @@ export const Metadata = {
 
 // Tool implementation
 export default async function add({ a, b }: z.infer<typeof schema>) {
-  return a + b;
+  return {
+    content: [{ type: "text", text: String(a + b) }],
+  }
 }

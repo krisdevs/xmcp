@@ -2,7 +2,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import express, { Express, Request, Response, NextFunction } from "express";
 import http from "http";
 import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
-import server from "./server";
+import { createServer } from "./server";
 
 // @ts-expect-error: injected by compiler
 const port = SSE_PORT as number;
@@ -10,7 +10,7 @@ const port = SSE_PORT as number;
 const debug = SSE_DEBUG as boolean;
 // @ts-expect-error: injected by compiler
 const bodySizeLimit = SSE_BODY_SIZE_LIMIT as string;
-const mcpServer = server;
+const mcpServer = createServer();
 
 // configurable from xmcp.config.ts
 interface SSETransportOptions {
@@ -204,9 +204,12 @@ class SSETransport {
 }
 
 // Create and start the SSE transport
-const sseTransport = new SSETransport(mcpServer, {
-  port,
-  debug,
-  bodySizeLimit,
-});
-sseTransport.start();
+createServer().then((server) => {
+  const sseTransport = new SSETransport(server, {
+    port,
+    debug,
+    bodySizeLimit,
+  });
+  sseTransport.start();
+})
+
