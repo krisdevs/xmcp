@@ -6,7 +6,8 @@
   },
   "devDependencies": {
     "prettier": "latest",
-    "turbo": "^2.5.3"
+    "turbo": "^2.5.3",
+    "eslint-config-custom": "workspace:"
   },
   "packageManager": "pnpm@10.8.1",
   "engines": {
