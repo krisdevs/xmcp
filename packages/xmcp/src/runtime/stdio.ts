@@ -1,5 +1,6 @@
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js"
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import server from "./server";
 
 class StdioTransport {
   private mcpServer: McpServer;
@@ -32,8 +33,7 @@ class StdioTransport {
   }
 }
 
-// @ts-expect-error: injected by compiler
-const mcpServer = INJECTED_MCP_SERVER as McpServer;
+const mcpServer = server;
 
 const stdioTransport = new StdioTransport(mcpServer);
 stdioTransport.start();
