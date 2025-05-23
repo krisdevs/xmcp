@@ -1,7 +1,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp";
 
 type ToolFile = {
-  Metadata: any;
+  metadata: any;
   schema: any;
   default: (...args: any[]) => Promise<any>;
 };
@@ -23,8 +23,14 @@ export async function createServer() {
 
     Promise.all(promises).then((resolvedTools) => {
       resolvedTools.forEach((tool) => {
-        const { default: handler, Metadata, schema } = tool;
-        server.tool(Metadata.name, schema, handler);
+        const { default: handler, metadata, schema } = tool;
+        server.tool(
+          metadata.name,
+          metadata.description,
+          schema,
+          metadata.annotations,
+          handler
+        );
       });
 
       resolve(server);

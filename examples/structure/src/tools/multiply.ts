@@ -7,7 +7,7 @@ export const schema = z.object({
 });
 
 // Define tool metadata
-export const Metadata = {
+export const metadata = {
   name: "multiply",
   description: "Multiply two numbers together",
   annotations: {
