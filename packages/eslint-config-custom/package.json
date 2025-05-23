@@ -1,0 +1,15 @@
+{
+  "name": "eslint-config-custom",
+  "private": true,
+  "main": "eslint.config.js",
+  "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.27.0",
+    "@typescript-eslint/parser": "^8.27.0",
+    "eslint": "^9.23.0",
+    "eslint-config-prettier": "^10.1.1",
+    "eslint-config-turbo": "^2.5.3",
+    "eslint-plugin-prettier": "^5.2.3",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
+    "typescript-eslint": "^8.27.0"
+  }
+}

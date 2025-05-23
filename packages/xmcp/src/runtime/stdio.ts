@@ -1,8 +1,39 @@
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js"
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import { createServer } from "./server";
 
-// @ts-expect-error: injected by compiler
-const mcpServer = INJECTED_MCP_SERVER as McpServer
+class StdioTransport {
+  private mcpServer: McpServer;
+  private transport: StdioServerTransport;
 
-const transport = new StdioServerTransport();
-mcpServer.connect(transport);
+  constructor(mcpServer: McpServer) {
+    this.mcpServer = mcpServer;
+    this.transport = new StdioServerTransport();
+  }
+
+  public start(): void {
+    try {
+      this.mcpServer.connect(this.transport);
+      console.log("[STDIO] MCP Server running with STDIO transport");
+      this.setupShutdownHandlers();
+    } catch (error) {
+      console.error("[STDIO] Error starting STDIO transport:", error);
+      process.exit(1);
+    }
+  }
+
+  private setupShutdownHandlers(): void {
+    process.on("SIGINT", this.shutdown.bind(this));
+    process.on("SIGTERM", this.shutdown.bind(this));
+  }
+
+  public shutdown(): void {
+    console.log("[STDIO] Shutting down STDIO transport");
+    process.exit(0);
+  }
+}
+
+createServer().then((mcpServer) => {
+  const stdioTransport = new StdioTransport(mcpServer);
+  stdioTransport.start();
+});

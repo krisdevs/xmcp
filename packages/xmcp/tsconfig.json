@@ -7,6 +7,8 @@
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "skipLibCheck": true,
+    "declaration": true,
+    "declarationMap": true,
     "outDir": "./dist",
     "typeRoots": [
       "../node_modules/@types",
@@ -20,6 +22,6 @@
   "include": [
     "src/index.ts",
     "src/cli.ts",
-    "src/runtime/**/*.ts",
+    "src/runtime/**/*.ts"
   ]
 }
