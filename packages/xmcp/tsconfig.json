@@ -8,18 +8,8 @@
     "strict": true,
     "skipLibCheck": true,
     "outDir": "./dist",
-    "typeRoots": [
-      "../node_modules/@types",
-      "./node_modules/@types",
-      "./types"
-    ],
-    "types": [
-      "node"
-    ]
+    "typeRoots": ["../node_modules/@types", "./node_modules/@types", "./types"],
+    "types": ["node"]
   },
-  "include": [
-    "src/index.ts",
-    "src/cli.ts",
-    "src/runtime/**/*.ts",
-  ]
+  "include": ["src/index.ts", "src/cli.ts", "src/runtime/**/*.ts"]
 }

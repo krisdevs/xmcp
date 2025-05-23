@@ -10,7 +10,6 @@ const port = SSE_PORT as number;
 const debug = SSE_DEBUG as boolean;
 // @ts-expect-error: injected by compiler
 const bodySizeLimit = SSE_BODY_SIZE_LIMIT as string;
-const mcpServer = createServer();
 
 // configurable from xmcp.config.ts
 interface SSETransportOptions {
@@ -204,8 +203,8 @@ class SSETransport {
 }
 
 // Create and start the SSE transport
-createServer().then((server) => {
-  const sseTransport = new SSETransport(server, {
+createServer().then((mcpServer) => {
+  const sseTransport = new SSETransport(mcpServer, {
     port,
     debug,
     bodySizeLimit,
