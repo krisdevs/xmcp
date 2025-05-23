@@ -1,10 +1,11 @@
 import { z } from "zod";
+import { type InferSchema } from "xmcp";
 
 // Define the schema for tool parameters
-export const schema = z.object({
+export const schema = {
   a: z.number().describe("First number to multiply"),
   b: z.number().describe("Second number to multiply"),
-});
+};
 
 // Define tool metadata
 export const metadata = {
@@ -19,7 +20,7 @@ export const metadata = {
 };
 
 // Tool implementation
-export default async function multiply({ a, b }: z.infer<typeof schema>) {
+export default async function multiply({ a, b }: InferSchema<typeof schema>) {
   return {
     content: [{ type: "text", text: String(a * b) }],
   };

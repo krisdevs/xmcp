@@ -9,6 +9,7 @@ import { runtimeFolderPath } from "./utils/constants"
 import { createFolder } from "./utils/fs-utils"
 import path from "path"
 import { deleteSync } from "del"
+import { type z } from "zod"
 
 export type CompilerMode = "development" | "production"
 
@@ -123,4 +124,8 @@ function onFirstBuild(mode: CompilerMode, xmcpConfig: XmcpConfig) {
   builtResults.forEach(result => {
     console.log(chalk.bold(result))
   })
+}
+
+export type InferSchema<T extends Record<string, z.ZodType>> = {
+  [K in keyof T]: z.infer<T[K]>
 }
