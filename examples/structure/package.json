@@ -1,0 +1,20 @@
+{
+  "name": "structure",
+  "description": "A simple mcp server with tool syntax",
+  "scripts": {
+    "build": "xmcp build",
+    "dev": "xmcp dev",
+    "start-sse": "node dist/sse.js",
+    "start-stdio": "node dist/stdio.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.11.4",
+    "ts-loader": "^9.4.2",
+    "typescript": "^5.0.4",
+    "xmcp": "workspace:*",
+    "zod": "^3.24.4"
+  },
+  "devDependencies": {
+    "swc-loader": "^0.2.6"
+  }
+}

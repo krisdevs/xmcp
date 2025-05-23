@@ -30,6 +30,28 @@ importers:
         specifier: ^3.24.4
         version: 3.24.4
 
+  examples/structure:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.11.4
+        version: 1.11.4
+      ts-loader:
+        specifier: ^9.4.2
+        version: 9.5.2(typescript@5.8.3)(webpack@5.99.8(@swc/core@1.11.24))
+      typescript:
+        specifier: ^5.0.4
+        version: 5.8.3
+      xmcp:
+        specifier: workspace:*
+        version: link:../../packages/xmcp
+      zod:
+        specifier: ^3.24.4
+        version: 3.24.4
+    devDependencies:
+      swc-loader:
+        specifier: ^0.2.6
+        version: 0.2.6(@swc/core@1.11.24)(webpack@5.99.8(@swc/core@1.11.24))
+
   examples/with-config-json:
     dependencies:
       '@modelcontextprotocol/sdk':
@@ -90,7 +112,7 @@ importers:
         specifier: ^5.2.0
         version: 5.4.1
       chokidar:
-        specifier: ^3.5.3
+        specifier: ^3.6.0
         version: 3.6.0
       clean-webpack-plugin:
         specifier: ^4.0.0
@@ -119,12 +141,6 @@ importers:
       handlebars:
         specifier: ^4.7.7
         version: 4.7.8
-      swc-loader:
-        specifier: ^0.2.6
-        version: 0.2.6(@swc/core@1.11.24)(webpack@5.99.8(@swc/core@1.11.24))
-      ts-loader:
-        specifier: ^9.4.2
-        version: 9.5.2(typescript@5.8.3)(webpack@5.99.8(@swc/core@1.11.24))
       tsx:
         specifier: ^4.19.4
         version: 4.19.4
@@ -150,6 +166,12 @@ importers:
       node-loader:
         specifier: ^1.0.1
         version: 1.0.3(webpack@5.99.8(@swc/core@1.11.24))
+      swc-loader:
+        specifier: ^0.2.6
+        version: 0.2.6(@swc/core@1.11.24)(webpack@5.99.8(@swc/core@1.11.24))
+      ts-loader:
+        specifier: ^9.4.2
+        version: 9.5.2(typescript@5.8.3)(webpack@5.99.8(@swc/core@1.11.24))
       typescript:
         specifier: ^5.0.4
         version: 5.8.3

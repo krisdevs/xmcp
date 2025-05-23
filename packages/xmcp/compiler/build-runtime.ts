@@ -2,16 +2,17 @@
  * This script builds the compiler. It's not the compiler itself
  * */
 
-import path from "path"
-import ForkTsCheckerWebpackPlugin from "fork-ts-checker-webpack-plugin"
-import nodeExternals from "webpack-node-externals"
-import { CleanWebpackPlugin } from "clean-webpack-plugin"
-import webpack from "webpack"
-import type { Configuration } from "webpack"
-import { outputPath, runtimeOutputPath } from "./constants"
-import { srcPath } from "./constants"
+import path from "path";
+import ForkTsCheckerWebpackPlugin from "fork-ts-checker-webpack-plugin";
+import nodeExternals from "webpack-node-externals";
+import { CleanWebpackPlugin } from "clean-webpack-plugin";
+import webpack from "webpack";
+import type { Configuration } from "webpack";
+import { outputPath, runtimeOutputPath } from "./constants";
+import { srcPath } from "./constants";
 
-const mode = process.env.NODE_ENV === 'production' ? 'production' : 'development'
+const mode =
+  process.env.NODE_ENV === "production" ? "production" : "development";
 
 /** Since we are using webpack to build webpack, we need to exclude some modules */
 const libsToExcludeFromCompilation = [
@@ -19,9 +20,8 @@ const libsToExcludeFromCompilation = [
   "webpack-virtual-modules",
   "webpack-node-externals",
   "ts-loader",
-  "fork-ts-checker-webpack-plugin"
-]
-
+  "fork-ts-checker-webpack-plugin",
+];
 
 const config: Configuration = {
   entry: {
@@ -32,18 +32,20 @@ const config: Configuration = {
   devtool: false,
   target: "node",
   externalsPresets: { node: true },
-  externals: [nodeExternals({
-    allowlist: (modulePath) => {
-      return !(libsToExcludeFromCompilation.includes(modulePath));
-    }
-  })],
+  externals: [
+    nodeExternals({
+      allowlist: (modulePath) => {
+        return !libsToExcludeFromCompilation.includes(modulePath);
+      },
+    }),
+  ],
   output: {
     filename: "[name].js",
     path: runtimeOutputPath,
     globalObject: "this",
     library: {
       type: "umd",
-    }
+    },
   },
   module: {
     rules: [
@@ -51,33 +53,33 @@ const config: Configuration = {
         test: /\.ts$/,
         exclude: /node_modules/,
         use: {
-          loader: 'swc-loader',
+          loader: "swc-loader",
           options: {
             jsc: {
               parser: {
-                syntax: 'typescript',
+                syntax: "typescript",
                 tsx: false,
-                decorators: true
+                decorators: true,
               },
-              target: 'es2020'
+              target: "es2020",
             },
             module: {
-              type: 'es6'
-            }
-          }
-        }
-      }
-    ]
+              type: "es6",
+            },
+          },
+        },
+      },
+    ],
   },
   resolve: {
-    extensions: ['.tsx', '.ts', '.jsx', '.js', '.json'],
+    extensions: [".tsx", ".ts", ".jsx", ".js", ".json"],
   },
   watchOptions: {
     aggregateTimeout: 600,
     ignored: /node_modules/,
   },
   optimization: {
-    minimize: true
+    minimize: true,
   },
   plugins: [
     new ForkTsCheckerWebpackPlugin(),
@@ -86,9 +88,8 @@ const config: Configuration = {
       cleanOnceBeforeBuildPatterns: [outputPath],
     }),
   ],
-  watch: mode === 'development'
-}
-
+  watch: mode === "development",
+};
 
 // Fix issues with importing unsupported fsevents module in Windows and Linux
 // For more info, see: https://github.com/vinceau/project-clippi/issues/48
@@ -104,22 +105,26 @@ if (process.platform !== "darwin") {
 export function buildRuntime(onCompiled: (stats: any) => void) {
   webpack(config, (err, stats) => {
     if (err) {
-      console.error(err)
+      console.error(err);
     }
 
     if (stats?.hasErrors()) {
-      console.error(stats.toString({
-        colors: true,
-        chunks: false
-      }))
-      return
+      console.error(
+        stats.toString({
+          colors: true,
+          chunks: false,
+        })
+      );
+      return;
     }
 
-    console.log(stats?.toString({
-      colors: true,
-      chunks: false
-    }))
+    console.log(
+      stats?.toString({
+        colors: true,
+        chunks: false,
+      })
+    );
 
-    onCompiled(stats)
-  })
+    onCompiled(stats);
+  });
 }
