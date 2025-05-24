@@ -16,7 +16,7 @@ Runs on every pull request to `main`.
 - ✅ Tests that both CLIs are executable
 - ✅ Tests `create-xmcp-app` can create new projects
 - ✅ Validates example projects work with built packages
-- ✅ Checks package.json integrity
+- ✅ Checks main package.json integrity (skips config packages)
 - ✅ Verifies lockfile is up to date
 
 **Skip CLI Tests:**
@@ -77,8 +77,9 @@ pnpm run lint:all           # Lint all packages including examples
 **Default behavior (recommended):**
 
 - `pnpm run build` - Builds only `xmcp` and `create-xmcp-app` packages
-- Skips building examples for faster CI/development iteration
+- Skips building examples and config packages for faster CI/development iteration
 - Examples are tested by installing the built packages, not by building them
+- Config packages (like `eslint-config-custom`) are skipped in validation
 
 **Full build (when needed):**
 
@@ -125,3 +126,4 @@ pnpm run test:ci:skip-cli
 - Use the "Manual CI" workflow in GitHub for on-demand testing
 - Skip CLI tests when debugging build issues to get faster feedback
 - Default build targets only main packages for speed
+- Config packages are automatically skipped in integrity checks

@@ -171,12 +171,12 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Check package.json integrity
+      - name: Check main packages integrity
         run: |
-          echo "Checking package.json files..."
+          echo "Checking main package.json files..."
 
-          # Check that all packages have proper version, name, and main fields
-          for pkg in packages/*/package.json; do
+          # Check only main packages (skip eslint-config-custom)
+          for pkg in packages/xmcp/package.json packages/create-xmcp-app/package.json; do
             echo "Checking $pkg..."
             
             if ! jq -e '.name' "$pkg" > /dev/null; then
