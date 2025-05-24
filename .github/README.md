@@ -17,7 +17,7 @@ Runs on every pull request to `main`.
 - ✅ Tests `create-xmcp-app` can create new projects
 - ✅ Validates example projects work with built packages
 - ✅ Checks main package.json integrity (skips config packages)
-- ✅ Verifies lockfile is up to date
+- ✅ Verifies lockfile integrity via `--frozen-lockfile` flag
 
 **Skip CLI Tests:**
 Set the environment variable `SKIP_CLI_TESTS=true` in the workflow to skip CLI tests and only run build verification.
@@ -80,6 +80,7 @@ pnpm run lint:all           # Lint all packages including examples
 - Skips building examples and config packages for faster CI/development iteration
 - Examples are tested by installing the built packages, not by building them
 - Config packages (like `eslint-config-custom`) are skipped in validation
+- Lockfile integrity is verified automatically with `--frozen-lockfile`
 
 **Full build (when needed):**
 
@@ -118,6 +119,11 @@ pnpm run test:ci:skip-cli
 - Verify CLI entry points exist after build
 - Use `pnpm run ci:build-only` to isolate build issues from CLI issues
 
+**Lockfile issues:**
+
+- The `--frozen-lockfile` flag ensures the lockfile is up to date
+- If CI fails due to lockfile issues, run `pnpm install` locally and commit the updated lockfile
+
 ## Development Tips
 
 **Fast iteration during development:**
@@ -127,3 +133,4 @@ pnpm run test:ci:skip-cli
 - Skip CLI tests when debugging build issues to get faster feedback
 - Default build targets only main packages for speed
 - Config packages are automatically skipped in integrity checks
+- Lockfile verification is built into the installation step for simplicity

@@ -168,7 +168,7 @@ jobs:
           node-version: 20.x
           cache: "pnpm"
 
-      - name: Install dependencies
+      - name: Verify lockfile and install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Check main packages integrity
@@ -192,7 +192,4 @@ jobs:
             echo "✅ $pkg is valid"
           done
 
-      - name: Verify lockfile is up to date
-        run: |
-          pnpm install --frozen-lockfile --dry-run
-          echo "✅ Lockfile is up to date"
+          echo "✅ All main packages are valid"
