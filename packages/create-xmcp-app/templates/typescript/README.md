@@ -16,41 +16,48 @@ pnpm dev
 
 This will start the MCP server with both SSE and STDIO transport methods.
 
-## MCP Server
+## Project Structure
 
-The MCP server is defined in `src/index.ts`. Here's a simple example:
+This project uses the structured approach where tools are automatically discovered from the `src/tools` directory. Each tool is defined in its own file with the following structure:
 
 ```typescript
-import { McpServer, ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
+import { type InferSchema } from "xmcp";
 
-const server = new McpServer({
-  name: "Demo",
-  version: "1.0.0"
-});
+// Define the schema for tool parameters
+export const schema = {
+  a: z.number().describe("First number to add"),
+  b: z.number().describe("Second number to add"),
+};
 
-// Add an addition tool
-server.tool("add",
-  { a: z.number(), b: z.number() },
-  async ({ a, b }) => ({
-    content: [{ type: "text", text: String(a + b) }]
-  })
-);
+// Define tool metadata
+export const metadata = {
+  name: "add",
+  description: "Add two numbers together",
+  annotations: {
+    title: "Add Two Numbers",
+    readOnlyHint: true,
+    destructiveHint: false,
+    idempotentHint: true,
+  },
+};
 
-// Add a dynamic greeting resource
-server.resource(
-  "greeting",
-  new ResourceTemplate("greeting://{name}", { list: undefined }),
-  async (uri, { name }) => ({
-    contents: [{
-      uri: uri.href,
-      text: `Hello, ${name}!`
-    }]
-  })
-);
-
-export default server
+// Tool implementation
+export default async function add({ a, b }: InferSchema<typeof schema>) {
+  return {
+    content: [{ type: "text", text: String(a + b) }],
+  };
+}
 ```
+
+## Adding New Tools
+
+To add a new tool:
+
+1. Create a new `.ts` file in the `src/tools` directory
+2. Export a `schema` object defining the tool parameters using Zod
+3. Export a `metadata` object with tool information
+4. Export a default function that implements the tool logic
 
 ## Building for Production
 
@@ -79,3 +86,4 @@ npm run start-stdio
 ## Learn More
 
 - [XMCP Documentation](https://github.com/basementstudio/xmcp)
+- [Tool Structure Documentation](src/tools/tools.md)
