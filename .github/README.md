@@ -10,12 +10,12 @@ Runs on every pull request to `main`.
 
 **What it does:**
 
-- ✅ Builds all packages using Turbo
-- ✅ Runs linting (if available)
+- ✅ Builds main packages only (`xmcp` and `create-xmcp-app`) using Turbo filters
+- ✅ Runs linting on main packages (if available)
 - ✅ Verifies build outputs exist
 - ✅ Tests that both CLIs are executable
 - ✅ Tests `create-xmcp-app` can create new projects
-- ✅ Validates example projects
+- ✅ Validates example projects work with built packages
 - ✅ Checks package.json integrity
 - ✅ Verifies lockfile is up to date
 
@@ -31,6 +31,7 @@ Manually triggered workflow with options to customize testing.
 - ✅ Choose to skip CLI tests for faster feedback
 - ✅ Select target branch to test
 - ✅ Same comprehensive testing as main CI
+- ✅ Builds only main packages for speed
 
 ### `cross-platform.yml` - Cross-Platform Testing
 
@@ -39,6 +40,7 @@ Runs on PR to `main`.
 **What it does:**
 
 - ✅ Tests on Ubuntu, Windows, and macOS
+- ✅ Builds only main packages for faster execution
 - ✅ Ensures CLIs work across all platforms
 - ✅ Verifies Node.js compatibility
 
@@ -48,8 +50,11 @@ Runs on PR to `main`.
 # Install dependencies
 pnpm install
 
-# Build all packages
+# Build main packages only (default - faster)
 pnpm run build
+
+# Build all packages including examples
+pnpm run build:all
 
 # Run full CI test suite
 pnpm run ci
@@ -61,7 +66,24 @@ pnpm run ci:build-only
 pnpm run test:build         # Test build outputs only
 pnpm run test:cli           # Test CLI functionality
 pnpm run test:cli:skip      # Skip CLI tests (exits immediately)
+
+# Linting options
+pnpm run lint               # Lint main packages only
+pnpm run lint:all           # Lint all packages including examples
 ```
+
+## Build Strategy
+
+**Default behavior (recommended):**
+
+- `pnpm run build` - Builds only `xmcp` and `create-xmcp-app` packages
+- Skips building examples for faster CI/development iteration
+- Examples are tested by installing the built packages, not by building them
+
+**Full build (when needed):**
+
+- `pnpm run build:all` - Builds everything including examples
+- Use when you need to test example projects in depth
 
 ## Skipping CLI Tests
 
@@ -102,3 +124,4 @@ pnpm run test:ci:skip-cli
 - Use `pnpm run ci:build-only` for quick build verification
 - Use the "Manual CI" workflow in GitHub for on-demand testing
 - Skip CLI tests when debugging build issues to get faster feedback
+- Default build targets only main packages for speed

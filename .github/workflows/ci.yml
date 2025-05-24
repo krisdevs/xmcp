@@ -35,11 +35,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build all packages
-        run: pnpm turbo build
+      - name: Build main packages only
+        run: pnpm turbo build --filter=xmcp --filter=create-xmcp-app
 
       - name: Lint packages (if available)
-        run: pnpm turbo lint || echo "No lint script available, skipping..."
+        run: pnpm turbo lint --filter=xmcp --filter=create-xmcp-app || echo "No lint script available, skipping..."
 
       - name: Verify xmcp package build
         run: |
