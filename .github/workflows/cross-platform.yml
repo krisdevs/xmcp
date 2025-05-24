@@ -1,0 +1,80 @@
+name: Cross-Platform Tests
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  cross-platform-test:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        node-version: [20.x]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.8.1
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build packages
+        run: pnpm turbo build
+
+      - name: Test CLI functionality (Unix)
+        if: matrix.os != 'windows-latest'
+        run: |
+          cd packages/xmcp
+          if ! node dist/cli.js --help; then
+            echo "❌ xmcp CLI failed on ${{ matrix.os }}"
+            exit 1
+          fi
+          echo "✅ xmcp CLI works on ${{ matrix.os }}"
+
+      - name: Test CLI functionality (Windows)
+        if: matrix.os == 'windows-latest'
+        run: |
+          cd packages/xmcp
+          node dist/cli.js --help
+          if ($LASTEXITCODE -ne 0) {
+            Write-Host "❌ xmcp CLI failed on Windows"
+            exit 1
+          }
+          Write-Host "✅ xmcp CLI works on Windows"
+        shell: powershell
+
+      - name: Test create-xmcp-app (Unix)
+        if: matrix.os != 'windows-latest'
+        run: |
+          # Test that create-xmcp-app can be invoked
+          cd packages/create-xmcp-app
+          if ! node index.js --help; then
+            echo "❌ create-xmcp-app CLI failed on ${{ matrix.os }}"
+            exit 1
+          fi
+          echo "✅ create-xmcp-app CLI works on ${{ matrix.os }}"
+
+      - name: Test create-xmcp-app (Windows)
+        if: matrix.os == 'windows-latest'
+        run: |
+          cd packages/create-xmcp-app
+          node index.js --help
+          if ($LASTEXITCODE -ne 0) {
+            Write-Host "❌ create-xmcp-app CLI failed on Windows"
+            exit 1
+          }
+          Write-Host "✅ create-xmcp-app CLI works on Windows"
+        shell: powershell

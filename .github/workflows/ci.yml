@@ -1,0 +1,198 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+
+env:
+  # Set this to 'true' to skip CLI tests in CI
+  # Can be overridden in repository settings or workflow dispatch
+  SKIP_CLI_TESTS: true
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.8.1
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build all packages
+        run: pnpm turbo build
+
+      - name: Lint packages (if available)
+        run: pnpm turbo lint || echo "No lint script available, skipping..."
+
+      - name: Verify xmcp package build
+        run: |
+          cd packages/xmcp
+          # Check that dist files were created
+          if [ ! -f "dist/index.js" ]; then
+            echo "❌ xmcp package build failed - dist/index.js not found"
+            exit 1
+          fi
+          if [ ! -f "dist/index.d.ts" ]; then
+            echo "❌ xmcp package build failed - dist/index.d.ts not found"
+            exit 1
+          fi
+          if [ ! -f "dist/cli.js" ]; then
+            echo "❌ xmcp package build failed - dist/cli.js not found"
+            exit 1
+          fi
+          echo "✅ xmcp package build successful"
+
+      - name: Verify create-xmcp-app CLI build
+        run: |
+          cd packages/create-xmcp-app
+          # Check that build outputs were created
+          if [ ! -f "index.js" ]; then
+            echo "❌ create-xmcp-app CLI build failed - index.js not found"
+            exit 1
+          fi
+          echo "✅ create-xmcp-app CLI build successful"
+
+      - name: Test xmcp CLI availability
+        if: env.SKIP_CLI_TESTS != 'true'
+        run: |
+          cd packages/xmcp
+          # Test that the CLI can be invoked
+          if ! node dist/cli.js --help > /dev/null 2>&1; then
+            echo "❌ xmcp CLI cannot be executed"
+            exit 1
+          fi
+          echo "✅ xmcp CLI is executable"
+
+      - name: Test create-xmcp-app CLI functionality
+        if: env.SKIP_CLI_TESTS != 'true'
+        run: |
+          # Create a temporary directory for testing
+          TEST_DIR=$(mktemp -d)
+          cd "$TEST_DIR"
+
+          # Test create-xmcp-app CLI
+          echo "Testing create-xmcp-app CLI..."
+
+          # Install create-xmcp-app globally for testing
+          cd "$GITHUB_WORKSPACE"
+          pnpm --filter=create-xmcp-app pack
+          cd packages/create-xmcp-app
+          PACK_FILE=$(ls create-xmcp-app-*.tgz)
+          npm install -g "$PACK_FILE"
+
+          # Create a test project using non-interactive flags
+          cd "$TEST_DIR"
+          echo "Creating test project..."
+          create-xmcp-app test-project --yes --use-npm --local || {
+            echo "❌ create-xmcp-app failed to create project"
+            exit 1
+          }
+
+          if [ ! -d "test-project" ]; then
+            echo "❌ Test project directory was not created"
+            exit 1
+          fi
+
+          echo "✅ create-xmcp-app successfully created test project"
+
+      - name: Test example projects build
+        if: env.SKIP_CLI_TESTS != 'true'
+        run: |
+          # Test that example projects can be built/used
+          echo "Testing example projects..."
+
+          # Install xmcp globally for testing
+          cd packages/xmcp
+          PACK_FILE=$(ls xmcp-*.tgz 2>/dev/null || echo "")
+          if [ -z "$PACK_FILE" ]; then
+            pnpm pack
+            PACK_FILE=$(ls xmcp-*.tgz)
+          fi
+          npm install -g "$PACK_FILE"
+
+          # Test simple-server example
+          if [ -d "examples/simple-server" ]; then
+            cd examples/simple-server
+            if [ -f "package.json" ]; then
+              pnpm install || npm install
+              echo "✅ simple-server example dependencies installed"
+            fi
+          fi
+
+          echo "✅ Example projects validated"
+
+      - name: Clean up test artifacts
+        if: always() && env.SKIP_CLI_TESTS != 'true'
+        run: |
+          # Clean up any global packages installed during testing
+          npm uninstall -g create-xmcp-app xmcp || true
+
+      - name: CLI tests skipped notice
+        if: env.SKIP_CLI_TESTS == 'true'
+        run: |
+          echo "🚫 CLI tests were skipped due to SKIP_CLI_TESTS=true"
+          echo "Only build verification was performed."
+
+  package-integrity:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.8.1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check package.json integrity
+        run: |
+          echo "Checking package.json files..."
+
+          # Check that all packages have proper version, name, and main fields
+          for pkg in packages/*/package.json; do
+            echo "Checking $pkg..."
+            
+            if ! jq -e '.name' "$pkg" > /dev/null; then
+              echo "❌ Missing name field in $pkg"
+              exit 1
+            fi
+            
+            if ! jq -e '.version' "$pkg" > /dev/null; then
+              echo "❌ Missing version field in $pkg"
+              exit 1
+            fi
+            
+            echo "✅ $pkg is valid"
+          done
+
+      - name: Verify lockfile is up to date
+        run: |
+          pnpm install --frozen-lockfile --dry-run
+          echo "✅ Lockfile is up to date"

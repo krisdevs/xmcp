@@ -2,7 +2,18 @@
   "name": "xmcp-monorepo",
   "description": "Brom the basement, to all AIs",
   "scripts": {
-    "xmcp": "turbo run dev --filter=xmcp"
+    "xmcp": "turbo run dev --filter=xmcp",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "ci": "pnpm run build && pnpm run lint && pnpm run test:ci",
+    "ci:build-only": "pnpm run build && pnpm run lint && pnpm run test:build",
+    "test:ci": "pnpm run test:build && pnpm run test:cli",
+    "test:ci:skip-cli": "pnpm run test:build && pnpm run test:cli --skip",
+    "test:build": "scripts/test-build.sh",
+    "test:cli": "scripts/test-cli.sh",
+    "test:cli:skip": "scripts/test-cli.sh --skip",
+    "clean": "turbo run clean && rm -rf node_modules/.cache",
+    "reset": "rm -rf node_modules packages/*/node_modules packages/*/dist && pnpm install"
   },
   "devDependencies": {
     "prettier": "latest",
