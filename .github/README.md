@@ -44,6 +44,25 @@ Runs on PR to `main`.
 - ✅ Ensures CLIs work across all platforms
 - ✅ Verifies Node.js compatibility
 
+### `publish.yml` - NPM Publishing
+
+Automatically triggered when a GitHub release is published.
+
+**What it does:**
+
+- ✅ Builds both main packages (`xmcp` and `create-xmcp-app`)
+- ✅ Verifies build outputs before publishing
+- ✅ Extracts version from release tag (supports `v1.0.0` or `1.0.0` format)
+- ✅ Updates package.json versions to match release tag
+- ✅ Publishes both packages to NPM with provenance
+- ✅ Creates a summary with installation instructions
+
+**Requirements:**
+
+- Set `NPM_TOKEN` secret in repository settings
+- Create GitHub releases with semantic version tags (e.g., `v1.0.0`)
+- Both packages will be published with the same version from the release tag
+
 ## Running Tests Locally
 
 ```bash
