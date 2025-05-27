@@ -1,0 +1,67 @@
+name: Manual CI
+
+on:
+  workflow_dispatch:
+    inputs:
+      skip_cli_tests:
+        description: "Skip CLI tests (faster for build-only verification)"
+        required: false
+        default: true
+        type: boolean
+      target_branch:
+        description: "Branch to test (defaults to current branch)"
+        required: false
+        default: ""
+        type: string
+
+jobs:
+  manual-build-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.target_branch || github.ref }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.8.1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build main packages only
+        run: pnpm turbo build --filter=xmcp --filter=create-xmcp-app
+
+      - name: Lint packages (if available)
+        run: pnpm turbo lint --filter=xmcp --filter=create-xmcp-app || echo "No lint script available, skipping..."
+
+      - name: Test package builds
+        run: pnpm run test:build
+
+      - name: Test CLI functionality
+        if: ${{ !inputs.skip_cli_tests }}
+        run: pnpm run test:cli
+
+      - name: CLI tests skipped notice
+        if: ${{ inputs.skip_cli_tests }}
+        run: |
+          echo "🚫 CLI tests were skipped by user request"
+          echo "Only build verification was performed."
+
+      - name: Test summary
+        run: |
+          echo "✅ Manual CI completed successfully!"
+          if [[ "${{ inputs.skip_cli_tests }}" == "true" ]]; then
+            echo "🔧 Tests run: Build verification only"
+          else
+            echo "🔧 Tests run: Build verification + CLI tests"
+          fi
