@@ -32,7 +32,7 @@ jobs:
           registry-url: "https://registry.npmjs.org"
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --no-frozen-lockfile
 
       - name: Build packages
         run: pnpm turbo build --filter=xmcp --filter=create-xmcp-app
