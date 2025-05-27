@@ -15,7 +15,8 @@
     "test:cli": "scripts/test-cli.sh",
     "test:cli:skip": "scripts/test-cli.sh --skip",
     "clean": "turbo run clean && rm -rf node_modules/.cache",
-    "reset": "rm -rf node_modules packages/*/node_modules packages/*/dist && pnpm install"
+    "reset": "rm -rf node_modules packages/*/node_modules packages/*/dist && pnpm install",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,md}\""
   },
   "devDependencies": {
     "eslint-config-custom": "workspace:",

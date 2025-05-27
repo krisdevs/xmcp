@@ -7,8 +7,6 @@ export const schema = {
   b: z.number().describe("Second number to add"),
 };
 
-
-
 // Define tool metadata
 export const metadata = {
   name: "add",

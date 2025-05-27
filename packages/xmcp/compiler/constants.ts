@@ -1,9 +1,9 @@
-import path from "path"
-import { fileURLToPath } from "url"
+import path from "path";
+import { fileURLToPath } from "url";
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-export const srcPath = path.join(__dirname, "..", "src")
-export const outputPath = path.join(__dirname, "..", "dist")
-export const runtimeOutputPath = path.join(__dirname, "..", "dist", "runtime")
+export const srcPath = path.join(__dirname, "..", "src");
+export const outputPath = path.join(__dirname, "..", "dist");
+export const runtimeOutputPath = path.join(__dirname, "..", "dist", "runtime");

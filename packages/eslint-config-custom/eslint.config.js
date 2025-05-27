@@ -1,10 +1,10 @@
-const { defineConfig } = require("eslint/config")
+const { defineConfig } = require("eslint/config");
 
-const typescriptPlugin = require("@typescript-eslint/eslint-plugin")
-const prettierPlugin = require("eslint-plugin-prettier")
-const simpleImportSortPlugin = require("eslint-plugin-simple-import-sort")
-const reactHooksPlugin = require("eslint-plugin-react-hooks")
-const typescriptParser = require("@typescript-eslint/parser")
+const typescriptPlugin = require("@typescript-eslint/eslint-plugin");
+const prettierPlugin = require("eslint-plugin-prettier");
+const simpleImportSortPlugin = require("eslint-plugin-simple-import-sort");
+const reactHooksPlugin = require("eslint-plugin-react-hooks");
+const typescriptParser = require("@typescript-eslint/parser");
 
 module.exports = defineConfig([
   {
@@ -13,10 +13,10 @@ module.exports = defineConfig([
       "@typescript-eslint": typescriptPlugin,
       prettier: prettierPlugin,
       "simple-import-sort": simpleImportSortPlugin,
-      "react-hooks": reactHooksPlugin
+      "react-hooks": reactHooksPlugin,
     },
     languageOptions: {
-      parser: typescriptParser
+      parser: typescriptParser,
     },
     rules: {
       semi: "off",
@@ -27,7 +27,7 @@ module.exports = defineConfig([
 
       "prettier/prettier": "error",
       "simple-import-sort/imports": "error",
-      "simple-import-sort/exports": "error"
-    }
-  }
-])
+      "simple-import-sort/exports": "error",
+    },
+  },
+]);

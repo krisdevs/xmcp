@@ -19,7 +19,7 @@ pnpm create xmcp-app my-app
 - `--use-npm`: Use npm as package manager (default)
 - `--use-yarn`: Use yarn as package manager
 - `--use-pnpm`: Use pnpm as package manager
-- `--local`: Use the local next-mcp package instead of downloading from npm (for development) 
+- `--local`: Use the local next-mcp package instead of downloading from npm (for development)
 
 ## Commands
 
