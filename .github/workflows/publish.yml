@@ -84,7 +84,7 @@ jobs:
         run: |
           cd packages/xmcp
           echo "Publishing xmcp package..."
-          npm publish --access public --provenance
+          npm publish --access public
           echo "✅ Successfully published xmcp@${{ steps.version.outputs.version }}"
 
       - name: Publish create-xmcp-app package
@@ -93,7 +93,7 @@ jobs:
         run: |
           cd packages/create-xmcp-app
           echo "Publishing create-xmcp-app package..."
-          npm publish --access public --provenance
+          npm publish --access public
           echo "✅ Successfully published create-xmcp-app@${{ steps.version.outputs.version }}"
 
       - name: Create publish summary
