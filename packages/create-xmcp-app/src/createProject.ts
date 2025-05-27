@@ -14,25 +14,6 @@ interface CreateProjectOptions {
 }
 
 /**
- * Get the current xmcp package version
- */
-function getXmcpVersion(): string {
-  try {
-    const xmcpPackageJsonPath = path.resolve(
-      __dirname,
-      "../../../packages/xmcp/package.json"
-    );
-    const xmcpPackageJson = JSON.parse(
-      fs.readFileSync(xmcpPackageJsonPath, "utf8")
-    );
-    return `^${xmcpPackageJson.version}`;
-  } catch (error) {
-    console.warn("Could not read xmcp package version, falling back to latest");
-    return "latest";
-  }
-}
-
-/**
  * Create a new XMCP project
  */
 export async function createProject(
@@ -73,8 +54,8 @@ export async function createProject(
     const xmcpPath = path.resolve(__dirname, "../../../packages/xmcp");
     packageJson.dependencies["xmcp"] = `file:${xmcpPath}`;
   } else {
-    // Use the actual version from the xmcp package.json
-    packageJson.dependencies["xmcp"] = getXmcpVersion();
+    // Replace workspace:* with the latest npm version for non-local development
+    packageJson.dependencies["xmcp"] = "latest";
   }
 
   await fs.writeJson(packageJsonPath, packageJson, { spaces: 2 });
