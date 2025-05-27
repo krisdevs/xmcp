@@ -24,8 +24,8 @@ importers:
         specifier: ^1.11.4
         version: 1.11.4
       xmcp:
-        specifier: workspace:*
-        version: link:../../packages/xmcp
+        specifier: ^0.0.2
+        version: 0.0.2(@types/node@22.15.18)(typescript@5.8.3)
       zod:
         specifier: ^3.24.4
         version: 3.24.4
@@ -42,7 +42,7 @@ importers:
         specifier: ^5.0.4
         version: 5.8.3
       xmcp:
-        specifier: 0.0.2
+        specifier: ^0.0.2
         version: 0.0.2(@types/node@22.15.18)(typescript@5.8.3)
       zod:
         specifier: ^3.24.4
@@ -58,8 +58,8 @@ importers:
         specifier: ^1.11.4
         version: 1.11.4
       xmcp:
-        specifier: workspace:*
-        version: link:../../packages/xmcp
+        specifier: ^0.0.2
+        version: 0.0.2(@types/node@22.15.18)(typescript@5.8.3)
       zod:
         specifier: ^3.24.4
         version: 3.24.4
