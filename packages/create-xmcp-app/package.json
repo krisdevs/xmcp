@@ -1,6 +1,6 @@
 {
   "name": "create-xmcp-app",
-  "version": "0.0.4",
+  "version": "0.0.3",
   "description": "Create XMCP apps with one command",
   "main": "index.js",
   "bin": {
