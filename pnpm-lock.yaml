@@ -42,30 +42,8 @@ importers:
         specifier: ^5.0.4
         version: 5.8.3
       xmcp:
-        specifier: workspace:*
-        version: link:../../packages/xmcp
-      zod:
-        specifier: ^3.24.4
-        version: 3.24.4
-    devDependencies:
-      swc-loader:
-        specifier: ^0.2.6
-        version: 0.2.6(@swc/core@1.11.24)(webpack@5.99.8(@swc/core@1.11.24))
-
-  examples/test:
-    dependencies:
-      '@modelcontextprotocol/sdk':
-        specifier: ^1.11.4
-        version: 1.11.4
-      ts-loader:
-        specifier: ^9.4.2
-        version: 9.5.2(typescript@5.8.3)(webpack@5.99.8(@swc/core@1.11.24))
-      typescript:
-        specifier: ^5.0.4
-        version: 5.8.3
-      xmcp:
-        specifier: file:/Users/valentinabearzotti/Documents/Repositories/xmcp/packages/xmcp
-        version: link:../../packages/xmcp
+        specifier: 0.0.2
+        version: 0.0.2(@types/node@22.15.18)(typescript@5.8.3)
       zod:
         specifier: ^3.24.4
         version: 3.24.4
@@ -2991,6 +2969,10 @@ packages:
       utf-8-validate:
         optional: true
 
+  xmcp@0.0.2:
+    resolution: {integrity: sha512-d/jGchyxGZLRYwVhKoCkIY1a0I25jIvy/YhMSD4IHb9cFaEVPaLmN/7MFVzx8EaueUSXx8M7Ce7fRU9OMKMYYA==}
+    hasBin: true
+
   y18n@5.0.8:
     resolution: {integrity: sha512-0pfFzegeDWJHJIAmTLRP2DwHjdF5s7jo9tuztdQxAhINCdvS+3nGINqPd00AphqJR/0LhANUS6/+7SCb98YOfA==}
     engines: {node: '>=10'}
@@ -5816,6 +5798,44 @@ snapshots:
   wrappy@1.0.2: {}
 
   ws@8.18.2: {}
+
+  xmcp@0.0.2(@types/node@22.15.18)(typescript@5.8.3):
+    dependencies:
+      '@modelcontextprotocol/inspector': 0.12.0(@swc/core@1.11.24)(@types/node@22.15.18)(typescript@5.8.3)
+      '@modelcontextprotocol/sdk': 1.11.4
+      '@swc/core': 1.11.24
+      '@types/express': 5.0.2
+      '@types/webpack-node-externals': 3.0.4(@swc/core@1.11.24)
+      chalk: 5.4.1
+      chokidar: 3.6.0
+      clean-webpack-plugin: 4.0.0(webpack@5.99.8(@swc/core@1.11.24))
+      commander: 10.0.1
+      cross-env: 7.0.3
+      del: 7.1.0
+      eslint-config-custom: link:packages/eslint-config-custom
+      express: 4.21.2
+      fork-ts-checker-webpack-plugin: 8.0.0(typescript@5.8.3)(webpack@5.99.8(@swc/core@1.11.24))
+      fs-extra: 11.3.0
+      glob: 11.0.2
+      handlebars: 4.7.8
+      tsx: 4.19.4
+      webpack: 5.99.8(@swc/core@1.11.24)
+      webpack-node-externals: 3.0.0
+      webpack-virtual-modules: 0.5.0
+    transitivePeerDependencies:
+      - '@swc/helpers'
+      - '@swc/wasm'
+      - '@types/node'
+      - '@types/react'
+      - '@types/react-dom'
+      - bufferutil
+      - esbuild
+      - supports-color
+      - tailwindcss
+      - typescript
+      - uglify-js
+      - utf-8-validate
+      - webpack-cli
 
   y18n@5.0.8: {}
 
