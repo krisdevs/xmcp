@@ -102,20 +102,7 @@ program
         packageManager = pmAnswers.packageManager;
       }
 
-      // Prompt for local flag if not specified via command-line
-      const localAnswers = await inquirer.prompt([
-        {
-          type: "list",
-          name: "useLocalXmcp",
-          message: "Use local xmcp package (for development)?",
-          choices: [
-            { name: "Yes", value: true },
-            { name: "No", value: false },
-          ],
-          default: true,
-        },
-      ]);
-      useLocalXmcp = localAnswers.useLocalXmcp;
+      useLocalXmcp = options.local;
 
       console.log();
       console.log(
