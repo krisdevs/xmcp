@@ -100,6 +100,12 @@ function getConfig() {
         RUNTIME_STDIO: JSON.stringify(stdioContent),
         RUNTIME_SSE: JSON.stringify(sseContent),
       }),
+      // add shebang to CLI output
+      new webpack.BannerPlugin({
+        banner: "#!/usr/bin/env node",
+        raw: true,
+        include: /^cli\.js$/,
+      }),
     ],
     watch: mode === "development",
   };
