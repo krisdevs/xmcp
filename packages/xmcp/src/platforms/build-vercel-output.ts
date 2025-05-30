@@ -51,8 +51,13 @@ async function buildVercelOutput() {
   fs.mkdirSync(outputDir, { recursive: true });
   fs.mkdirSync(functionsDir, { recursive: true });
 
-  const sourceFile = path.join(rootDir, "dist", "sse.js");
+  const distDir = path.join(rootDir, "dist");
+  const sourceFile = path.join(distDir, "sse.js");
   const targetFile = path.join(functionsDir, "index.js");
+
+  if (!fs.existsSync(distDir)) {
+    throw new Error("❌ Dist directory not found. Run build first.");
+  }
 
   if (fs.existsSync(sourceFile)) {
     fs.copyFileSync(sourceFile, targetFile);
@@ -61,6 +66,25 @@ async function buildVercelOutput() {
     throw new Error(
       "❌ Source sse.js file not found in dist/. Run build first."
     );
+  }
+
+  // copy all other files from dist directory that sse.js might depend on
+  const distContents = fs.readdirSync(distDir);
+
+  for (const item of distContents) {
+    const sourcePath = path.join(distDir, item);
+    const targetPath = path.join(functionsDir, item);
+
+    if (item === "sse.js" || item === "stdio.js") continue;
+
+    const stat = fs.statSync(sourcePath);
+    if (stat.isFile()) {
+      fs.copyFileSync(sourcePath, targetPath);
+      console.log(`✅ Copied ${item} to function directory`);
+    } else if (stat.isDirectory()) {
+      fs.cpSync(sourcePath, targetPath, { recursive: true });
+      console.log(`✅ Copied directory ${item} to function directory`);
+    }
   }
 
   const packageJsonSource = path.join(rootDir, "package.json");
