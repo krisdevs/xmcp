@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 import { Command } from "commander";
 import { compile } from "./index";
+import { buildVercelOutput } from "../compiler/build-vercel-output";
 import chalk from "chalk";
-import { buildVercel } from "../scripts/build-vercel";
 
 const program = new Command();
 
@@ -29,10 +29,20 @@ program
 program
   .command("build:vercel")
   .description("Build for Vercel")
-  .action(() => {
+  .action(async () => {
     console.log(`${xmcpLogo} Building for Vercel...`);
-    compile({ mode: "production" });
-    buildVercel();
+    await compile({ mode: "production" });
+
+    console.log(`${xmcpLogo} Creating Vercel output structure...`);
+    try {
+      await buildVercelOutput();
+    } catch (error) {
+      console.error(
+        chalk.red("❌ Failed to create Vercel output structure:"),
+        error
+      );
+      process.exit(1);
+    }
   });
 
 program.parse();
