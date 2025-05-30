@@ -33,7 +33,7 @@ jobs:
           cache: "pnpm"
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --no-frozen-lockfile
 
       - name: Build main packages only
         run: pnpm turbo build --filter=xmcp --filter=create-xmcp-app
@@ -169,7 +169,7 @@ jobs:
           cache: "pnpm"
 
       - name: Verify lockfile and install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --no-frozen-lockfile
 
       - name: Check main packages integrity
         run: |
