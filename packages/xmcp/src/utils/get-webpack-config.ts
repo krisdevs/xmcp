@@ -32,6 +32,7 @@ export function getWebpackConfig(
       alias: {
         "node:process": "process",
       },
+      extensions: [".tsx", ".ts", ".jsx", ".js", ".json"],
     },
     plugins: [new InjectRuntimePlugin()],
     module: {
