@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { Command } from "commander";
 import { compile } from "./index";
-import { buildVercelOutput } from "../compiler/build-vercel-output";
+import { buildVercelOutput } from "./platforms/build-vercel-output";
 import chalk from "chalk";
 
 const program = new Command();
