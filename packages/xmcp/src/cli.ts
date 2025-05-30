@@ -2,6 +2,7 @@
 import { Command } from "commander";
 import { compile } from "./index";
 import chalk from "chalk";
+import { buildVercel } from "../scripts/build-vercel";
 
 const program = new Command();
 
@@ -23,6 +24,15 @@ program
   .action(() => {
     console.log(`${xmcpLogo} Building for production...`);
     compile({ mode: "production" });
+  });
+
+program
+  .command("build:vercel")
+  .description("Build for Vercel")
+  .action(() => {
+    console.log(`${xmcpLogo} Building for Vercel...`);
+    compile({ mode: "production" });
+    buildVercel();
   });
 
 program.parse();

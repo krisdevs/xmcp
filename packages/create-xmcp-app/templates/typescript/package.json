@@ -1,9 +1,10 @@
 {
-  "name": "my-xmcp-app",
+  "name": "structure",
   "version": "0.1.0",
-  "description": "An XMCP application",
+  "description": "An XMCP application with tool syntax",
   "scripts": {
     "build": "xmcp build",
+    "build:vercel": "xmcp build:vercel",
     "dev": "xmcp dev",
     "start-sse": "node dist/sse.js",
     "start-stdio": "node dist/stdio.js"
@@ -12,7 +13,7 @@
     "@modelcontextprotocol/sdk": "^1.11.4",
     "ts-loader": "^9.4.2",
     "typescript": "^5.0.4",
-    "xmcp": "^0.0.4",
+    "xmcp": "latest",
     "zod": "^3.24.4"
   },
   "devDependencies": {
