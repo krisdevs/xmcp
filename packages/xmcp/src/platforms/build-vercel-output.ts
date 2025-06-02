@@ -17,32 +17,32 @@ function detectPackageManager(): {
     return {
       manager: "pnpm",
       lockFile: "pnpm-lock.yaml",
-      installCmd: "pnpm install --prod",
+      installCmd: "pnpm install",
     };
   } else if (fs.existsSync(npmLock)) {
     return {
       manager: "npm",
       lockFile: "package-lock.json",
-      installCmd: "npm ci --omit=dev",
+      installCmd: "npm install",
     };
   } else if (fs.existsSync(yarnLock)) {
     return {
       manager: "yarn",
       lockFile: "yarn.lock",
-      installCmd: "yarn install --production --frozen-lockfile",
+      installCmd: "yarn install",
     };
   } else {
     return {
       manager: "npm",
       lockFile: "",
-      installCmd: "npm install --omit=dev",
+      installCmd: "npm install",
     };
   }
 }
 
 async function buildVercelOutput() {
   const outputDir = path.join(rootDir, ".vercel", "output");
-  const functionsDir = path.join(outputDir, "functions", "index.func");
+  const functionsDir = path.join(outputDir, "functions", "api", "index.func");
   const packageManager = detectPackageManager();
 
   console.log("🚀 Building Vercel output structure...");
@@ -61,16 +61,16 @@ async function buildVercelOutput() {
 
   if (fs.existsSync(sourceFile)) {
     fs.copyFileSync(sourceFile, targetFile);
-    console.log("✅ Copied sse.js to function directory as index.js");
   } else {
     throw new Error(
-      "❌ Source sse.js file not found in dist/. Run build first."
+      "❌ Application server file not found in dist/. Run build first."
     );
   }
 
   // copy all other files from dist directory that sse.js might depend on
   const distContents = fs.readdirSync(distDir);
 
+  // to do add proper error handling for failed copy
   for (const item of distContents) {
     const sourcePath = path.join(distDir, item);
     const targetPath = path.join(functionsDir, item);
@@ -80,37 +80,16 @@ async function buildVercelOutput() {
     const stat = fs.statSync(sourcePath);
     if (stat.isFile()) {
       fs.copyFileSync(sourcePath, targetPath);
-      console.log(`✅ Copied ${item} to function directory`);
     } else if (stat.isDirectory()) {
       fs.cpSync(sourcePath, targetPath, { recursive: true });
-      console.log(`✅ Copied directory ${item} to function directory`);
     }
   }
 
   const packageJsonSource = path.join(rootDir, "package.json");
   const packageJsonTarget = path.join(functionsDir, "package.json");
   fs.copyFileSync(packageJsonSource, packageJsonTarget);
-  console.log("✅ Copied package.json to function directory");
 
-  if (packageManager.lockFile) {
-    const lockFileSource = path.join(rootDir, packageManager.lockFile);
-    const lockFileTarget = path.join(functionsDir, packageManager.lockFile);
-    if (fs.existsSync(lockFileSource)) {
-      fs.copyFileSync(lockFileSource, lockFileTarget);
-      console.log(`✅ Copied ${packageManager.lockFile} to function directory`);
-    }
-  }
-
-  console.log("📦 Installing production dependencies...");
-  try {
-    execSync(packageManager.installCmd, {
-      cwd: functionsDir,
-      stdio: "inherit",
-    });
-  } catch (error) {
-    console.error("❌ Failed to install dependencies:", error);
-    throw error;
-  }
+  console.log("Server and dependency files copied to function directory");
 
   const vcConfig = {
     handler: "index.js",
@@ -123,14 +102,13 @@ async function buildVercelOutput() {
     path.join(functionsDir, ".vc-config.json"),
     JSON.stringify(vcConfig, null, 2)
   );
-  console.log("✅ Created .vc-config.json");
 
   const config = {
     version: 3,
     routes: [
       {
         src: "^/(.*)$",
-        dest: "/index.js",
+        dest: "/api",
       },
       {
         handle: "filesystem",
@@ -142,10 +120,21 @@ async function buildVercelOutput() {
     path.join(outputDir, "config.json"),
     JSON.stringify(config, null, 2)
   );
-  console.log("✅ Created config.json");
 
-  console.log("🎉 Vercel output structure created successfully!");
-  console.log(`📁 Output directory: ${outputDir}`);
+  // Install dependencies last, after all files and configs are in place
+  console.log("📦 Installing production dependencies...");
+  try {
+    execSync(packageManager.installCmd, {
+      cwd: functionsDir,
+      stdio: "inherit",
+    });
+    console.log("✅ Dependencies installed");
+  } catch (error) {
+    console.error("❌ Failed to install dependencies:", error);
+    throw error;
+  }
+
+  console.log("✅ Vercel output structure created successfully");
 }
 
 export { buildVercelOutput };
