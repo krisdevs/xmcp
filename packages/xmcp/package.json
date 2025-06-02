@@ -13,8 +13,7 @@
   ],
   "scripts": {
     "dev": "cross-env NODE_ENV=development tsx --watch --tsconfig ./compiler.tsconfig.json ./compiler/index.ts && tsc --emitDeclarationOnly --watch",
-    "build": "cross-env NODE_ENV=production tsx --tsconfig ./compiler.tsconfig.json ./compiler/index.ts && tsc --emitDeclarationOnly",
-    "build:vercel": "cross-env NODE_ENV=production tsx --tsconfig ./compiler.tsconfig.json ./compiler/index.ts && tsc --emitDeclarationOnly && tsx scripts/build-vercel.ts"
+    "build": "cross-env NODE_ENV=production tsx --tsconfig ./compiler.tsconfig.json ./compiler/index.ts && tsc --emitDeclarationOnly"
   },
   "dependencies": {
     "@modelcontextprotocol/inspector": "^0.12.0",
