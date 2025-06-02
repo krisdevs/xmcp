@@ -128,7 +128,7 @@ async function buildVercelOutput() {
     routes: [
       {
         src: "^/(.*)$",
-        dest: "/index.js",
+        dest: "/api",
       },
       {
         handle: "filesystem",
