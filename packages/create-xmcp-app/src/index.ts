@@ -28,7 +28,9 @@ const program = new Command()
     "-v, --version",
     "Output the current version of create-xmcp-app."
   )
-  .argument("[project-directory]", "Directory to create the app in")
+  .argument("[directory]")
+  .usage("[directory] [options]")
+  .helpOption("-h, --help", "Display help message.")
   .option("-y, --yes", "Skip confirmation prompt", false)
   .option("--use-npm", "Use npm as package manager (default: use npm)")
   .option("--use-yarn", "Use yarn as package manager")
