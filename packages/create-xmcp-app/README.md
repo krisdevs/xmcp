@@ -20,6 +20,7 @@ pnpm create xmcp-app my-app
 - `--use-yarn`: Use yarn as package manager
 - `--use-pnpm`: Use pnpm as package manager
 - `--local`: Use the local next-mcp package instead of downloading from npm (for development)
+- `--vercel`: Add Vercel postbuild script for deployment
 
 ## Commands
 
@@ -40,5 +41,3 @@ npm run start
 
 - Build the package: `pnpm build`
 - Link it for usage: `pnpm link --global`
-
-* You may need to grant permissions.

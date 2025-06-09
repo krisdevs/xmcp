@@ -7,7 +7,11 @@ import { Command } from "commander";
 import inquirer from "inquirer";
 import ora from "ora";
 import { fileURLToPath } from "url";
-import { createProject } from "./createProject.js";
+import { checkNodeVersion } from "./utils/check-node.js";
+import { createProject } from "./helpers/create.js";
+import { isFolderEmpty } from "./utils/is-folder-empty.js";
+
+checkNodeVersion();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -16,20 +20,26 @@ const packageJson = JSON.parse(
   fs.readFileSync(path.join(__dirname, "../package.json"), "utf8")
 );
 
-const program = new Command();
-
-program
+const program = new Command()
   .name("create-xmcp-app")
-  .version(packageJson.version)
   .description("Create a new XMCP application")
-  .argument("[project-directory]", "Directory to create the app in")
+  .version(
+    packageJson.version,
+    "-v, --version",
+    "Output the current version of create-xmcp-app."
+  )
+  .argument("[directory]")
+  .usage("[directory] [options]")
+  .helpOption("-h, --help", "Display help message.")
   .option("-y, --yes", "Skip confirmation prompt", false)
   .option("--use-npm", "Use npm as package manager (default: use npm)")
   .option("--use-yarn", "Use yarn as package manager")
   .option("--use-pnpm", "Use pnpm as package manager")
+  .option("--skip-install", "Skip installing dependencies", false)
   .option("--local", "Use local xmcp package (for development)", false)
+  .option("--vercel", "Add Vercel postbuild script for deployment", false)
   .action(async (projectDir, options) => {
-    console.log(chalk.bold(`\ncreate-xmcp-app v${packageJson.version}!`));
+    console.log(chalk.bold(`\ncreate-xmcp-app@${packageJson.version}`));
 
     // If project directory wasn't specified, ask for it
     if (!projectDir) {
@@ -59,27 +69,18 @@ program
       }
 
       // Check if directory is empty
-      const files = fs.readdirSync(resolvedProjectPath);
-      if (files.length > 0) {
-        if (!options.yes) {
-          const { proceed } = await inquirer.prompt([
-            {
-              type: "confirm",
-              name: "proceed",
-              message: `The directory ${chalk.cyan(projectName)} is not empty. Continue anyway?`,
-              default: false,
-            },
-          ]);
-          if (!proceed) {
-            console.log(chalk.yellow("Aborting installation."));
-            process.exit(0);
-          }
-        }
+      if (!isFolderEmpty(resolvedProjectPath, projectName)) {
+        console.error(
+          chalk.red(`The directory ${resolvedProjectPath} is not empty.`)
+        );
+        process.exit(1);
       }
     }
 
     let packageManager = "npm";
     let useLocalXmcp = options.local;
+    let deployToVercel = options.vercel;
+    let skipInstall = options.skipInstall;
 
     if (!options.yes) {
       if (options.useYarn) packageManager = "yarn";
@@ -102,7 +103,17 @@ program
         packageManager = pmAnswers.packageManager;
       }
 
-      useLocalXmcp = options.local;
+      if (!options.vercel) {
+        const vercelAnswers = await inquirer.prompt([
+          {
+            type: "confirm",
+            name: "deployToVercel",
+            message: "Add Vercel deployment support?",
+            default: true,
+          },
+        ]);
+        deployToVercel = vercelAnswers.deployToVercel;
+      }
 
       console.log();
       console.log(
@@ -111,9 +122,11 @@ program
       console.log();
       console.log("Options:");
       console.log(`  - ${chalk.cyan("Package Manager")}: ${packageManager}`);
-      console.log(`  - ${chalk.cyan("Language")}: TypeScript`);
+      if (useLocalXmcp) {
+        console.log(`  - ${chalk.cyan("Use Local XMCP")}: Yes`);
+      }
       console.log(
-        `  - ${chalk.cyan("Use Local XMCP")}: ${useLocalXmcp ? "Yes" : "No"}`
+        `  - ${chalk.cyan("Vercel deploy")}: ${deployToVercel ? "Yes" : "No"}`
       );
       console.log();
 
@@ -138,24 +151,32 @@ program
 
     const spinner = ora("Creating your XMCP app...").start();
     try {
-      await createProject({
+      createProject({
         projectPath: resolvedProjectPath,
         projectName,
         packageManager,
         useLocalXmcp,
+        deployToVercel,
+        skipInstall,
       });
 
-      spinner.succeed(chalk.green("Your XMCP app is ready!"));
+      spinner.succeed(chalk.green("Your XMCP app is ready"));
 
       console.log();
       console.log("Next steps:");
-      console.log(`  cd ${chalk.cyan(projectDir)}`);
+
+      if (resolvedProjectPath !== process.cwd()) {
+        console.log(`  cd ${chalk.cyan(projectDir)}`);
+      }
 
       if (packageManager === "yarn") {
+        skipInstall && console.log(`  ${chalk.cyan("yarn install")}`);
         console.log(`  ${chalk.cyan("yarn dev")}`);
       } else if (packageManager === "pnpm") {
+        skipInstall && console.log(`  ${chalk.cyan("pnpm install")}`);
         console.log(`  ${chalk.cyan("pnpm dev")}`);
       } else {
+        skipInstall && console.log(`  ${chalk.cyan("npm install")}`);
         console.log(`  ${chalk.cyan("npm run dev")}`);
       }
 

@@ -1,6 +1,6 @@
 {
   "name": "xmcp-monorepo",
-  "description": "Brom the basement, to all AIs",
+  "description": "From the basement.",
   "scripts": {
     "xmcp": "turbo run dev --filter=xmcp",
     "build": "turbo run build --filter=xmcp --filter=create-xmcp-app",
