@@ -209,4 +209,12 @@ your-project/
 - Supports both `stdio` and `sse` transports
 - Full compatibility with MCP clients and AI models
 
+## Vercel Deployment
+
+XMCP can be deployed to Vercel with the `--vercel` flag. This will create `.vercel` directory with the built output.
+
+```bash
+xmcp build --vercel
+```
+
 From the basement.
