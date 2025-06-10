@@ -15,7 +15,8 @@ export function copyTemplate(templateDir: string, projectPath: string): void {
         basename !== "node_modules" &&
         basename !== "package-lock.json" &&
         basename !== "yarn.lock" &&
-        basename !== "pnpm-lock.yaml"
+        basename !== "pnpm-lock.yaml" &&
+        basename !== "vercel.json"
       );
     },
   });
