@@ -27,6 +27,7 @@ const config: Configuration = {
   entry: {
     stdio: path.join(srcPath, "runtime", "stdio.ts"),
     sse: path.join(srcPath, "runtime", "sse.ts"),
+    "streamable-http": path.join(srcPath, "runtime", "streamable-http.ts"),
   },
   mode: "production",
   devtool: false,

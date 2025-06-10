@@ -7,6 +7,8 @@ import { CompilerMode } from "..";
 import {
   DEFAULT_SSE_BODY_SIZE_LIMIT,
   DEFAULT_SSE_PORT,
+  DEFAULT_STREAMABLE_HTTP_PORT,
+  DEFAULT_STREAMABLE_HTTP_BODY_SIZE_LIMIT,
   XmcpConfig,
 } from "./parse-config";
 
@@ -76,6 +78,29 @@ export function getWebpackConfig(
       definedVariables.SSE_BODY_SIZE_LIMIT = DEFAULT_SSE_BODY_SIZE_LIMIT;
     }
   }
+  if (xmcpConfig["streamable-http"]) {
+    // setup entry point
+    entry["streamable-http"] = path.join(
+      runtimeFolderPath,
+      "streamable-http.js"
+    );
+    // define variables
+    definedVariables.STREAMABLE_HTTP_DEBUG = mode === "development";
+    if (typeof xmcpConfig["streamable-http"] === "object") {
+      definedVariables.STREAMABLE_HTTP_PORT =
+        xmcpConfig["streamable-http"].port;
+      definedVariables.STREAMABLE_HTTP_BODY_SIZE_LIMIT =
+        xmcpConfig["streamable-http"].bodySizeLimit;
+      definedVariables.STREAMABLE_HTTP_ENDPOINT =
+        xmcpConfig["streamable-http"].endpoint;
+    } else {
+      // streamableHttp config is boolean
+      definedVariables.STREAMABLE_HTTP_PORT = DEFAULT_STREAMABLE_HTTP_PORT;
+      definedVariables.STREAMABLE_HTTP_BODY_SIZE_LIMIT =
+        DEFAULT_STREAMABLE_HTTP_BODY_SIZE_LIMIT;
+      definedVariables.STREAMABLE_HTTP_ENDPOINT = "/mcp";
+    }
+  }
   config.entry = entry;
 
   // add injected variables to config
@@ -102,6 +127,11 @@ class InjectRuntimePlugin {
         );
         // @ts-expect-error: injected by compiler
         fs.writeFileSync(path.join(runtimeFolderPath, "sse.js"), RUNTIME_SSE);
+        fs.writeFileSync(
+          path.join(runtimeFolderPath, "streamable-http.js"),
+          // @ts-expect-error: injected by compiler
+          RUNTIME_STREAMABLE_HTTP
+        );
       }
     );
   }

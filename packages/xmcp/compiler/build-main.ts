@@ -32,9 +32,11 @@ function getConfig() {
 
   const stdioPath = path.join(runtimeOutputPath, "stdio.js");
   const ssePath = path.join(runtimeOutputPath, "sse.js");
+  const streamableHttpPath = path.join(runtimeOutputPath, "streamable-http.js");
 
   const stdioContent = fs.readFileSync(stdioPath, "utf-8");
   const sseContent = fs.readFileSync(ssePath, "utf-8");
+  const streamableHttpContent = fs.readFileSync(streamableHttpPath, "utf-8");
 
   const config: Configuration = {
     entry: {
@@ -99,6 +101,7 @@ function getConfig() {
       new webpack.DefinePlugin({
         RUNTIME_STDIO: JSON.stringify(stdioContent),
         RUNTIME_SSE: JSON.stringify(sseContent),
+        RUNTIME_STREAMABLE_HTTP: JSON.stringify(streamableHttpContent),
       }),
       // add shebang to CLI output
       new webpack.BannerPlugin({

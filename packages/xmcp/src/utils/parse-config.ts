@@ -5,6 +5,9 @@ import { z } from "zod";
 export const DEFAULT_SSE_PORT = 3001;
 export const DEFAULT_SSE_BODY_SIZE_LIMIT = 1024 * 1024 * 10; // 10MB
 
+export const DEFAULT_STREAMABLE_HTTP_PORT = 3002;
+export const DEFAULT_STREAMABLE_HTTP_BODY_SIZE_LIMIT = 1024 * 1024 * 10; // 10MB
+
 const configSchema = z.object({
   sse: z
     .union([
@@ -16,6 +19,19 @@ const configSchema = z.object({
     ])
     .optional(),
   stdio: z.boolean().optional(),
+  "streamable-http": z
+    .union([
+      z.boolean(),
+      z.object({
+        port: z.number().default(DEFAULT_STREAMABLE_HTTP_PORT),
+        bodySizeLimit: z
+          .number()
+          .default(DEFAULT_STREAMABLE_HTTP_BODY_SIZE_LIMIT),
+        debug: z.boolean().default(false),
+        endpoint: z.string().default("/mcp"),
+      }),
+    ])
+    .optional(),
   webpack: z.function().args(z.any()).returns(z.any()).optional(),
 });
 
@@ -42,6 +58,7 @@ export function getConfig(configFilePath: string): XmcpConfig {
     return {
       sse: true,
       stdio: true,
+      "streamable-http": true,
     };
   }
   return validateConfig(JSON.parse(content));
