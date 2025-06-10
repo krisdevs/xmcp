@@ -15,11 +15,13 @@ export type CompilerMode = "development" | "production";
 
 export interface CompileOptions {
   mode: CompilerMode;
+  onBuild?: () => void;
   configFilePath?: string;
 }
 
-export async function compile({
+export function compile({
   mode,
+  onBuild,
   configFilePath = "xmcp.config.json",
 }: CompileOptions) {
   const startTime = Date.now();
@@ -86,6 +88,8 @@ export async function compile({
           const duration = endTime - startTime;
           console.log(`Compiled in ${chalk.bold.green(`${duration}ms`)}`);
           onFirstBuild(mode, xmpcConfig);
+          // user defined callback
+          onBuild?.();
         }
       });
     });
