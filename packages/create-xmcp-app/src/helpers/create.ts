@@ -53,7 +53,15 @@ export function createProject(options: ProjectOptions): void {
   renameFiles(projectPath);
 
   // Update package.json with project configuration
-  updatePackageJson(projectPath, projectName, useLocalXmcp, deployToVercel);
+  updatePackageJson(projectPath, projectName, useLocalXmcp);
+
+  // Add vercel.json if deployToVercel is true
+  if (deployToVercel) {
+    fs.copySync(
+      path.join(__dirname, "../../templates/typescript/vercel.json"),
+      path.join(projectPath, "vercel.json")
+    );
+  }
 
   // Create necessary project directories
   createProjectDirectories(projectPath);

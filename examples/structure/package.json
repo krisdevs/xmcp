@@ -2,8 +2,7 @@
   "name": "structure",
   "description": "A simple mcp server with tool syntax",
   "scripts": {
-    "build": "xmcp build",
-    "build:vercel": "xmcp build:vercel",
+    "build": "xmcp build --vercel",
     "dev": "xmcp dev",
     "start-sse": "node dist/sse.js",
     "start-stdio": "node dist/stdio.js"
