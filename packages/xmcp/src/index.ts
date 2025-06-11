@@ -125,7 +125,7 @@ function onFirstBuild(mode: CompilerMode, xmcpConfig: XmcpConfig) {
   if (xmcpConfig.stdio) {
     builtResults.push("- STDIO server");
   }
-  if (xmcpConfig["streamable-http"]) {
+  if (xmcpConfig.streamableHttp) {
     builtResults.push("- Streamable HTTP server");
   }
 

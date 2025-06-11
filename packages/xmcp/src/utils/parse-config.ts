@@ -7,6 +7,7 @@ export const DEFAULT_SSE_BODY_SIZE_LIMIT = 1024 * 1024 * 10; // 10MB
 
 export const DEFAULT_STREAMABLE_HTTP_PORT = 3002;
 export const DEFAULT_STREAMABLE_HTTP_BODY_SIZE_LIMIT = 1024 * 1024 * 10; // 10MB
+export const DEFAULT_STREAMABLE_HTTP_ENDPOINT = "/mcp";
 
 const configSchema = z.object({
   sse: z
@@ -19,7 +20,7 @@ const configSchema = z.object({
     ])
     .optional(),
   stdio: z.boolean().optional(),
-  "streamable-http": z
+  streamableHttp: z
     .union([
       z.boolean(),
       z.object({
@@ -28,7 +29,7 @@ const configSchema = z.object({
           .number()
           .default(DEFAULT_STREAMABLE_HTTP_BODY_SIZE_LIMIT),
         debug: z.boolean().default(false),
-        endpoint: z.string().default("/mcp"),
+        endpoint: z.string().default(DEFAULT_STREAMABLE_HTTP_ENDPOINT),
       }),
     ])
     .optional(),
@@ -58,7 +59,7 @@ export function getConfig(configFilePath: string): XmcpConfig {
     return {
       sse: true,
       stdio: true,
-      "streamable-http": true,
+      streamableHttp: true,
     };
   }
   return validateConfig(JSON.parse(content));

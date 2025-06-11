@@ -6,12 +6,14 @@ import { randomUUID } from "crypto";
 import getRawBody from "raw-body";
 import contentType from "content-type";
 
-// Constants - to do: fix injection of these values
-const port = 3001;
-const debug = true;
-const bodySizeLimit = "10mb";
-const endpoint = "/mcp";
-const MAXIMUM_MESSAGE_SIZE = "4mb";
+// @ts-expect-error: injected by compiler
+const port = STREAMABLE_HTTP_PORT as number;
+// @ts-expect-error: injected by compiler
+const debug = STREAMABLE_HTTP_DEBUG as boolean;
+// @ts-expect-error: injected by compiler
+const bodySizeLimit = STREAMABLE_HTTP_BODY_SIZE_LIMIT as string;
+// @ts-expect-error: injected by compiler
+const endpoint = STREAMABLE_HTTP_ENDPOINT as string;
 
 interface StreamableHttpTransportOptions {
   port?: number;
@@ -280,7 +282,7 @@ class StreamableHttpServerTransport {
 
         const parsedCt = contentType.parse(ct);
         const body = await getRawBody(req, {
-          limit: MAXIMUM_MESSAGE_SIZE,
+          limit: bodySizeLimit,
           encoding: parsedCt.parameters.charset ?? "utf-8",
         });
         rawMessage = JSON.parse(body.toString());
