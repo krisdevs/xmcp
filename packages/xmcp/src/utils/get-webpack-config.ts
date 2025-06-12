@@ -10,6 +10,7 @@ import {
   DEFAULT_STREAMABLE_HTTP_PORT,
   DEFAULT_STREAMABLE_HTTP_BODY_SIZE_LIMIT,
   DEFAULT_STREAMABLE_HTTP_ENDPOINT,
+  DEFAULT_STREAMABLE_HTTP_STATELESS,
   XmcpConfig,
 } from "./parse-config";
 
@@ -83,19 +84,25 @@ export function getWebpackConfig(
       );
     }
   }
-  if (xmcpConfig.streamableHttp) {
+  if (xmcpConfig["streamable-http"]) {
     // setup entry point
-    entry.streamableHttp = path.join(runtimeFolderPath, "streamable-http.js");
+    entry["streamable-http"] = path.join(
+      runtimeFolderPath,
+      "streamable-http.js"
+    );
     // define variables
     definedVariables.STREAMABLE_HTTP_DEBUG = mode === "development";
-    if (typeof xmcpConfig.streamableHttp === "object") {
-      definedVariables.STREAMABLE_HTTP_PORT = xmcpConfig.streamableHttp.port;
+    if (typeof xmcpConfig["streamable-http"] === "object") {
+      definedVariables.STREAMABLE_HTTP_PORT =
+        xmcpConfig["streamable-http"].port;
       definedVariables.STREAMABLE_HTTP_BODY_SIZE_LIMIT = JSON.stringify(
-        xmcpConfig.streamableHttp.bodySizeLimit
+        xmcpConfig["streamable-http"].bodySizeLimit
       );
       definedVariables.STREAMABLE_HTTP_ENDPOINT = JSON.stringify(
-        xmcpConfig.streamableHttp.endpoint
+        xmcpConfig["streamable-http"].endpoint
       );
+      definedVariables.STREAMABLE_HTTP_STATELESS =
+        xmcpConfig["streamable-http"].stateless;
     } else {
       // streamableHttp config is boolean
       definedVariables.STREAMABLE_HTTP_PORT = DEFAULT_STREAMABLE_HTTP_PORT;
@@ -105,6 +112,8 @@ export function getWebpackConfig(
       definedVariables.STREAMABLE_HTTP_ENDPOINT = JSON.stringify(
         DEFAULT_STREAMABLE_HTTP_ENDPOINT
       );
+      definedVariables.STREAMABLE_HTTP_STATELESS =
+        DEFAULT_STREAMABLE_HTTP_STATELESS;
     }
   }
   config.entry = entry;

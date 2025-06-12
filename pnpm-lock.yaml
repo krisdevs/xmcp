@@ -18,6 +18,18 @@ importers:
         specifier: ^2.5.3
         version: 2.5.3
 
+  examples/simple-server:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.11.4
+        version: 1.11.4
+      xmcp:
+        specifier: ^0.0.2
+        version: 0.0.2(typescript@5.8.3)
+      zod:
+        specifier: ^3.24.4
+        version: 3.24.4
+
   examples/structure:
     dependencies:
       '@modelcontextprotocol/sdk':
@@ -139,6 +151,9 @@ importers:
       commander:
         specifier: ^10.0.0
         version: 10.0.1
+      content-type:
+        specifier: ^1.0.5
+        version: 1.0.5
       cross-env:
         specifier: ^7.0.3
         version: 7.0.3
@@ -160,6 +175,9 @@ importers:
       handlebars:
         specifier: ^4.7.7
         version: 4.7.8
+      raw-body:
+        specifier: ^3.0.0
+        version: 3.0.0
       tsx:
         specifier: ^4.19.4
         version: 4.19.4
@@ -173,6 +191,9 @@ importers:
         specifier: ^0.5.0
         version: 0.5.0
     devDependencies:
+      '@types/content-type':
+        specifier: ^1.1.9
+        version: 1.1.9
       '@types/fs-extra':
         specifier: ^11.0.4
         version: 11.0.4
@@ -973,6 +994,9 @@ packages:
 
   '@types/connect@3.4.38':
     resolution: {integrity: sha512-K6uROf1LD88uDQqJCktA4yzL1YYAK6NgfsI0v/mTgyPKWsX1CnJ0XPSDhViejru1GcRkLWb8RlzFYJRqGUbaug==}
+
+  '@types/content-type@1.1.9':
+    resolution: {integrity: sha512-Hq9IMnfekuOCsEmYl4QX2HBrT+XsfXiupfrLLY8Dcf3Puf4BkBOxSbWYTITSOQAhJoYPBez+b4MJRpIYL65z8A==}
 
   '@types/eslint-scope@3.7.7':
     resolution: {integrity: sha512-MzMFlSLBqNF2gcHWO0G1vP/YQyfvrxZ0bF+u7mzUdZ1/xK4A4sru+nraZz5i3iEIk1l1uyicaDVTB4QbbEkAYg==}
@@ -3664,6 +3688,8 @@ snapshots:
     dependencies:
       '@types/node': 22.15.18
 
+  '@types/content-type@1.1.9': {}
+
   '@types/eslint-scope@3.7.7':
     dependencies:
       '@types/eslint': 9.6.1
@@ -5537,7 +5563,7 @@ snapshots:
 
   tapable@2.2.1: {}
 
-  terser-webpack-plugin@5.3.14(@swc/core@1.11.24)(webpack@5.99.8):
+  terser-webpack-plugin@5.3.14(@swc/core@1.11.24)(webpack@5.99.8(@swc/core@1.11.24)):
     dependencies:
       '@jridgewell/trace-mapping': 0.3.25
       jest-worker: 27.5.1
@@ -5746,7 +5772,7 @@ snapshots:
       neo-async: 2.6.2
       schema-utils: 4.3.2
       tapable: 2.2.1
-      terser-webpack-plugin: 5.3.14(@swc/core@1.11.24)(webpack@5.99.8)
+      terser-webpack-plugin: 5.3.14(@swc/core@1.11.24)(webpack@5.99.8(@swc/core@1.11.24))
       watchpack: 2.4.2
       webpack-sources: 3.2.3
     transitivePeerDependencies:
