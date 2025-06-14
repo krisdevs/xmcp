@@ -5,13 +5,14 @@
     "build": "xmcp build --vercel",
     "dev": "xmcp dev",
     "start-sse": "node dist/sse.js",
-    "start-stdio": "node dist/stdio.js"
+    "start-stdio": "node dist/stdio.js",
+    "start-streamable-http": "node dist/streamable-http.js"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.11.4",
     "ts-loader": "^9.4.2",
     "typescript": "^5.0.4",
-    "xmcp": "latest",
+    "xmcp": "workspace:*",
     "zod": "^3.24.4"
   },
   "devDependencies": {
