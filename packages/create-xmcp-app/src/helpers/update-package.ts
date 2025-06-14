@@ -6,13 +6,11 @@ import fs from "fs-extra";
  * @param projectPath - Project directory path
  * @param projectName - Name of the project
  * @param useLocalXmcp - Whether to use local xmcp dependency
- * @param deployToVercel - Whether to add Vercel deployment configuration
  */
 export function updatePackageJson(
   projectPath: string,
   projectName: string,
-  useLocalXmcp?: boolean,
-  deployToVercel?: boolean
+  useLocalXmcp?: boolean
 ): void {
   const packageJsonPath = path.join(projectPath, "package.json");
   const packageJson = fs.readJsonSync(packageJsonPath);
@@ -24,10 +22,6 @@ export function updatePackageJson(
     packageJson.dependencies["xmcp"] = `file:${xmcpPath}`;
   } else {
     packageJson.dependencies["xmcp"] = "latest";
-  }
-
-  if (deployToVercel) {
-    packageJson.scripts.postbuild = "xmcp build:vercel";
   }
 
   fs.writeJsonSync(packageJsonPath, packageJson, { spaces: 2 });
