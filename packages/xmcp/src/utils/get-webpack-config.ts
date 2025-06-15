@@ -116,6 +116,44 @@ export function getWebpackConfig(
         DEFAULT_STREAMABLE_HTTP_STATELESS;
     }
   }
+  /* if (xmcpConfig.auth) {
+    // setup entry point
+    //entry.auth = path.join(runtimeFolderPath, "auth.js");
+    definedVariables.AUTH_TYPE = // grab the type of auth
+      typeof xmcpConfig.auth === "object" && "jwt" in xmcpConfig.auth
+        ? "jwt"
+        : "apiKey";
+    // define variables
+    if (typeof xmcpConfig.auth === "object" && "jwt" in xmcpConfig.auth) {
+      // it has set up jwt auth
+      definedVariables.AUTH_JWT_SECRET = JSON.stringify(
+        xmcpConfig.auth.jwt.secret
+      );
+      definedVariables.AUTH_JWT_ALGORITHM = JSON.stringify(
+        xmcpConfig.auth.jwt.algorithm
+      );
+      definedVariables.AUTH_JWT_ISSUER_BASE_URL = JSON.stringify(
+        xmcpConfig.auth.jwt.issuerBaseUrl
+      );
+      definedVariables.AUTH_JWT_AUDIENCE = JSON.stringify(
+        xmcpConfig.auth.jwt.audience
+      );
+    } else if (
+      typeof xmcpConfig.auth === "object" &&
+      "apiKey" in xmcpConfig.auth
+    ) {
+      // it has set up api key auth
+      definedVariables.AUTH_API_KEY_SECRET = JSON.stringify(
+        xmcpConfig.auth.apiKey.secret
+      );
+      definedVariables.AUTH_API_KEY_HEADER_NAME = JSON.stringify(
+        xmcpConfig.auth.apiKey.headerName
+      );
+    } else {
+      // auth config is boolean
+      definedVariables.AUTH_TYPE = "none";
+    }
+  } */
   config.entry = entry;
 
   // add injected variables to config
