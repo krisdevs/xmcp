@@ -53,7 +53,11 @@ export function getWebpackConfig(
     // connects the user exports with our runtime
     INJECTED_TOOLS: [
       path.resolve(processFolder, ".xmcp/import-map.js"),
-      "default",
+      "tools",
+    ],
+    INJECTED_MIDDLEWARE: [
+      path.resolve(processFolder, ".xmcp/import-map.js"),
+      "middleware",
     ],
   };
 

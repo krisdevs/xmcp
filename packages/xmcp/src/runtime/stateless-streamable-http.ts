@@ -6,6 +6,13 @@ import express, {
   NextFunction,
   RequestHandler,
 } from "express";
+import express, {
+  Express,
+  Request,
+  Response,
+  NextFunction,
+  RequestHandler,
+} from "express";
 import http, { IncomingMessage, ServerResponse } from "http";
 import { randomUUID } from "crypto";
 import getRawBody from "raw-body";
@@ -280,6 +287,8 @@ export class StatelessStreamableHTTPTransport {
     this.authMiddleware = authMiddleware;
 
     this.setupMiddleware(options.bodySizeLimit || "10mb");
+    this.middleware = middleware;
+
     this.setupRoutes();
   }
 
