@@ -331,6 +331,7 @@ export class StatelessStreamableHTTPTransport {
                 <p>MCP Endpoint: <a href="${this.endpoint}">${this.endpoint}</a></p>
                 <p>Transport: Streamable HTTP</p>
                 <p>Mode: Stateless (POST only, per-request isolation)</p>
+                <p>Auth: ${this.authMiddleware ? "enabled" : "disabled"}</p>
               </body>
             </html>
           `);
@@ -340,6 +341,16 @@ export class StatelessStreamableHTTPTransport {
     if (this.authMiddleware) {
       this.app.use(this.authMiddleware);
     }
+
+    // add test route
+    // to do remove
+    this.app.get("/test", (_req: Request, res: Response) => {
+      res.status(200).json({
+        status: "ok",
+        transport: "streamable-http",
+        mode: "stateless",
+      });
+    });
 
     this.app.use(this.endpoint, async (req: Request, res: Response) => {
       await this.handleStatelessRequest(req, res);

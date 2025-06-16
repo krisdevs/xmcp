@@ -1,17 +1,9 @@
 import { Request, Response, NextFunction, RequestHandler } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 
-export const mockJWTAuthConfig: JWTAuthMiddlewareConfig = {
-  secret: "test_super_secret_1234567890",
-  algorithm: "HS256",
-  issuerBaseUrl: "https://test-issuer.example.com",
-};
-
-interface JWTAuthMiddlewareConfig {
+export interface JWTAuthMiddlewareConfig {
   secret: string;
   algorithm: "HS256" | "RS256";
-  issuerBaseUrl: string;
-  audience?: string;
   logError?: (err: Error, context?: any) => void;
 }
 
@@ -34,8 +26,6 @@ export function createJWTAuthMiddleware(
     try {
       const decoded = jwt.verify(token, config.secret, {
         algorithms: [config.algorithm],
-        issuer: config.issuerBaseUrl,
-        audience: config.audience,
       }) as JwtPayload;
       (req as any).user = decoded;
       next();

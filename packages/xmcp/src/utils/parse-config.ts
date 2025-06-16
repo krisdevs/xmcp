@@ -35,14 +35,12 @@ const configSchema = z.object({
       }),
     ])
     .optional(),
-  /*   auth: z
+  auth: z
     .union([
       z.object({
         jwt: z.object({
           secret: z.string(),
           algorithm: z.enum(["HS256", "RS256"]).default("HS256"),
-          issuerBaseUrl: z.string(),
-          audience: z.string().optional(),
         }),
       }),
       z.object({
@@ -52,7 +50,7 @@ const configSchema = z.object({
         }),
       }),
     ])
-    .optional(), */
+    .optional(),
   webpack: z.function().args(z.any()).returns(z.any()).optional(),
 });
 
