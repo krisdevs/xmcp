@@ -1,18 +1,15 @@
 import { Request, Response, NextFunction, RequestHandler } from "express";
-import jwt, { JwtPayload } from "jsonwebtoken";
+import jwt, { JwtPayload, VerifyOptions } from "jsonwebtoken";
 
-export interface JWTAuthMiddlewareConfig {
+export interface JWTAuthMiddlewareConfig extends VerifyOptions {
   secret: string;
-  algorithm: "HS256" | "RS256";
 }
 
 export class JWTAuthService {
-  private secret: string;
-  private algorithm: "HS256" | "RS256";
+  private config: JWTAuthMiddlewareConfig;
 
   constructor(config: JWTAuthMiddlewareConfig) {
-    this.secret = config.secret;
-    this.algorithm = config.algorithm;
+    this.config = config;
   }
 
   getMiddleware(): RequestHandler {
@@ -30,9 +27,9 @@ export class JWTAuthService {
         return;
       }
       try {
-        const decoded = jwt.verify(token, this.secret, {
-          algorithms: [this.algorithm],
-        }) as JwtPayload;
+        const { secret, ...verifyOptions } = this.config;
+
+        const decoded = jwt.verify(token, secret, verifyOptions) as JwtPayload;
         (req as any).user = decoded;
         next();
       } catch (err) {
