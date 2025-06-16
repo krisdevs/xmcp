@@ -1,6 +1,7 @@
 import { createServer } from "./server";
 import { StatelessStreamableHTTPTransport } from "./stateless-streamable-http";
-import { createJWTAuthMiddleware } from "../auth/jwt";
+import { RequestHandler } from "express";
+import { getAuthMiddleware } from "../auth";
 
 // @ts-expect-error: injected by compiler
 const port = STREAMABLE_HTTP_PORT as number;
@@ -13,11 +14,6 @@ const endpoint = STREAMABLE_HTTP_ENDPOINT as string;
 // @ts-expect-error: injected by compiler
 const stateless = STREAMABLE_HTTP_STATELESS as boolean;
 
-// @ts-expect-error: injected by compiler
-const jwtSecret = AUTH_JWT_SECRET as string;
-// @ts-expect-error: injected by compiler
-const jwtAlgorithm = AUTH_JWT_ALGORITHM as "HS256" | "RS256";
-
 function main() {
   const options = {
     port,
@@ -27,12 +23,7 @@ function main() {
     stateless,
   };
 
-  const authOptions = {
-    secret: jwtSecret,
-    algorithm: jwtAlgorithm,
-  };
-
-  const authMiddleware = createJWTAuthMiddleware(authOptions);
+  let authMiddleware: RequestHandler | undefined = getAuthMiddleware();
 
   // should validate for stateless but it is currently the only option supported
   const transport = new StatelessStreamableHTTPTransport(

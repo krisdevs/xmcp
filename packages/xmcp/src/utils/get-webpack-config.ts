@@ -119,6 +119,7 @@ export function getWebpackConfig(
   if (xmcpConfig.auth) {
     // define variables
     if (typeof xmcpConfig.auth === "object" && "jwt" in xmcpConfig.auth) {
+      definedVariables.AUTH_TYPE = JSON.stringify("jwt");
       // it has set up jwt auth
       definedVariables.AUTH_JWT_SECRET = JSON.stringify(
         xmcpConfig.auth.jwt.secret
@@ -130,6 +131,7 @@ export function getWebpackConfig(
       typeof xmcpConfig.auth === "object" &&
       "apiKey" in xmcpConfig.auth
     ) {
+      definedVariables.AUTH_TYPE = JSON.stringify("apiKey");
       // it has set up api key auth
       definedVariables.AUTH_API_KEY_SECRET = JSON.stringify(
         xmcpConfig.auth.apiKey.secret
