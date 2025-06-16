@@ -1,8 +1,6 @@
 import { RequestHandler } from "express";
 import { createServer } from "./server";
 import { StatelessStreamableHTTPTransport } from "./stateless-streamable-http";
-import { RequestHandler } from "express";
-import { getAuthMiddleware } from "../auth";
 
 // @ts-expect-error: injected by compiler
 const port = STREAMABLE_HTTP_PORT as number;

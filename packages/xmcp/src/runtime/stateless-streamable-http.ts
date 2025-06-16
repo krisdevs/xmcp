@@ -6,13 +6,6 @@ import express, {
   NextFunction,
   RequestHandler,
 } from "express";
-import express, {
-  Express,
-  Request,
-  Response,
-  NextFunction,
-  RequestHandler,
-} from "express";
 import http, { IncomingMessage, ServerResponse } from "http";
 import { randomUUID } from "crypto";
 import getRawBody from "raw-body";
@@ -267,12 +260,12 @@ export class StatelessStreamableHTTPTransport {
   private debug: boolean;
   private options: StreamableHttpTransportOptions;
   private createServerFn: () => Promise<McpServer>;
-  private authMiddleware: RequestHandler | undefined;
+  private middleware: RequestHandler | undefined;
 
   constructor(
     createServerFn: () => Promise<McpServer>,
     options: StreamableHttpTransportOptions = {},
-    authMiddleware: RequestHandler | undefined
+    middleware: RequestHandler | undefined
   ) {
     this.options = {
       bindToLocalhost: true,
@@ -284,10 +277,9 @@ export class StatelessStreamableHTTPTransport {
     this.endpoint = options.endpoint ?? "/mcp";
     this.debug = options.debug ?? false;
     this.createServerFn = createServerFn;
-    this.authMiddleware = authMiddleware;
+    this.middleware = middleware;
 
     this.setupMiddleware(options.bodySizeLimit || "10mb");
-    this.middleware = middleware;
 
     this.setupRoutes();
   }
@@ -340,15 +332,14 @@ export class StatelessStreamableHTTPTransport {
                 <p>MCP Endpoint: <a href="${this.endpoint}">${this.endpoint}</a></p>
                 <p>Transport: Streamable HTTP</p>
                 <p>Mode: Stateless (POST only, per-request isolation)</p>
-                <p>Auth: ${this.authMiddleware ? "enabled" : "disabled"}</p>
               </body>
             </html>
           `);
     });
 
-    // routes beyond this point are protected by the auth middleware
-    if (this.authMiddleware) {
-      this.app.use(this.authMiddleware);
+    // routes beyond this point get intercepted by the middleware
+    if (this.middleware) {
+      this.app.use(this.middleware);
     }
 
     // add test route
