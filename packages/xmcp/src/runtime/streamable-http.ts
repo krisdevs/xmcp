@@ -1,3 +1,4 @@
+import { RequestHandler } from "express";
 import { createServer } from "./server";
 import { StatelessStreamableHTTPTransport } from "./stateless-streamable-http";
 
@@ -11,6 +12,11 @@ const bodySizeLimit = STREAMABLE_HTTP_BODY_SIZE_LIMIT as string;
 const endpoint = STREAMABLE_HTTP_ENDPOINT as string;
 // @ts-expect-error: injected by compiler
 const stateless = STREAMABLE_HTTP_STATELESS as boolean;
+// @ts-expect-error: injected by compiler
+const middleware = INJECTED_MIDDLEWARE as Record<
+  string,
+  () => Promise<RequestHandler>
+>;
 
 function main() {
   const options = {
