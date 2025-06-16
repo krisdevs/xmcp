@@ -35,22 +35,35 @@ export function compile({
   }
 
   let pathList: string[] = [];
-  const watcher = chokidar.watch("./src/tools/**/*.ts", {
-    ignored: /(^|[\/\\])\../,
-    persistent: mode === "development",
-  });
+  // For now, we only support one middleware file
+  let middlewarePaths: string[] = [];
+  const watcher = chokidar.watch(
+    ["./src/tools/**/*.ts", "./src/middleware.ts"],
+    {
+      ignored: /(^|[\/\\])\../,
+      persistent: mode === "development",
+    }
+  );
 
   watcher
     .on("add", (path) => {
-      pathList.push(path);
+      if (path === "src/middleware.ts") {
+        middlewarePaths.push(path);
+      } else {
+        pathList.push(path);
+      }
       if (compilerStarted) {
-        generateCode(pathList);
+        generateCode(pathList, middlewarePaths);
       }
     })
     .on("unlink", (path) => {
-      pathList = pathList.filter((p) => p !== path);
+      if (path === "src/middleware.ts") {
+        middlewarePaths = middlewarePaths.filter((p) => p !== path);
+      } else {
+        pathList = pathList.filter((p) => p !== path);
+      }
       if (compilerStarted) {
-        generateCode(pathList);
+        generateCode(pathList, middlewarePaths);
       }
     })
     .on("ready", () => {
@@ -65,7 +78,7 @@ export function compile({
         watcher.close();
       }
 
-      generateCode(pathList);
+      generateCode(pathList, middlewarePaths);
 
       webpack(config, (err, stats) => {
         if (err) {
@@ -95,8 +108,8 @@ export function compile({
     });
 }
 
-function generateCode(pathlist: string[]) {
-  const fileContent = generateImportCode(pathlist);
+function generateCode(pathlist: string[], middlewarePaths: string[]) {
+  const fileContent = generateImportCode(pathlist, middlewarePaths);
   fs.writeFileSync(path.join(runtimeFolderPath, "import-map.js"), fileContent);
 }
 
