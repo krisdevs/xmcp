@@ -10,6 +10,10 @@ import { createFolder } from "./utils/fs-utils";
 import path from "path";
 import { deleteSync } from "del";
 import { type z } from "zod";
+import dotenv from "dotenv";
+
+dotenv.config();
+
 export { type Middleware } from "./types/middleware";
 
 export type CompilerMode = "development" | "production";
@@ -156,3 +160,5 @@ function onFirstBuild(mode: CompilerMode, xmcpConfig: XmcpConfig) {
 export type InferSchema<T extends Record<string, z.ZodType>> = {
   [K in keyof T]: z.infer<T[K]>;
 };
+
+export { JWTAuthMiddleware, ApiKeyAuthMiddleware } from "./auth";

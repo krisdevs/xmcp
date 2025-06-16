@@ -35,22 +35,6 @@ const configSchema = z.object({
       }),
     ])
     .optional(),
-  auth: z
-    .union([
-      z.object({
-        jwt: z.object({
-          secret: z.string(),
-          algorithm: z.enum(["HS256", "RS256"]).default("HS256"),
-        }),
-      }),
-      z.object({
-        apiKey: z.object({
-          secret: z.string(),
-          headerName: z.string().default("X-API-Key"),
-        }),
-      }),
-    ])
-    .optional(),
   webpack: z.function().args(z.any()).returns(z.any()).optional(),
 });
 

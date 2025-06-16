@@ -120,31 +120,6 @@ export function getWebpackConfig(
         DEFAULT_STREAMABLE_HTTP_STATELESS;
     }
   }
-  if (xmcpConfig.auth) {
-    // define variables
-    if (typeof xmcpConfig.auth === "object" && "jwt" in xmcpConfig.auth) {
-      definedVariables.AUTH_TYPE = JSON.stringify("jwt");
-      // it has set up jwt auth
-      definedVariables.AUTH_JWT_SECRET = JSON.stringify(
-        xmcpConfig.auth.jwt.secret
-      );
-      definedVariables.AUTH_JWT_ALGORITHM = JSON.stringify(
-        xmcpConfig.auth.jwt.algorithm
-      );
-    } else if (
-      typeof xmcpConfig.auth === "object" &&
-      "apiKey" in xmcpConfig.auth
-    ) {
-      definedVariables.AUTH_TYPE = JSON.stringify("apiKey");
-      // it has set up api key auth
-      definedVariables.AUTH_API_KEY_SECRET = JSON.stringify(
-        xmcpConfig.auth.apiKey.secret
-      );
-      definedVariables.AUTH_API_KEY_HEADER_NAME = JSON.stringify(
-        xmcpConfig.auth.apiKey.headerName
-      );
-    }
-  }
   config.entry = entry;
 
   // add injected variables to config
