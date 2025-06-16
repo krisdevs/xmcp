@@ -10,6 +10,7 @@ import { createFolder } from "./utils/fs-utils";
 import path from "path";
 import { deleteSync } from "del";
 import { type z } from "zod";
+export { type Middleware } from "./types/middleware";
 
 export type CompilerMode = "development" | "production";
 
@@ -36,7 +37,7 @@ export function compile({
 
   let pathList: string[] = [];
   // For now, we only support one middleware file
-  let middlewarePaths: string[] = [];
+  let hasMiddleware = false;
   const watcher = chokidar.watch(
     ["./src/tools/**/*.ts", "./src/middleware.ts"],
     {
@@ -48,22 +49,22 @@ export function compile({
   watcher
     .on("add", (path) => {
       if (path === "src/middleware.ts") {
-        middlewarePaths.push(path);
+        hasMiddleware = true;
       } else {
         pathList.push(path);
       }
       if (compilerStarted) {
-        generateCode(pathList, middlewarePaths);
+        generateCode(pathList, hasMiddleware);
       }
     })
     .on("unlink", (path) => {
       if (path === "src/middleware.ts") {
-        middlewarePaths = middlewarePaths.filter((p) => p !== path);
+        hasMiddleware = false;
       } else {
         pathList = pathList.filter((p) => p !== path);
       }
       if (compilerStarted) {
-        generateCode(pathList, middlewarePaths);
+        generateCode(pathList, hasMiddleware);
       }
     })
     .on("ready", () => {
@@ -78,7 +79,7 @@ export function compile({
         watcher.close();
       }
 
-      generateCode(pathList, middlewarePaths);
+      generateCode(pathList, hasMiddleware);
 
       webpack(config, (err, stats) => {
         if (err) {
@@ -108,8 +109,8 @@ export function compile({
     });
 }
 
-function generateCode(pathlist: string[], middlewarePaths: string[]) {
-  const fileContent = generateImportCode(pathlist, middlewarePaths);
+function generateCode(pathlist: string[], hasMiddleware: boolean) {
+  const fileContent = generateImportCode(pathlist, hasMiddleware);
   fs.writeFileSync(path.join(runtimeFolderPath, "import-map.js"), fileContent);
 }
 

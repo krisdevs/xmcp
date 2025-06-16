@@ -13,12 +13,13 @@ const endpoint = STREAMABLE_HTTP_ENDPOINT as string;
 // @ts-expect-error: injected by compiler
 const stateless = STREAMABLE_HTTP_STATELESS as boolean;
 // @ts-expect-error: injected by compiler
-const middleware = INJECTED_MIDDLEWARE as Record<
-  string,
-  () => Promise<RequestHandler>
->;
+const middleware = INJECTED_MIDDLEWARE as () =>
+  | Promise<{
+      default: RequestHandler;
+    }>
+  | undefined;
 
-function main() {
+async function main() {
   const options = {
     port,
     debug,
@@ -27,8 +28,29 @@ function main() {
     stateless,
   };
 
+  let middlewareFn = undefined;
+
+  if (middleware) {
+    const middlewareModule = await middleware();
+    if (
+      middlewareModule &&
+      middlewareModule.default &&
+      typeof middlewareModule.default === "function"
+    ) {
+      middlewareFn = middlewareModule.default;
+    } else {
+      throw new Error(
+        "Middleware module does not export a default RequestHandler"
+      );
+    }
+  }
+
   // should validate for stateless but it is currently the only option supported
-  const transport = new StatelessStreamableHTTPTransport(createServer, options);
+  const transport = new StatelessStreamableHTTPTransport(
+    createServer,
+    options,
+    middlewareFn
+  );
   transport.start();
 }
 

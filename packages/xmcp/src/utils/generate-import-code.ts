@@ -1,6 +1,6 @@
 export function generateImportCode(
   pathlist: string[],
-  middlewarePaths: string[]
+  hasMiddleware: boolean
 ): string {
   const importToolsCode = pathlist
     .map((path) => {
@@ -9,19 +9,15 @@ export function generateImportCode(
     })
     .join("\n");
 
-  const importMiddlewareCode = middlewarePaths
-    .map((path) => {
-      const relativePath = `../${path}`;
-      return `"middleware": () => import("${relativePath}"),`;
-    })
-    .join("\n");
+  const importMiddlewareCode = hasMiddleware
+    ? `export const middleware = () => import("../src/middleware"),`
+    : "";
 
   return `
 export const tools = {
 ${importToolsCode}
 };
-export const middleware = {
+
 ${importMiddlewareCode}
-};
 `;
 }
