@@ -342,16 +342,6 @@ export class StatelessStreamableHTTPTransport {
       this.app.use(this.middleware);
     }
 
-    // add test route
-    // to do remove
-    this.app.get("/test", (_req: Request, res: Response) => {
-      res.status(200).json({
-        status: "ok",
-        transport: "streamable-http",
-        mode: "stateless",
-      });
-    });
-
     this.app.use(this.endpoint, async (req: Request, res: Response) => {
       await this.handleStatelessRequest(req, res);
     });
