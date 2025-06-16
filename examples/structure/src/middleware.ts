@@ -1,6 +1,8 @@
 import { type Middleware } from "xmcp";
 import jwt from "jsonwebtoken";
 
+const EXAMPLE_SECRET = "pepeabjsdasnjdjalhadsjlasdhjdasadhsjl";
+
 const middleware: Middleware = (req, res, next) => {
   const authHeader = req.headers.authorization;
   if (!authHeader) {
@@ -15,10 +17,7 @@ const middleware: Middleware = (req, res, next) => {
   }
 
   try {
-    if (!process.env.JWT_SECRET) {
-      throw new Error("JWT_SECRET is not set");
-    }
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, EXAMPLE_SECRET);
   } catch (err) {
     res.status(401).json({ error: "Invalid token" });
     return;

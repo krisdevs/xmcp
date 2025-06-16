@@ -10,7 +10,7 @@ export function generateImportCode(
     .join("\n");
 
   const importMiddlewareCode = hasMiddleware
-    ? `export const middleware = () => import("../src/middleware"),`
+    ? `export const middleware = () => import("../src/middleware");`
     : "";
 
   return `
