@@ -14,6 +14,16 @@ import {
   XmcpConfig,
 } from "./parse-config";
 
+// Add this type for local use
+type CorsConfig = {
+  origin?: string | string[] | boolean;
+  methods?: string | string[];
+  allowedHeaders?: string | string[];
+  exposedHeaders?: string | string[];
+  credentials?: boolean;
+  maxAge?: number;
+};
+
 export function getWebpackConfig(
   mode: CompilerMode,
   xmcpConfig: XmcpConfig
@@ -71,18 +81,34 @@ export function getWebpackConfig(
     entry.sse = path.join(runtimeFolderPath, "sse.js");
     // define variables
     definedVariables.SSE_DEBUG = mode === "development";
+    let cors: CorsConfig = {};
     if (typeof xmcpConfig.sse === "object") {
       definedVariables.SSE_PORT = xmcpConfig.sse.port;
       definedVariables.SSE_BODY_SIZE_LIMIT = JSON.stringify(
         xmcpConfig.sse.bodySizeLimit
       );
+      cors = xmcpConfig.sse.cors || {};
     } else {
       // sse config is boolean
       definedVariables.SSE_PORT = DEFAULT_SSE_PORT;
       definedVariables.SSE_BODY_SIZE_LIMIT = JSON.stringify(
         DEFAULT_SSE_BODY_SIZE_LIMIT
       );
+      cors = {};
     }
+    // inject cors
+    definedVariables.SSE_CORS_ORIGIN = JSON.stringify(cors.origin ?? "");
+    definedVariables.SSE_CORS_METHODS = JSON.stringify(cors.methods ?? "");
+    definedVariables.SSE_CORS_ALLOWED_HEADERS = JSON.stringify(
+      cors.allowedHeaders ?? ""
+    );
+    definedVariables.SSE_CORS_EXPOSED_HEADERS = JSON.stringify(
+      cors.exposedHeaders ?? ""
+    );
+    definedVariables.SSE_CORS_CREDENTIALS =
+      typeof cors.credentials === "boolean" ? cors.credentials : false;
+    definedVariables.SSE_CORS_MAX_AGE =
+      typeof cors.maxAge === "number" ? cors.maxAge : 0;
   }
   if (xmcpConfig["streamable-http"]) {
     // setup entry point
@@ -92,6 +118,7 @@ export function getWebpackConfig(
     );
     // define variables
     definedVariables.STREAMABLE_HTTP_DEBUG = mode === "development";
+    let cors: CorsConfig = {};
     if (typeof xmcpConfig["streamable-http"] === "object") {
       definedVariables.STREAMABLE_HTTP_PORT =
         xmcpConfig["streamable-http"].port;
@@ -103,6 +130,7 @@ export function getWebpackConfig(
       );
       definedVariables.STREAMABLE_HTTP_STATELESS =
         xmcpConfig["streamable-http"].stateless;
+      cors = xmcpConfig["streamable-http"].cors || {};
     } else {
       // streamableHttp config is boolean
       definedVariables.STREAMABLE_HTTP_PORT = DEFAULT_STREAMABLE_HTTP_PORT;
@@ -114,7 +142,25 @@ export function getWebpackConfig(
       );
       definedVariables.STREAMABLE_HTTP_STATELESS =
         DEFAULT_STREAMABLE_HTTP_STATELESS;
+      cors = {};
     }
+    // inject cors
+    definedVariables.STREAMABLE_HTTP_CORS_ORIGIN = JSON.stringify(
+      cors.origin ?? ""
+    );
+    definedVariables.STREAMABLE_HTTP_CORS_METHODS = JSON.stringify(
+      cors.methods ?? ""
+    );
+    definedVariables.STREAMABLE_HTTP_CORS_ALLOWED_HEADERS = JSON.stringify(
+      cors.allowedHeaders ?? ""
+    );
+    definedVariables.STREAMABLE_HTTP_CORS_EXPOSED_HEADERS = JSON.stringify(
+      cors.exposedHeaders ?? ""
+    );
+    definedVariables.STREAMABLE_HTTP_CORS_CREDENTIALS =
+      typeof cors.credentials === "boolean" ? cors.credentials : false;
+    definedVariables.STREAMABLE_HTTP_CORS_MAX_AGE =
+      typeof cors.maxAge === "number" ? cors.maxAge : 0;
   }
   config.entry = entry;
 

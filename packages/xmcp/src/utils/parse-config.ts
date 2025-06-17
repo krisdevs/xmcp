@@ -10,6 +10,16 @@ export const DEFAULT_STREAMABLE_HTTP_BODY_SIZE_LIMIT = 1024 * 1024 * 10; // 10MB
 export const DEFAULT_STREAMABLE_HTTP_ENDPOINT = "/mcp";
 export const DEFAULT_STREAMABLE_HTTP_STATELESS = true;
 
+// cors config schema
+const corsConfigSchema = z.object({
+  origin: z.union([z.string(), z.array(z.string()), z.boolean()]).optional(),
+  methods: z.union([z.string(), z.array(z.string())]).optional(),
+  allowedHeaders: z.union([z.string(), z.array(z.string())]).optional(),
+  exposedHeaders: z.union([z.string(), z.array(z.string())]).optional(),
+  credentials: z.boolean().optional(),
+  maxAge: z.number().optional(),
+});
+
 const configSchema = z.object({
   sse: z
     .union([
@@ -17,6 +27,7 @@ const configSchema = z.object({
       z.object({
         port: z.number().default(DEFAULT_SSE_PORT),
         bodySizeLimit: z.number().default(DEFAULT_SSE_BODY_SIZE_LIMIT),
+        cors: corsConfigSchema.optional(),
       }),
     ])
     .optional(),
@@ -32,6 +43,7 @@ const configSchema = z.object({
         debug: z.boolean().default(false),
         endpoint: z.string().default(DEFAULT_STREAMABLE_HTTP_ENDPOINT),
         stateless: z.boolean().default(DEFAULT_STREAMABLE_HTTP_STATELESS),
+        cors: corsConfigSchema.optional(),
       }),
     ])
     .optional(),

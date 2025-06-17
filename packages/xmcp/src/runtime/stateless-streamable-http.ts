@@ -10,6 +10,15 @@ import {
   StreamableHttpTransportOptions,
 } from "./base-streamable-http";
 
+type CorsOptions = {
+  origin?: string | string[] | boolean;
+  methods?: string | string[];
+  allowedHeaders?: string | string[];
+  exposedHeaders?: string | string[];
+  credentials?: boolean;
+  maxAge?: number;
+};
+
 // no session management, POST only
 class StatelessHttpServerTransport extends BaseHttpServerTransport {
   debug: boolean;
@@ -254,10 +263,12 @@ export class StatelessStreamableHTTPTransport {
   private debug: boolean;
   private options: StreamableHttpTransportOptions;
   private createServerFn: () => Promise<McpServer>;
+  private corsOptions: CorsOptions;
 
   constructor(
     createServerFn: () => Promise<McpServer>,
-    options: StreamableHttpTransportOptions = {}
+    options: StreamableHttpTransportOptions = {},
+    corsOptions: CorsOptions = {}
   ) {
     this.options = {
       bindToLocalhost: true,
@@ -269,6 +280,7 @@ export class StatelessStreamableHTTPTransport {
     this.endpoint = options.endpoint ?? "/mcp";
     this.debug = options.debug ?? false;
     this.createServerFn = createServerFn;
+    this.corsOptions = corsOptions;
 
     this.setupMiddleware(options.bodySizeLimit || "10mb");
     this.setupRoutes();
@@ -282,12 +294,43 @@ export class StatelessStreamableHTTPTransport {
 
   private setupMiddleware(bodySizeLimit: string): void {
     this.app.use((req: Request, res: Response, next: NextFunction) => {
-      res.setHeader("Access-Control-Allow-Origin", "*");
-      res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
-      res.setHeader(
-        "Access-Control-Allow-Headers",
-        "Content-Type, Accept, Origin"
-      );
+      const cors = this.corsOptions;
+      // set cors headers dynamically
+      if (cors.origin !== undefined)
+        res.setHeader(
+          "Access-Control-Allow-Origin",
+          Array.isArray(cors.origin)
+            ? cors.origin.join(",")
+            : String(cors.origin)
+        );
+      if (cors.methods !== undefined)
+        res.setHeader(
+          "Access-Control-Allow-Methods",
+          Array.isArray(cors.methods)
+            ? cors.methods.join(",")
+            : String(cors.methods)
+        );
+      if (cors.allowedHeaders !== undefined)
+        res.setHeader(
+          "Access-Control-Allow-Headers",
+          Array.isArray(cors.allowedHeaders)
+            ? cors.allowedHeaders.join(",")
+            : String(cors.allowedHeaders)
+        );
+      if (cors.exposedHeaders !== undefined)
+        res.setHeader(
+          "Access-Control-Expose-Headers",
+          Array.isArray(cors.exposedHeaders)
+            ? cors.exposedHeaders.join(",")
+            : String(cors.exposedHeaders)
+        );
+      if (typeof cors.credentials === "boolean")
+        res.setHeader(
+          "Access-Control-Allow-Credentials",
+          String(cors.credentials)
+        );
+      if (typeof cors.maxAge === "number")
+        res.setHeader("Access-Control-Max-Age", String(cors.maxAge));
 
       if (req.method === "OPTIONS") {
         res.sendStatus(200);
