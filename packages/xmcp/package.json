@@ -2,6 +2,24 @@
   "name": "xmcp",
   "description": "The MCP framework",
   "version": "0.0.3",
+  "author": {
+    "name": "Basement Studio",
+    "email": "hello@basement.studio",
+    "url": "https://basement.studio"
+  },
+  "contributors": [
+    {
+      "name": "Valentina Bearzotti",
+      "email": "valebearzotti1@gmail.com",
+      "url": "https://github.com/valebearzotti"
+    },
+    {
+      "name": "Matias Gonzalez Fernandez",
+      "email": "matiasngf@hotmail.com",
+      "url": "https://github.com/matiasngf"
+    }
+  ],
+  "license": "MIT",
   "type": "commonjs",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
