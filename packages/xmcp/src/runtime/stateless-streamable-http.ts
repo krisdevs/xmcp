@@ -9,6 +9,9 @@ import {
   JsonRpcMessage,
   StreamableHttpTransportOptions,
 } from "./base-streamable-http";
+import fs from "fs";
+import path from "path";
+import homeTemplate from "../templates/home";
 
 // no session management, POST only
 class StatelessHttpServerTransport extends BaseHttpServerTransport {
@@ -314,17 +317,7 @@ export class StatelessStreamableHTTPTransport {
     });
 
     this.app.get("/", (_req: Request, res: Response) => {
-      res.send(`
-            <html>
-              <head><title>MCP Server - Stateless Streamable HTTP</title></head>
-              <body>
-                <h1>MCP Server with Stateless Streamable HTTP Transport</h1>
-                <p>MCP Endpoint: <a href="${this.endpoint}">${this.endpoint}</a></p>
-                <p>Transport: Streamable HTTP</p>
-                <p>Mode: Stateless (POST only, per-request isolation)</p>
-              </body>
-            </html>
-          `);
+      res.send(homeTemplate(this.endpoint));
     });
 
     this.app.use(this.endpoint, async (req: Request, res: Response) => {
