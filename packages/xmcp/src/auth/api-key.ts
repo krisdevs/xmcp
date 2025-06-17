@@ -5,24 +5,19 @@ export interface ApiKeyAuthMiddlewareConfig {
   headerName?: string;
 }
 
-export class ApiKeyAuthService {
-  private apiKey: string;
-  private headerName: string;
+export function ApiKeyAuthMiddleware(
+  config: ApiKeyAuthMiddlewareConfig
+): RequestHandler {
+  const apiKey = config.apiKey;
+  const headerName = config.headerName ?? "X-API-Key";
 
-  constructor(config: ApiKeyAuthMiddlewareConfig) {
-    this.apiKey = config.apiKey;
-    this.headerName = config.headerName ?? "X-API-Key";
-  }
-
-  getMiddleware(): RequestHandler {
-    return (req: Request, res: Response, next: NextFunction) => {
-      const apiKeyHeader = req.header(this.headerName);
-      if (!apiKeyHeader || apiKeyHeader !== this.apiKey) {
-        const error = new Error("Unauthorized: Missing or invalid API key");
-        res.status(401).json({ error: error.message });
-        return;
-      }
-      next();
-    };
-  }
+  return (req: Request, res: Response, next: NextFunction) => {
+    const apiKeyHeader = req.header(headerName);
+    if (!apiKeyHeader || apiKeyHeader !== apiKey) {
+      const error = new Error("Unauthorized: Missing or invalid API key");
+      res.status(401).json({ error: error.message });
+      return;
+    }
+    next();
+  };
 }

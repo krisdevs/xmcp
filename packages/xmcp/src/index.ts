@@ -161,4 +161,5 @@ export type InferSchema<T extends Record<string, z.ZodType>> = {
   [K in keyof T]: z.infer<T[K]>;
 };
 
-export { JWTAuthMiddleware, ApiKeyAuthMiddleware } from "./auth";
+export { ApiKeyAuthMiddleware } from "./auth/api-key";
+export { JWTAuthMiddleware } from "./auth/jwt";
