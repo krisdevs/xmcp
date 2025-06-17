@@ -1,6 +1,6 @@
 {
-  "name": "structure",
-  "description": "A simple mcp server with tool syntax",
+  "name": "auth-jwt",
+  "description": "An MCP server with JWT authentication",
   "scripts": {
     "build": "xmcp build --vercel",
     "dev": "xmcp dev",
