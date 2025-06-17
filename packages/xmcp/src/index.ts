@@ -11,10 +11,44 @@ import path from "path";
 import { deleteSync } from "del";
 import { type z } from "zod";
 import dotenv from "dotenv";
+export { type Middleware } from "./types/middleware";
+import { watchdog } from "./utils/spawn-process";
+import { type ChildProcess, spawn } from "child_process";
 
 dotenv.config();
 
-export { type Middleware } from "./types/middleware";
+let httpServerProcess: ChildProcess | null = null;
+
+function spawnHttpServer() {
+  const process = spawn("node", ["dist/streamable-http.js"], {
+    stdio: "inherit",
+    shell: true,
+  });
+
+  watchdog(process);
+
+  return process;
+}
+
+async function killProcess(process: ChildProcess) {
+  process.kill("SIGKILL");
+  await new Promise((resolve) => {
+    process.on("exit", resolve);
+  });
+}
+
+async function startHttpServer() {
+  if (!httpServerProcess) {
+    console.log("Starting http server");
+    // first time starting the server
+    httpServerProcess = spawnHttpServer();
+  } else {
+    console.log("Restarting http server");
+    // restart the server
+    await killProcess(httpServerProcess);
+    httpServerProcess = spawnHttpServer();
+  }
+}
 
 export type CompilerMode = "development" | "production";
 
@@ -108,6 +142,11 @@ export function compile({
           onFirstBuild(mode, xmpcConfig);
           // user defined callback
           onBuild?.();
+        } else {
+          // on dev mode, webpack will recompile the code, so we need to start the http server after the first one
+          if (mode === "development" && xmpcConfig["streamable-http"]) {
+            startHttpServer();
+          }
         }
       });
     });
@@ -121,7 +160,6 @@ function generateCode(pathlist: string[], hasMiddleware: boolean) {
 function onFirstBuild(mode: CompilerMode, xmcpConfig: XmcpConfig) {
   if (mode === "development") {
     console.log(chalk.bold.green("Starting inspector..."));
-    const { spawn } = require("child_process");
 
     const inspectorArgs = ["@modelcontextprotocol/inspector@latest"];
 
@@ -129,10 +167,12 @@ function onFirstBuild(mode: CompilerMode, xmcpConfig: XmcpConfig) {
       inspectorArgs.push("node", "dist/stdio.js");
     }
 
-    const inspector = spawn("npx", inspectorArgs, {
-      stdio: "inherit",
-      shell: true,
-    });
+    const inspector = watchdog(
+      spawn("npx", inspectorArgs, {
+        stdio: "inherit",
+        shell: true,
+      })
+    );
 
     inspector.on("error", (err: Error) => {
       console.error("Failed to start inspector:", err);

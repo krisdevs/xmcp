@@ -12,7 +12,7 @@
     "dist"
   ],
   "scripts": {
-    "dev": "cross-env NODE_ENV=development tsx --watch --tsconfig ./compiler.tsconfig.json ./compiler/index.ts && tsc --emitDeclarationOnly --watch",
+    "dev": "cross-env NODE_ENV=development tsx --watch --tsconfig ./compiler.tsconfig.json ./compiler/index.ts",
     "build": "cross-env NODE_ENV=production tsx --tsconfig ./compiler.tsconfig.json ./compiler/index.ts && tsc --emitDeclarationOnly"
   },
   "dependencies": {
@@ -29,6 +29,7 @@
     "cross-env": "^7.0.3",
     "del": "^7.0.0",
     "dotenv": "^16.5.0",
+    "execa": "^9.6.0",
     "express": "^4.19.1",
     "fork-ts-checker-webpack-plugin": "^8.0.0",
     "fs-extra": "^11.3.0",

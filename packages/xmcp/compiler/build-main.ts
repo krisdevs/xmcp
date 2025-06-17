@@ -10,10 +10,13 @@ import type { Configuration } from "webpack";
 import { fileURLToPath } from "url";
 import { runtimeOutputPath } from "./constants";
 import fs from "fs-extra";
+import { execSync } from "child_process";
 
 function getConfig() {
   const mode =
     process.env.NODE_ENV === "production" ? "production" : "development";
+
+  execSync("tsc --emitDeclarationOnly", { stdio: "inherit" });
 
   /** Since we are using webpack to build webpack, we need to exclude some modules */
   const libsToExcludeFromCompilation = [
