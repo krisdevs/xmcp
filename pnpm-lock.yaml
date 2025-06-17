@@ -18,6 +18,34 @@ importers:
         specifier: ^2.5.3
         version: 2.5.3
 
+  examples/auth/jwt:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.11.4
+        version: 1.11.4
+      jsonwebtoken:
+        specifier: ^9.0.2
+        version: 9.0.2
+      ts-loader:
+        specifier: ^9.4.2
+        version: 9.5.2(typescript@5.8.3)(webpack@5.99.8(@swc/core@1.11.24))
+      typescript:
+        specifier: ^5.0.4
+        version: 5.8.3
+      xmcp:
+        specifier: workspace:*
+        version: link:../../../packages/xmcp
+      zod:
+        specifier: ^3.24.4
+        version: 3.24.4
+    devDependencies:
+      '@types/jsonwebtoken':
+        specifier: ^9.0.10
+        version: 9.0.10
+      swc-loader:
+        specifier: ^0.2.6
+        version: 0.2.6(@swc/core@1.11.24)(webpack@5.99.8(@swc/core@1.11.24))
+
   examples/simple-server:
     dependencies:
       '@modelcontextprotocol/sdk':
@@ -153,7 +181,7 @@ importers:
         version: 3.6.0
       clean-webpack-plugin:
         specifier: ^4.0.0
-        version: 4.0.0(webpack@5.99.8)
+        version: 4.0.0(webpack@5.99.8(@swc/core@1.11.24))
       commander:
         specifier: ^10.0.0
         version: 10.0.1
@@ -174,7 +202,7 @@ importers:
         version: 4.21.2
       fork-ts-checker-webpack-plugin:
         specifier: ^8.0.0
-        version: 8.0.0(typescript@5.8.3)(webpack@5.99.8)
+        version: 8.0.0(typescript@5.8.3)(webpack@5.99.8(@swc/core@1.11.24))
       fs-extra:
         specifier: ^11.3.0
         version: 11.3.0
@@ -4236,7 +4264,7 @@ snapshots:
     dependencies:
       escape-string-regexp: 5.0.0
 
-  clean-webpack-plugin@4.0.0(webpack@5.99.8):
+  clean-webpack-plugin@4.0.0(webpack@5.99.8(@swc/core@1.11.24)):
     dependencies:
       del: 4.1.1
       webpack: 5.99.8(@swc/core@1.11.24)
@@ -4754,7 +4782,7 @@ snapshots:
       cross-spawn: 7.0.6
       signal-exit: 4.1.0
 
-  fork-ts-checker-webpack-plugin@8.0.0(typescript@5.8.3)(webpack@5.99.8):
+  fork-ts-checker-webpack-plugin@8.0.0(typescript@5.8.3)(webpack@5.99.8(@swc/core@1.11.24)):
     dependencies:
       '@babel/code-frame': 7.27.1
       chalk: 4.1.2
@@ -5942,13 +5970,13 @@ snapshots:
       '@types/webpack-node-externals': 3.0.4(@swc/core@1.11.24)
       chalk: 5.4.1
       chokidar: 3.6.0
-      clean-webpack-plugin: 4.0.0(webpack@5.99.8)
+      clean-webpack-plugin: 4.0.0(webpack@5.99.8(@swc/core@1.11.24))
       commander: 10.0.1
       cross-env: 7.0.3
       del: 7.1.0
       eslint-config-custom: link:packages/eslint-config-custom
       express: 4.21.2
-      fork-ts-checker-webpack-plugin: 8.0.0(typescript@5.8.3)(webpack@5.99.8)
+      fork-ts-checker-webpack-plugin: 8.0.0(typescript@5.8.3)(webpack@5.99.8(@swc/core@1.11.24))
       fs-extra: 11.3.0
       glob: 11.0.2
       handlebars: 4.7.8
