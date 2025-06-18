@@ -3,6 +3,7 @@ import express, { Express, Request, Response, NextFunction } from "express";
 import http from "http";
 import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
 import { createServer } from "./server";
+import homeTemplate from "../templates/home";
 
 // @ts-expect-error: injected by compiler
 const port = SSE_PORT as number;
@@ -123,15 +124,7 @@ class SSETransport {
   private setupRoutes(): void {
     // root endpoint
     this.app.get("/", (_req: Request, res: Response) => {
-      res.send(`
-        <html>
-          <head><title>MCP Server</title></head>
-          <body>
-            <h1>MCP Server is running</h1>
-            <p>SSE Endpoint: <a href="/sse">/sse</a></p>
-          </body>
-        </html>
-      `);
+      res.send(homeTemplate("/sse"));
     });
 
     this.app.get("/health", (_req: Request, res: Response) => {
