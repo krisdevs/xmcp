@@ -71,7 +71,7 @@ async function main() {
   const transport = new StatelessStreamableHTTPTransport(
     createServer,
     options,
-    corsOptions
+    corsOptions,
     middlewareFn
   );
   transport.start();

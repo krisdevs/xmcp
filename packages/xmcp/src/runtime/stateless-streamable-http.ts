@@ -275,7 +275,7 @@ export class StatelessStreamableHTTPTransport {
   constructor(
     createServerFn: () => Promise<McpServer>,
     options: StreamableHttpTransportOptions = {},
-    corsOptions: CorsOptions = {}
+    corsOptions: CorsOptions = {},
     middleware: RequestHandler | undefined
   ) {
     this.options = {
