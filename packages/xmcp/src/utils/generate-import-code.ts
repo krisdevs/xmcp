@@ -1,10 +1,23 @@
-export function generateImportCode(pathlist: string[]): string {
-  const importCode = pathlist
+export function generateImportCode(
+  pathlist: string[],
+  hasMiddleware: boolean
+): string {
+  const importToolsCode = pathlist
     .map((path) => {
       const relativePath = `../${path}`;
       return `"${path}": () => import("${relativePath}"),`;
     })
     .join("\n");
 
-  return `export default {\n${importCode}\n}`;
+  const importMiddlewareCode = hasMiddleware
+    ? `export const middleware = () => import("../src/middleware");`
+    : "";
+
+  return `
+export const tools = {
+${importToolsCode}
+};
+
+${importMiddlewareCode}
+`;
 }

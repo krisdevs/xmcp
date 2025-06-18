@@ -1,6 +1,6 @@
 {
-  "name": "structure",
-  "description": "A simple mcp server with tool syntax",
+  "name": "middleware-custom",
+  "description": "An MCP server with custom middleware",
   "scripts": {
     "build": "xmcp build --vercel",
     "dev": "xmcp dev",

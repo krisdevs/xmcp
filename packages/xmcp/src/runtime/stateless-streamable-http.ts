@@ -1,5 +1,11 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp";
-import express, { Express, Request, Response, NextFunction } from "express";
+import express, {
+  Express,
+  Request,
+  Response,
+  NextFunction,
+  RequestHandler,
+} from "express";
 import http, { IncomingMessage, ServerResponse } from "http";
 import { randomUUID } from "crypto";
 import getRawBody from "raw-body";
@@ -264,11 +270,13 @@ export class StatelessStreamableHTTPTransport {
   private options: StreamableHttpTransportOptions;
   private createServerFn: () => Promise<McpServer>;
   private corsOptions: CorsOptions;
+  private middleware: RequestHandler | undefined;
 
   constructor(
     createServerFn: () => Promise<McpServer>,
     options: StreamableHttpTransportOptions = {},
     corsOptions: CorsOptions = {}
+    middleware: RequestHandler | undefined
   ) {
     this.options = {
       bindToLocalhost: true,
@@ -281,8 +289,10 @@ export class StatelessStreamableHTTPTransport {
     this.debug = options.debug ?? false;
     this.createServerFn = createServerFn;
     this.corsOptions = corsOptions;
+    this.middleware = middleware;
 
     this.setupMiddleware(options.bodySizeLimit || "10mb");
+
     this.setupRoutes();
   }
 
@@ -369,6 +379,11 @@ export class StatelessStreamableHTTPTransport {
             </html>
           `);
     });
+
+    // routes beyond this point get intercepted by the middleware
+    if (this.middleware) {
+      this.app.use(this.middleware);
+    }
 
     this.app.use(this.endpoint, async (req: Request, res: Response) => {
       await this.handleStatelessRequest(req, res);

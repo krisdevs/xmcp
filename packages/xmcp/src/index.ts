@@ -10,8 +10,12 @@ import { createFolder } from "./utils/fs-utils";
 import path from "path";
 import { deleteSync } from "del";
 import { type z } from "zod";
+import dotenv from "dotenv";
+export { type Middleware } from "./types/middleware";
 import { watchdog } from "./utils/spawn-process";
 import { type ChildProcess, spawn } from "child_process";
+
+dotenv.config();
 
 let httpServerProcess: ChildProcess | null = null;
 
@@ -70,22 +74,35 @@ export function compile({
   }
 
   let pathList: string[] = [];
-  const watcher = chokidar.watch("./src/tools/**/*.ts", {
-    ignored: /(^|[\/\\])\../,
-    persistent: mode === "development",
-  });
+  // For now, we only support one middleware file
+  let hasMiddleware = false;
+  const watcher = chokidar.watch(
+    ["./src/tools/**/*.ts", "./src/middleware.ts"],
+    {
+      ignored: /(^|[\/\\])\../,
+      persistent: mode === "development",
+    }
+  );
 
   watcher
     .on("add", (path) => {
-      pathList.push(path);
+      if (path === "src/middleware.ts") {
+        hasMiddleware = true;
+      } else {
+        pathList.push(path);
+      }
       if (compilerStarted) {
-        generateCode(pathList);
+        generateCode(pathList, hasMiddleware);
       }
     })
     .on("unlink", (path) => {
-      pathList = pathList.filter((p) => p !== path);
+      if (path === "src/middleware.ts") {
+        hasMiddleware = false;
+      } else {
+        pathList = pathList.filter((p) => p !== path);
+      }
       if (compilerStarted) {
-        generateCode(pathList);
+        generateCode(pathList, hasMiddleware);
       }
     })
     .on("ready", () => {
@@ -100,7 +117,7 @@ export function compile({
         watcher.close();
       }
 
-      generateCode(pathList);
+      generateCode(pathList, hasMiddleware);
 
       webpack(config, (err, stats) => {
         if (err) {
@@ -135,8 +152,8 @@ export function compile({
     });
 }
 
-function generateCode(pathlist: string[]) {
-  const fileContent = generateImportCode(pathlist);
+function generateCode(pathlist: string[], hasMiddleware: boolean) {
+  const fileContent = generateImportCode(pathlist, hasMiddleware);
   fs.writeFileSync(path.join(runtimeFolderPath, "import-map.js"), fileContent);
 }
 
@@ -183,3 +200,6 @@ function onFirstBuild(mode: CompilerMode, xmcpConfig: XmcpConfig) {
 export type InferSchema<T extends Record<string, z.ZodType>> = {
   [K in keyof T]: z.infer<T[K]>;
 };
+
+export { ApiKeyAuthMiddleware } from "./auth/api-key";
+export { JWTAuthMiddleware } from "./auth/jwt";

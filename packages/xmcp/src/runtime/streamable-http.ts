@@ -1,3 +1,4 @@
+import { RequestHandler } from "express";
 import { createServer } from "./server";
 import { StatelessStreamableHTTPTransport } from "./stateless-streamable-http";
 
@@ -11,6 +12,12 @@ const bodySizeLimit = STREAMABLE_HTTP_BODY_SIZE_LIMIT as string;
 const endpoint = STREAMABLE_HTTP_ENDPOINT as string;
 // @ts-expect-error: injected by compiler
 const stateless = STREAMABLE_HTTP_STATELESS as boolean;
+// @ts-expect-error: injected by compiler
+const middleware = INJECTED_MIDDLEWARE as () =>
+  | Promise<{
+      default: RequestHandler;
+    }>
+  | undefined;
 
 // cors config
 // @ts-expect-error: injected by compiler
@@ -26,7 +33,7 @@ const corsCredentials = STREAMABLE_HTTP_CORS_CREDENTIALS as boolean;
 // @ts-expect-error: injected by compiler
 const corsMaxAge = STREAMABLE_HTTP_CORS_MAX_AGE as number;
 
-function main() {
+async function main() {
   const options = {
     port,
     debug,
@@ -44,13 +51,28 @@ function main() {
     maxAge: corsMaxAge,
   };
 
-  console.log("corsOptions", corsOptions);
+  let middlewareFn = undefined;
 
+  if (middleware) {
+    const middlewareModule = await middleware();
+    if (
+      middlewareModule &&
+      middlewareModule.default &&
+      typeof middlewareModule.default === "function"
+    ) {
+      middlewareFn = middlewareModule.default;
+    } else {
+      throw new Error(
+        "Middleware module does not export a default RequestHandler"
+      );
+    }
+  }
   // should validate for stateless but it is currently the only option supported
   const transport = new StatelessStreamableHTTPTransport(
     createServer,
     options,
     corsOptions
+    middlewareFn
   );
   transport.start();
 }

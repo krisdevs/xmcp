@@ -1,6 +1,29 @@
 {
   "name": "xmcp-monorepo",
   "description": "From the basement.",
+  "author": {
+    "name": "Basement Studio",
+    "email": "hello@basement.studio",
+    "url": "https://basement.studio"
+  },
+  "contributors": [
+    {
+      "name": "Valentina Bearzotti",
+      "email": "valebearzotti1@gmail.com",
+      "url": "https://github.com/valebearzotti"
+    },
+    {
+      "name": "Matias Gonzalez Fernandez",
+      "email": "matiasngf@hotmail.com",
+      "url": "https://github.com/matiasngf"
+    }
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/basementstudio/xmcp"
+  },
+  "homepage": "https://xmcp.run",
   "scripts": {
     "xmcp": "turbo run dev --filter=xmcp",
     "build": "turbo run build --filter=xmcp --filter=create-xmcp-app",
