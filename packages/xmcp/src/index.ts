@@ -76,80 +76,113 @@ export function compile({
   let pathList: string[] = [];
   // For now, we only support one middleware file
   let hasMiddleware = false;
-  const watcher = chokidar.watch(
-    ["./src/tools/**/*.ts", "./src/middleware.ts"],
-    {
-      ignored: /(^|[\/\\])\../,
-      persistent: mode === "development",
-    }
-  );
 
-  watcher
+  // Watcher for tools
+  const toolsWatcher = chokidar.watch("./src/tools/**/*.ts", {
+    ignored: /(^|[\/\\])\../,
+    persistent: mode === "development",
+    ignoreInitial: false,
+  });
+
+  // Watcher for middleware
+  const middlewareWatcher = chokidar.watch("./src/middleware.ts", {
+    ignored: /(^|[\/\\])\../,
+    persistent: mode === "development",
+    ignoreInitial: false,
+  });
+
+  toolsWatcher
     .on("add", (path) => {
-      if (path === "src/middleware.ts") {
-        hasMiddleware = true;
-      } else {
-        pathList.push(path);
-      }
+      pathList.push(path);
       if (compilerStarted) {
         generateCode(pathList, hasMiddleware);
       }
     })
     .on("unlink", (path) => {
-      if (path === "src/middleware.ts") {
-        hasMiddleware = false;
-      } else {
-        pathList = pathList.filter((p) => p !== path);
+      pathList = pathList.filter((p) => p !== path);
+      if (compilerStarted) {
+        generateCode(pathList, hasMiddleware);
       }
+    });
+
+  middlewareWatcher
+    .on("add", (path) => {
+      hasMiddleware = true;
       if (compilerStarted) {
         generateCode(pathList, hasMiddleware);
       }
     })
-    .on("ready", () => {
-      let firstBuild = true;
-      compilerStarted = true;
+    .on("unlink", (path) => {
+      hasMiddleware = false;
+      if (compilerStarted) {
+        generateCode(pathList, hasMiddleware);
+      }
+    });
 
-      // delete existing runtime folder
-      deleteSync(runtimeFolderPath);
-      createFolder(runtimeFolderPath);
+  // Wait for both watchers to be ready
+  let toolsReady = false;
+  let middlewareReady = false;
 
-      if (mode === "production") {
-        watcher.close();
+  toolsWatcher.on("ready", () => {
+    toolsReady = true;
+    checkBothReady();
+  });
+
+  middlewareWatcher.on("ready", () => {
+    middlewareReady = true;
+    checkBothReady();
+  });
+
+  function checkBothReady() {
+    if (!toolsReady || !middlewareReady) {
+      return;
+    }
+
+    let firstBuild = true;
+    compilerStarted = true;
+
+    // delete existing runtime folder
+    deleteSync(runtimeFolderPath);
+    createFolder(runtimeFolderPath);
+
+    if (mode === "production") {
+      toolsWatcher.close();
+      middlewareWatcher.close();
+    }
+
+    generateCode(pathList, hasMiddleware);
+
+    webpack(config, (err, stats) => {
+      if (err) {
+        console.error(err);
       }
 
-      generateCode(pathList, hasMiddleware);
+      if (stats?.hasErrors()) {
+        console.error(
+          stats.toString({
+            colors: true,
+            chunks: false,
+          })
+        );
+        return;
+      }
 
-      webpack(config, (err, stats) => {
-        if (err) {
-          console.error(err);
+      if (firstBuild) {
+        firstBuild = false;
+        const endTime = Date.now();
+        const duration = endTime - startTime;
+        console.log(`Compiled in ${chalk.bold.green(`${duration}ms`)}`);
+        onFirstBuild(mode, xmpcConfig);
+        // user defined callback
+        onBuild?.();
+      } else {
+        // on dev mode, webpack will recompile the code, so we need to start the http server after the first one
+        if (mode === "development" && xmpcConfig["streamable-http"]) {
+          startHttpServer();
         }
-
-        if (stats?.hasErrors()) {
-          console.error(
-            stats.toString({
-              colors: true,
-              chunks: false,
-            })
-          );
-          return;
-        }
-
-        if (firstBuild) {
-          firstBuild = false;
-          const endTime = Date.now();
-          const duration = endTime - startTime;
-          console.log(`Compiled in ${chalk.bold.green(`${duration}ms`)}`);
-          onFirstBuild(mode, xmpcConfig);
-          // user defined callback
-          onBuild?.();
-        } else {
-          // on dev mode, webpack will recompile the code, so we need to start the http server after the first one
-          if (mode === "development" && xmpcConfig["streamable-http"]) {
-            startHttpServer();
-          }
-        }
-      });
+      }
     });
+  }
 }
 
 function generateCode(pathlist: string[], hasMiddleware: boolean) {
