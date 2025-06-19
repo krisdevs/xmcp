@@ -129,7 +129,6 @@ async function buildVercelOutput() {
   // Install dependencies last, after all files and configs are in place
   console.log("📦 Installing production dependencies...");
 
-  /*
   try {
     execSync(packageManager.installCmd, {
       cwd: functionsDir,
@@ -140,7 +139,6 @@ async function buildVercelOutput() {
     console.error("❌ Failed to install dependencies:", error);
     throw error;
   }
-    */
 
   console.log("✅ Vercel output structure created successfully");
 }

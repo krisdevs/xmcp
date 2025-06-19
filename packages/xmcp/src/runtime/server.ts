@@ -13,6 +13,11 @@ const INJECTED_CONFIG = {
   // get from project config
   name: "MCP Server",
   version: "0.0.1",
+  capabilities: {
+    tools: {
+      listChanged: true,
+    },
+  },
 };
 
 export async function createServer() {
