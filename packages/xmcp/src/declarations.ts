@@ -1,3 +1,3 @@
 declare module "xmcp/headers" {
-  export function headers(): Record<string, string>;
+  export const headers: typeof import("./runtime/headers").headers;
 }
