@@ -355,7 +355,7 @@ export class StatelessStreamableHTTPTransport {
     this.app.use(express.json({ limit: bodySizeLimit }));
 
     this.app.use((req: Request, res: Response, next: NextFunction) => {
-      this.log(`${req.method} ${req.path} - New isolated request`);
+      this.log(`${req.method} ${req.path}`);
       next();
     });
   }
@@ -407,9 +407,6 @@ export class StatelessStreamableHTTPTransport {
 
       // cleanup when request/connection closes
       res.on("close", () => {
-        if (this.debug) {
-          console.log("[StatelessHTTP] Request closed, cleaning up");
-        }
         transport.close();
         server.close();
       });
@@ -437,13 +434,10 @@ export class StatelessStreamableHTTPTransport {
 
     this.server.listen(this.port, host, () => {
       console.log(
-        `[StatelessHTTP] MCP Server running with Stateless HTTP transport on http://${host}:${this.port}`
+        `[StatelessHTTP] MCP Server running on http://${host}:${this.port}`
       );
       console.log(
         `[StatelessHTTP] - MCP endpoint: http://${host}:${this.port}${this.endpoint}`
-      );
-      console.log(
-        `[StatelessHTTP] - POST only, per-request isolation, no sessions`
       );
       if (this.debug) {
         console.log("[StatelessHTTP] Debug mode: enabled");
