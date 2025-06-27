@@ -1,28 +1,18 @@
-import { type Request } from "express";
-import { IncomingHttpHeaders } from "http";
-
-interface Headers {
-  initialized: boolean;
-  headers: IncomingHttpHeaders;
-}
-
-const headersData: Headers = {
-  initialized: false,
-  headers: {},
-};
-
-export const setHeaders = (request: Request) => {
-  headersData.initialized = true;
-
-  headersData.headers = request.headers;
-};
+import { getHttpContext, httpContext } from "./http-context";
 
 export const headers = () => {
-  if (!headersData.initialized) {
+  const store = httpContext.getStore();
+  if (!store) {
+    throw new Error("headres() can only be used within the http transport.");
+  }
+
+  const headers = getHttpContext("headers");
+
+  if (!headers) {
     throw new Error(
-      "Headers not initialized, headres() can only be used within the http transport."
+      "Error: headers not initialized. This is probably a bug. Please report it."
     );
   }
 
-  return headersData.headers;
+  return headers;
 };

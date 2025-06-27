@@ -16,7 +16,7 @@ import {
   StreamableHttpTransportOptions,
 } from "./base-streamable-http";
 import homeTemplate from "../templates/home";
-import { setHeaders } from "./headers";
+import { httpContext, setHttpContext } from "./http-context";
 
 type CorsOptions = {
   origin?: string | string[] | boolean;
@@ -273,6 +273,7 @@ export class StatelessStreamableHTTPTransport {
   private createServerFn: () => Promise<McpServer>;
   private corsOptions: CorsOptions;
   private middleware: RequestHandler | undefined;
+  private idSeq: number = 0;
 
   constructor(
     createServerFn: () => Promise<McpServer>,
@@ -372,13 +373,19 @@ export class StatelessStreamableHTTPTransport {
       res.send(homeTemplate(this.endpoint));
     });
 
+    // isolate requests context
+    this.app.use((req: Request, res: Response, next: NextFunction) => {
+      const id = crypto.randomUUID();
+      httpContext.run({ id }, () => {
+        setHttpContext("headers", req.headers);
+
+        next();
+      });
+    });
+
     // routes beyond this point get intercepted by the middleware
     if (this.middleware) {
       this.app.use(this.middleware);
-      this.app.use((req: Request, res: Response, next: NextFunction) => {
-        setHeaders(req);
-        next();
-      });
     }
 
     this.app.use(this.endpoint, async (req: Request, res: Response) => {
