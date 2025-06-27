@@ -7,10 +7,11 @@
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "skipLibCheck": true,
-    "outDir": "./dist",
-    "typeRoots": ["../node_modules/@types"],
     "declaration": true,
-    "declarationMap": true
+    "declarationMap": false,
+    "outDir": "./dist",
+    "typeRoots": ["../node_modules/@types", "./node_modules/@types", "./types"],
+    "types": ["node"]
   },
-  "include": ["compiler"]
+  "include": ["src/declarations.d.ts", "src/index.ts", "src/cli.ts"]
 }
