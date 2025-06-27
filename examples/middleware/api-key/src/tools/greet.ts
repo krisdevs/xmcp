@@ -21,12 +21,13 @@ export const metadata = {
 
 // Tool implementation
 export default async function greet({ name }: InferSchema<typeof schema>) {
-  const testData = headers();
+  const requestHeaders = headers();
 
-  console.log("TEST DATA:");
-  console.log(testData, name);
+  const apiKey = requestHeaders["x-api-key"];
+
+  const result = `Hello, ${name}! Your API key is ${apiKey}`;
 
   return {
-    content: [{ type: "text", text: JSON.stringify(testData) }],
+    content: [{ type: "text", text: result }],
   };
 }
