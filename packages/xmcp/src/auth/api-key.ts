@@ -9,7 +9,7 @@ export function ApiKeyAuthMiddleware(
   config: ApiKeyAuthMiddlewareConfig
 ): RequestHandler {
   const apiKey = config.apiKey;
-  const headerName = config.headerName ?? "X-API-Key";
+  const headerName = config.headerName ?? "x-api-key";
 
   return (req: Request, res: Response, next: NextFunction) => {
     const apiKeyHeader = req.header(headerName);
