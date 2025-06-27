@@ -7,7 +7,7 @@ import ForkTsCheckerWebpackPlugin from "fork-ts-checker-webpack-plugin";
 import nodeExternals from "webpack-node-externals";
 import { CleanWebpackPlugin } from "clean-webpack-plugin";
 import webpack from "webpack";
-import type { Configuration } from "webpack";
+import type { Configuration, EntryObject } from "webpack";
 import { outputPath, runtimeOutputPath } from "./constants";
 import { srcPath } from "./constants";
 
@@ -23,12 +23,24 @@ const libsToExcludeFromCompilation = [
   "fork-ts-checker-webpack-plugin",
 ];
 
+/** Each key here must correspond to a file in the runtime folder
+ * ej: "headers" -> "/runtime/headers.ts"
+ */
+const runtimeExportedRoots = ["headers", "stdio", "sse", "streamable-http"];
+
+const entry: EntryObject = {
+  // stdio: path.join(srcPath, "runtime", "stdio.ts"),
+  // sse: path.join(srcPath, "runtime", "sse.ts"),
+  // "streamable-http": path.join(srcPath, "runtime", "streamable-http.ts"),
+};
+
+// add dynamic entries
+for (const root of runtimeExportedRoots) {
+  entry[root] = path.join(srcPath, "runtime", `${root}.ts`);
+}
+
 const config: Configuration = {
-  entry: {
-    stdio: path.join(srcPath, "runtime", "stdio.ts"),
-    sse: path.join(srcPath, "runtime", "sse.ts"),
-    "streamable-http": path.join(srcPath, "runtime", "streamable-http.ts"),
-  },
+  entry,
   mode: "production",
   devtool: false,
   target: "node",
@@ -39,6 +51,22 @@ const config: Configuration = {
         return !libsToExcludeFromCompilation.includes(modulePath);
       },
     }),
+    // // Make runtime-exports an external dependency to avoid duplication
+    // function (data, callback) {
+    //   for (const root of runtimeExportedRoots) {
+    //     if (data.request?.endsWith(`/${root}`)) {
+    //       console.log(data.request);
+    //       return callback(null, `commonjs2 ./${root}.js`);
+    //     }
+    //   }
+    //   callback();
+    //   // if (
+    //   //   data.request?.endsWith("runtime-exports")
+    //   // ) {
+    //   //   return callback(null, "commonjs2 ./runtime-exports.js");
+    //   // }
+    //   // callback();
+    // },
   ],
   output: {
     filename: "[name].js",
@@ -81,6 +109,23 @@ const config: Configuration = {
   },
   optimization: {
     minimize: true,
+    splitChunks: {
+      chunks: "all",
+      cacheGroups: {
+        shared: {
+          name: "shared",
+          minChunks: 2,
+          priority: 10,
+          reuseExistingChunk: true,
+          enforce: true,
+        },
+        default: {
+          minChunks: 2,
+          priority: -20,
+          reuseExistingChunk: true,
+        },
+      },
+    },
   },
   plugins: [
     new ForkTsCheckerWebpackPlugin(),
@@ -101,6 +146,8 @@ if (process.platform !== "darwin") {
     })
   );
 }
+
+let compileStarted = false;
 
 // ✨
 export function buildRuntime(onCompiled: (stats: any) => void) {
@@ -126,6 +173,11 @@ export function buildRuntime(onCompiled: (stats: any) => void) {
       })
     );
 
-    onCompiled(stats);
+    if (compileStarted) {
+      return;
+    } else {
+      compileStarted = true;
+      onCompiled(stats);
+    }
   });
 }
