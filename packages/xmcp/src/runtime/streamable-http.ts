@@ -1,6 +1,7 @@
 import { RequestHandler } from "express";
 import { createServer } from "./server";
 import { StatelessStreamableHTTPTransport } from "./stateless-streamable-http";
+import { setTestData, headers } from "./headers";
 
 // @ts-expect-error: injected by compiler
 const port = STREAMABLE_HTTP_PORT as number;
@@ -34,6 +35,10 @@ const corsCredentials = STREAMABLE_HTTP_CORS_CREDENTIALS as boolean;
 const corsMaxAge = STREAMABLE_HTTP_CORS_MAX_AGE as number;
 
 async function main() {
+  setTestData("streamable");
+
+  console.log("HEADERS:", headers());
+
   const options = {
     port,
     debug,

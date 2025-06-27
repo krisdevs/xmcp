@@ -21,6 +21,7 @@ const libsToExcludeFromCompilation = [
   "webpack-node-externals",
   "ts-loader",
   "fork-ts-checker-webpack-plugin",
+  "xmcp/headers",
 ];
 
 /** Each key here must correspond to a file in the runtime folder
@@ -51,22 +52,21 @@ const config: Configuration = {
         return !libsToExcludeFromCompilation.includes(modulePath);
       },
     }),
-    // // Make runtime-exports an external dependency to avoid duplication
-    // function (data, callback) {
-    //   for (const root of runtimeExportedRoots) {
-    //     if (data.request?.endsWith(`/${root}`)) {
-    //       console.log(data.request);
-    //       return callback(null, `commonjs2 ./${root}.js`);
-    //     }
-    //   }
-    //   callback();
-    //   // if (
-    //   //   data.request?.endsWith("runtime-exports")
-    //   // ) {
-    //   //   return callback(null, "commonjs2 ./runtime-exports.js");
-    //   // }
-    //   // callback();
-    // },
+    // Make runtime-exports an external dependency to avoid duplication
+    function (data, callback) {
+      for (const root of runtimeExportedRoots) {
+        if (data.request?.endsWith(`/${root}`)) {
+          return callback(null, `commonjs2 ./${root}.js`);
+        }
+      }
+      callback();
+      // if (
+      //   data.request?.endsWith("runtime-exports")
+      // ) {
+      //   return callback(null, "commonjs2 ./runtime-exports.js");
+      // }
+      // callback();
+    },
   ],
   output: {
     filename: "[name].js",

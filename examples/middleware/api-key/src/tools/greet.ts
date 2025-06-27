@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { type InferSchema } from "xmcp";
+import { headers } from "xmcp/headers";
 
 // Define the schema for tool parameters
 export const schema = {
@@ -20,7 +21,12 @@ export const metadata = {
 
 // Tool implementation
 export default async function greet({ name }: InferSchema<typeof schema>) {
+  const testData = headers();
+
+  console.log("TEST DATA:");
+  console.log(testData, name);
+
   return {
-    content: [{ type: "text", text: `Hello, ${name}!` }],
+    content: [{ type: "text", text: JSON.stringify(testData) }],
   };
 }
