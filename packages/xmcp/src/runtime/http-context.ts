@@ -5,7 +5,7 @@ const STORAGE_KEY = Symbol.for("http-context");
 
 export interface HttpContext {
   id: string;
-  headers?: IncomingHttpHeaders;
+  headers: IncomingHttpHeaders;
 }
 
 (globalThis as any)[STORAGE_KEY] =
