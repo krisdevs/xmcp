@@ -15,9 +15,8 @@ import {
   JsonRpcMessage,
   StreamableHttpTransportOptions,
 } from "./base-streamable-http";
-import fs from "fs";
-import path from "path";
 import homeTemplate from "../templates/home";
+import { setHeaders } from "./headers";
 
 type CorsOptions = {
   origin?: string | string[] | boolean;
@@ -376,6 +375,10 @@ export class StatelessStreamableHTTPTransport {
     // routes beyond this point get intercepted by the middleware
     if (this.middleware) {
       this.app.use(this.middleware);
+      this.app.use((req: Request, res: Response, next: NextFunction) => {
+        setHeaders(req);
+        next();
+      });
     }
 
     this.app.use(this.endpoint, async (req: Request, res: Response) => {
