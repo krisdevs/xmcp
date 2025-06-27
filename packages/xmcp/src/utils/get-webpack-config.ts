@@ -3,7 +3,7 @@ import path from "path";
 import { outputPath, runtimeFolderPath } from "./constants";
 import fs from "fs-extra";
 import nodeExternals from "webpack-node-externals";
-import { CompilerMode } from "..";
+import { type CompilerMode } from "../compile";
 import {
   DEFAULT_SSE_BODY_SIZE_LIMIT,
   DEFAULT_SSE_PORT,
@@ -38,13 +38,18 @@ export function getWebpackConfig(
       libraryTarget: "commonjs2",
     },
     target: "node",
-    externals: [nodeExternals()],
+    externals: [
+      nodeExternals({
+        allowlist: ["xmcp/headers"],
+      }),
+    ],
     resolve: {
       fallback: {
         process: false,
       },
       alias: {
         "node:process": "process",
+        "xmcp/headers": path.resolve(processFolder, ".xmcp/headers.js"),
       },
       extensions: [".tsx", ".ts", ".jsx", ".js", ".json"],
     },
@@ -185,18 +190,13 @@ class InjectRuntimePlugin {
       (_compilationParams) => {
         if (hasRun) return;
         hasRun = true;
-        fs.writeFileSync(
-          path.join(runtimeFolderPath, "stdio.js"),
-          // @ts-expect-error: injected by compiler
-          RUNTIME_STDIO
-        );
+
         // @ts-expect-error: injected by compiler
-        fs.writeFileSync(path.join(runtimeFolderPath, "sse.js"), RUNTIME_SSE);
-        fs.writeFileSync(
-          path.join(runtimeFolderPath, "streamable-http.js"),
-          // @ts-expect-error: injected by compiler
-          RUNTIME_STREAMABLE_HTTP
-        );
+        const runtimeFiles = RUNTIME_FILES as Record<string, string>;
+
+        for (const [fileName, fileContent] of Object.entries(runtimeFiles)) {
+          fs.writeFileSync(path.join(runtimeFolderPath, fileName), fileContent);
+        }
       }
     );
   }
