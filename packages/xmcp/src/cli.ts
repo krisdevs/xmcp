@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { Command } from "commander";
-import { compile } from "./index";
+import { compile } from "./compile";
 import { buildVercelOutput } from "./platforms/build-vercel-output";
 import chalk from "chalk";
 
