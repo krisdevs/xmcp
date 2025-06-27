@@ -16,7 +16,10 @@ function getConfig() {
   const mode =
     process.env.NODE_ENV === "production" ? "production" : "development";
 
-  execSync("tsc --emitDeclarationOnly", { stdio: "inherit" });
+  // bundle xmcp with its own package tsconfig
+  execSync("tsc --emitDeclarationOnly --project xmcp.tsconfig.json", {
+    stdio: "inherit",
+  });
 
   /** Since we are using webpack to build webpack, we need to exclude some modules */
   const libsToExcludeFromCompilation = [
@@ -33,13 +36,28 @@ function getConfig() {
   const srcPath = path.join(__dirname, "..", "src");
   const outputPath = path.join(__dirname, "..", "dist");
 
-  const stdioPath = path.join(runtimeOutputPath, "stdio.js");
-  const ssePath = path.join(runtimeOutputPath, "sse.js");
-  const streamableHttpPath = path.join(runtimeOutputPath, "streamable-http.js");
+  // Read all files from runtime output path
+  const runtimeFileNames = fs.readdirSync(runtimeOutputPath);
 
-  const stdioContent = fs.readFileSync(stdioPath, "utf-8");
-  const sseContent = fs.readFileSync(ssePath, "utf-8");
-  const streamableHttpContent = fs.readFileSync(streamableHttpPath, "utf-8");
+  interface FileDependency {
+    name: string;
+    path: string;
+  }
+
+  const fileDependencies: FileDependency[] = [];
+
+  for (const fileName of runtimeFileNames) {
+    const filePath = path.join(runtimeOutputPath, fileName);
+    const stat = fs.statSync(filePath);
+
+    // Only read files, not directories
+    if (stat.isFile()) {
+      fileDependencies.push({
+        name: fileName,
+        path: filePath,
+      });
+    }
+  }
 
   const config: Configuration = {
     entry: {
@@ -102,9 +120,20 @@ function getConfig() {
     plugins: [
       new ForkTsCheckerWebpackPlugin(),
       new webpack.DefinePlugin({
-        RUNTIME_STDIO: JSON.stringify(stdioContent),
-        RUNTIME_SSE: JSON.stringify(sseContent),
-        RUNTIME_STREAMABLE_HTTP: JSON.stringify(streamableHttpContent),
+        RUNTIME_FILES: webpack.DefinePlugin.runtimeValue(
+          () => {
+            const runtimeFiles: Record<string, string> = {};
+
+            for (const file of fileDependencies) {
+              runtimeFiles[file.name] = fs.readFileSync(file.path, "utf-8");
+            }
+
+            return JSON.stringify(runtimeFiles);
+          },
+          {
+            fileDependencies: fileDependencies.map((file) => file.path),
+          }
+        ),
       }),
       // add shebang to CLI output
       new webpack.BannerPlugin({
