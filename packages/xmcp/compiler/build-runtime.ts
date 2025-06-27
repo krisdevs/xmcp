@@ -10,6 +10,7 @@ import webpack from "webpack";
 import type { Configuration, EntryObject } from "webpack";
 import { outputPath, runtimeOutputPath } from "./constants";
 import { srcPath } from "./constants";
+import chalk from "chalk";
 
 const mode =
   process.env.NODE_ENV === "production" ? "production" : "development";
@@ -151,6 +152,7 @@ let compileStarted = false;
 
 // ✨
 export function buildRuntime(onCompiled: (stats: any) => void) {
+  console.log(chalk.bgGreen.bold("Starting runtime compilation"));
   webpack(config, (err, stats) => {
     if (err) {
       console.error(err);
@@ -172,6 +174,8 @@ export function buildRuntime(onCompiled: (stats: any) => void) {
         chunks: false,
       })
     );
+
+    console.log(chalk.bgGreen.bold("xmcp runtime compiled"));
 
     if (compileStarted) {
       return;

@@ -11,6 +11,7 @@ import { fileURLToPath } from "url";
 import { runtimeOutputPath } from "./constants";
 import fs from "fs-extra";
 import { execSync } from "child_process";
+import chalk from "chalk";
 
 function getConfig() {
   const mode =
@@ -158,6 +159,8 @@ function getConfig() {
 
 // ✨
 export function buildMain() {
+  console.log(chalk.bgGreen.bold("Starting xmcp compilation"));
+
   const config = getConfig();
   webpack(config, (err, stats) => {
     if (err) {
@@ -180,5 +183,7 @@ export function buildMain() {
         chunks: false,
       })
     );
+
+    console.log(chalk.bgGreen.bold("xmcp compiled"));
   });
 }
