@@ -13,14 +13,16 @@ import fs from "fs-extra";
 import { execSync } from "child_process";
 import chalk from "chalk";
 
-function getConfig() {
-  const mode =
-    process.env.NODE_ENV === "production" ? "production" : "development";
-
+const compilePackageTypes = () => {
   // bundle xmcp with its own package tsconfig
   execSync("tsc --emitDeclarationOnly --project xmcp.tsconfig.json", {
     stdio: "inherit",
   });
+};
+
+function getConfig() {
+  const mode =
+    process.env.NODE_ENV === "production" ? "production" : "development";
 
   /** Since we are using webpack to build webpack, we need to exclude some modules */
   const libsToExcludeFromCompilation = [
@@ -183,6 +185,8 @@ export function buildMain() {
         chunks: false,
       })
     );
+
+    compilePackageTypes();
 
     console.log(chalk.bgGreen.bold("xmcp compiled"));
   });
