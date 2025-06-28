@@ -114,7 +114,6 @@ const config: Configuration = {
       chunks: "all",
       cacheGroups: {
         shared: {
-          name: "shared",
           minChunks: 2,
           priority: 10,
           reuseExistingChunk: true,
@@ -129,7 +128,11 @@ const config: Configuration = {
     },
   },
   plugins: [
-    new ForkTsCheckerWebpackPlugin(),
+    new ForkTsCheckerWebpackPlugin({
+      typescript: {
+        configFile: path.join(srcPath, "..", "tsconfig.json"),
+      },
+    }),
     new CleanWebpackPlugin({
       cleanStaleWebpackAssets: false,
       cleanOnceBeforeBuildPatterns: [outputPath],
