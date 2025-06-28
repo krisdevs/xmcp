@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import { createServer } from "./server";
+import { createServer } from "../../utils/server";
 import { StatelessStreamableHTTPTransport } from "./stateless-streamable-http";
 
 // @ts-expect-error: injected by compiler

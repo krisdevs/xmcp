@@ -15,7 +15,7 @@ import {
   JsonRpcMessage,
   StreamableHttpTransportOptions,
 } from "./base-streamable-http";
-import homeTemplate from "../templates/home";
+import homeTemplate from "../../../templates/home";
 import { httpContext, setHttpContext } from "./http-context";
 
 type CorsOptions = {
@@ -415,7 +415,7 @@ export class StatelessStreamableHTTPTransport {
 
       await transport.handleRequest(req, res, req.body);
     } catch (error) {
-      console.error("[StatelessHTTP] Error handling MCP request:", error);
+      console.error("[HTTP-server] Error handling MCP request:", error);
       if (!res.headersSent) {
         res.status(500).json({
           jsonrpc: "2.0",
@@ -434,13 +434,13 @@ export class StatelessStreamableHTTPTransport {
 
     this.server.listen(this.port, host, () => {
       console.log(
-        `[StatelessHTTP] MCP Server running on http://${host}:${this.port}`
+        `[HTTP-server] MCP Server running on http://${host}:${this.port}`
       );
       console.log(
-        `[StatelessHTTP] - MCP endpoint: http://${host}:${this.port}${this.endpoint}`
+        `[HTTP-server] - MCP endpoint: http://${host}:${this.port}${this.endpoint}`
       );
       if (this.debug) {
-        console.log("[StatelessHTTP] Debug mode: enabled");
+        console.log("[HTTP-server] Debug mode: enabled");
       }
 
       this.setupShutdownHandlers();

@@ -1,4 +1,4 @@
-import { getHttpContext, httpContext } from "./http-context";
+import { getHttpContext, httpContext } from "./transports/http/http-context";
 
 export const headers = () => {
   const store = httpContext.getStore();
