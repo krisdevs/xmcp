@@ -13,5 +13,5 @@
     "typeRoots": ["../node_modules/@types", "./node_modules/@types", "./types"],
     "types": ["node"]
   },
-  "include": ["src/declarations.d.ts", "src/index.ts", "src/cli.ts"]
+  "include": ["src/declarations.d.ts", "src/index.ts"]
 }
