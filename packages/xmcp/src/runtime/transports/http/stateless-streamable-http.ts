@@ -17,6 +17,9 @@ import {
 } from "./base-streamable-http";
 import homeTemplate from "../../../templates/home";
 import { httpContextProvider } from "./http-context";
+import chalk from "chalk";
+
+const greenCheck = chalk.bold.green("✔");
 
 type CorsOptions = {
   origin?: string | string[] | boolean;
@@ -431,14 +434,8 @@ export class StatelessStreamableHTTPTransport {
 
     this.server.listen(this.port, host, () => {
       console.log(
-        `[HTTP-server] MCP Server running on http://${host}:${this.port}`
+        `${greenCheck} MCP Server running on http://${host}:${this.port}${this.endpoint}`
       );
-      console.log(
-        `[HTTP-server] - MCP endpoint: http://${host}:${this.port}${this.endpoint}`
-      );
-      if (this.debug) {
-        console.log("[HTTP-server] Debug mode: enabled");
-      }
 
       this.setupShutdownHandlers();
     });
