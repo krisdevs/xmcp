@@ -15,7 +15,7 @@ import {
   JsonRpcMessage,
   StreamableHttpTransportOptions,
 } from "./base-streamable-http";
-import homeTemplate from "../templates/home";
+import homeTemplate from "../../../templates/home";
 import { httpContext } from "./http-context";
 
 type CorsOptions = {
