@@ -376,7 +376,6 @@ export class StatelessStreamableHTTPTransport {
     this.app.use((req: Request, res: Response, next: NextFunction) => {
       const id = crypto.randomUUID();
       httpContextProvider({ id, headers: req.headers }, () => {
-        console.log("Entered context");
         next();
       });
     });

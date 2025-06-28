@@ -85,10 +85,7 @@ export function getWebpackConfig(
   }
   if (xmcpConfig["streamable-http"]) {
     // setup entry point
-    entry["streamable-http"] = path.join(
-      runtimeFolderPath,
-      "streamable-http.js"
-    );
+    entry["streamable-http"] = path.join(runtimeFolderPath, "http.js");
     // define variables
     definedVariables.STREAMABLE_HTTP_DEBUG = mode === "development";
     let cors: CorsConfig = {};
