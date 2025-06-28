@@ -16,7 +16,7 @@ import {
   StreamableHttpTransportOptions,
 } from "./base-streamable-http";
 import homeTemplate from "../../../templates/home";
-import { httpContext } from "./http-context";
+import { httpContextProvider } from "./http-context";
 
 type CorsOptions = {
   origin?: string | string[] | boolean;
@@ -375,7 +375,8 @@ export class StatelessStreamableHTTPTransport {
     // isolate requests context
     this.app.use((req: Request, res: Response, next: NextFunction) => {
       const id = crypto.randomUUID();
-      httpContext.provider({ id, headers: req.headers }, () => {
+      httpContextProvider({ id, headers: req.headers }, () => {
+        console.log("Entered context");
         next();
       });
     });
