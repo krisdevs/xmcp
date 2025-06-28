@@ -16,18 +16,24 @@ interface CreateContextOptions {
   name: string;
 }
 
+const setGlobalContext = <T>(key: symbol, context: T) => {
+  (globalThis as any)[key] = context;
+};
+
+const getGlobalContext = <T>(key: symbol): T => {
+  return (globalThis as any)[key] as T;
+};
+
 export function createContext<T extends Object>({
   name,
-}: CreateContextOptions) {
-  const storageKey = crypto.randomUUID();
+}: CreateContextOptions): Context<T> {
+  const storageKey = Symbol.for(name);
 
-  if ((globalThis as any)[storageKey]) {
-    throw new Error("Context already created");
+  if (getGlobalContext(storageKey)) {
+    return getGlobalContext<Context<T>>(storageKey);
   }
 
-  (globalThis as any)[storageKey] = new AsyncLocalStorage<T>();
-
-  const context = (globalThis as any)[storageKey] as AsyncLocalStorage<T>;
+  const context = new AsyncLocalStorage<T>();
 
   const getContext: GetContext<T> = () => {
     const store = context.getStore();
@@ -62,6 +68,8 @@ export function createContext<T extends Object>({
     getContext,
     setContext,
   };
+
+  setGlobalContext(storageKey, result);
 
   return result;
 }
