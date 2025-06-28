@@ -1,5 +1,5 @@
 {
-  "sse": {
+  "streamable-http": {
     "port": 3002
   }
 }

@@ -8,7 +8,6 @@
   "scripts": {
     "build": "xmcp build",
     "dev": "xmcp dev",
-    "start-sse": "node dist/sse.js",
     "start-stdio": "node dist/stdio.js",
     "start-http": "node dist/streamable-http.js"
   },

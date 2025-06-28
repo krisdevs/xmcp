@@ -4,7 +4,7 @@
   "scripts": {
     "build": "xmcp build",
     "dev": "xmcp dev",
-    "start-sse": "node dist/sse.js"
+    "start": "node dist/streamable-http.js"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.11.4",
