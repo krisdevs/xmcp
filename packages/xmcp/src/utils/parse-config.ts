@@ -2,9 +2,6 @@ import fs from "fs";
 import path from "path";
 import { z } from "zod";
 
-export const DEFAULT_SSE_PORT = 3001;
-export const DEFAULT_SSE_BODY_SIZE_LIMIT = 1024 * 1024 * 10; // 10MB
-
 export const DEFAULT_STREAMABLE_HTTP_PORT = 3002;
 export const DEFAULT_STREAMABLE_HTTP_BODY_SIZE_LIMIT = 1024 * 1024 * 10; // 10MB
 export const DEFAULT_STREAMABLE_HTTP_ENDPOINT = "/mcp";
@@ -21,16 +18,6 @@ const corsConfigSchema = z.object({
 });
 
 const configSchema = z.object({
-  sse: z
-    .union([
-      z.boolean(),
-      z.object({
-        port: z.number().default(DEFAULT_SSE_PORT),
-        bodySizeLimit: z.number().default(DEFAULT_SSE_BODY_SIZE_LIMIT),
-        cors: corsConfigSchema.optional(),
-      }),
-    ])
-    .optional(),
   stdio: z.boolean().optional(),
   "streamable-http": z
     .union([
@@ -71,7 +58,6 @@ export function getConfig(configFilePath: string): XmcpConfig {
 
   if (!content) {
     return {
-      sse: true,
       stdio: true,
       "streamable-http": true,
     };

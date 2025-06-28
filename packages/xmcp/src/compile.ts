@@ -225,9 +225,6 @@ function onFirstBuild(mode: CompilerMode, xmcpConfig: XmcpConfig) {
 
   const builtResults = [];
 
-  if (xmcpConfig.sse) {
-    builtResults.push("- SSE server");
-  }
   if (xmcpConfig.stdio) {
     builtResults.push("- STDIO server");
   }
