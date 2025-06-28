@@ -376,8 +376,8 @@ export class StatelessStreamableHTTPTransport {
     // isolate requests context
     this.app.use((req: Request, res: Response, next: NextFunction) => {
       const id = crypto.randomUUID();
-      httpContext.run({ id }, () => {
-        setHttpContext("headers", req.headers);
+      httpContext.provider({ id }, () => {
+        setHttpContext({ headers: req.headers });
 
         next();
       });

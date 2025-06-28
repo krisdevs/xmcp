@@ -1,12 +1,7 @@
-import { getHttpContext, httpContext } from "./transports/http/http-context";
+import { getHttpContext } from "./transports/http/http-context";
 
 export const headers = () => {
-  const store = httpContext.getStore();
-  if (!store) {
-    throw new Error("headres() can only be used within the http transport.");
-  }
-
-  const headers = getHttpContext("headers");
+  const headers = getHttpContext().headers;
 
   if (!headers) {
     throw new Error(
