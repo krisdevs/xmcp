@@ -3,7 +3,7 @@ import { createContext } from "../../utils/context";
 
 export interface HttpContext {
   id: string;
-  headers?: IncomingHttpHeaders;
+  headers: IncomingHttpHeaders;
 }
 
 export const httpContext = createContext<HttpContext>({ name: "http-context" });
