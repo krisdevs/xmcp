@@ -5,8 +5,6 @@ import fs from "fs-extra";
 import nodeExternals from "webpack-node-externals";
 import { type CompilerMode } from "../compile";
 import {
-  DEFAULT_SSE_BODY_SIZE_LIMIT,
-  DEFAULT_SSE_PORT,
   DEFAULT_STREAMABLE_HTTP_PORT,
   DEFAULT_STREAMABLE_HTTP_BODY_SIZE_LIMIT,
   DEFAULT_STREAMABLE_HTTP_ENDPOINT,
@@ -84,40 +82,6 @@ export function getWebpackConfig(
   if (xmcpConfig.stdio) {
     // setup entry point
     entry.stdio = path.join(runtimeFolderPath, "stdio.js");
-  }
-  if (xmcpConfig.sse) {
-    // setup entry point
-    entry.sse = path.join(runtimeFolderPath, "sse.js");
-    // define variables
-    definedVariables.SSE_DEBUG = mode === "development";
-    let cors: CorsConfig = {};
-    if (typeof xmcpConfig.sse === "object") {
-      definedVariables.SSE_PORT = xmcpConfig.sse.port;
-      definedVariables.SSE_BODY_SIZE_LIMIT = JSON.stringify(
-        xmcpConfig.sse.bodySizeLimit
-      );
-      cors = xmcpConfig.sse.cors || {};
-    } else {
-      // sse config is boolean
-      definedVariables.SSE_PORT = DEFAULT_SSE_PORT;
-      definedVariables.SSE_BODY_SIZE_LIMIT = JSON.stringify(
-        DEFAULT_SSE_BODY_SIZE_LIMIT
-      );
-      cors = {};
-    }
-    // inject cors
-    definedVariables.SSE_CORS_ORIGIN = JSON.stringify(cors.origin ?? "");
-    definedVariables.SSE_CORS_METHODS = JSON.stringify(cors.methods ?? "");
-    definedVariables.SSE_CORS_ALLOWED_HEADERS = JSON.stringify(
-      cors.allowedHeaders ?? ""
-    );
-    definedVariables.SSE_CORS_EXPOSED_HEADERS = JSON.stringify(
-      cors.exposedHeaders ?? ""
-    );
-    definedVariables.SSE_CORS_CREDENTIALS =
-      typeof cors.credentials === "boolean" ? cors.credentials : false;
-    definedVariables.SSE_CORS_MAX_AGE =
-      typeof cors.maxAge === "number" ? cors.maxAge : 0;
   }
   if (xmcpConfig["streamable-http"]) {
     // setup entry point
