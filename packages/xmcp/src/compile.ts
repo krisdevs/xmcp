@@ -22,7 +22,7 @@ let httpServerProcess: ChildProcess | null = null;
 const greenCheck = chalk.bold.green("✔");
 
 function spawnHttpServer() {
-  const process = spawn("node", ["dist/streamable-http.js"], {
+  const process = spawn("node", ["dist/http.js"], {
     stdio: "inherit",
     shell: true,
   });
@@ -183,7 +183,7 @@ export function compile({
         onBuild?.();
       } else {
         // on dev mode, webpack will recompile the code, so we need to start the http server after the first one
-        if (mode === "development" && xmpcConfig["streamable-http"]) {
+        if (mode === "development" && xmpcConfig["http"]) {
           startHttpServer();
         }
       }
@@ -255,7 +255,7 @@ function onFirstBuild(mode: CompilerMode, xmcpConfig: XmcpConfig) {
   if (xmcpConfig.stdio) {
     builtResults.push(`${greenCheck} Built STDIO server`);
   }
-  if (xmcpConfig["streamable-http"]) {
+  if (xmcpConfig["http"]) {
     builtResults.push(`${greenCheck} Built HTTP server`);
   }
 
