@@ -9,7 +9,7 @@ import {
   DEFAULT_HTTP_BODY_SIZE_LIMIT,
   DEFAULT_HTTP_ENDPOINT,
   DEFAULT_HTTP_STATELESS,
-  XmcpConfig,
+  XmcpParsedConfig,
 } from "./parse-config";
 
 // Add this type for local use
@@ -24,7 +24,7 @@ type CorsConfig = {
 
 export function getWebpackConfig(
   mode: CompilerMode,
-  xmcpConfig: XmcpConfig
+  xmcpConfig: XmcpParsedConfig
 ): Configuration {
   const processFolder = process.cwd();
   const config: Configuration = {
@@ -97,7 +97,7 @@ export function getWebpackConfig(
       definedVariables.HTTP_ENDPOINT = JSON.stringify(
         xmcpConfig["http"].endpoint
       );
-      definedVariables.HTTP_STATELESS = xmcpConfig["http"].stateless;
+      definedVariables.HTTP_STATELESS = DEFAULT_HTTP_STATELESS;
       cors = xmcpConfig["http"].cors || {};
     } else {
       // http config is boolean
