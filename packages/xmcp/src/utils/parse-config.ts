@@ -2,10 +2,10 @@ import fs from "fs";
 import path from "path";
 import { z } from "zod";
 
-export const DEFAULT_STREAMABLE_HTTP_PORT = 3002;
-export const DEFAULT_STREAMABLE_HTTP_BODY_SIZE_LIMIT = 1024 * 1024 * 10; // 10MB
-export const DEFAULT_STREAMABLE_HTTP_ENDPOINT = "/mcp";
-export const DEFAULT_STREAMABLE_HTTP_STATELESS = true;
+export const DEFAULT_HTTP_PORT = 3002;
+export const DEFAULT_HTTP_BODY_SIZE_LIMIT = 1024 * 1024 * 10; // 10MB
+export const DEFAULT_HTTP_ENDPOINT = "/mcp";
+export const DEFAULT_HTTP_STATELESS = true;
 
 // cors config schema
 const corsConfigSchema = z.object({
@@ -19,17 +19,15 @@ const corsConfigSchema = z.object({
 
 const configSchema = z.object({
   stdio: z.boolean().optional(),
-  "streamable-http": z
+  http: z
     .union([
       z.boolean(),
       z.object({
-        port: z.number().default(DEFAULT_STREAMABLE_HTTP_PORT),
-        bodySizeLimit: z
-          .number()
-          .default(DEFAULT_STREAMABLE_HTTP_BODY_SIZE_LIMIT),
+        port: z.number().default(DEFAULT_HTTP_PORT),
+        bodySizeLimit: z.number().default(DEFAULT_HTTP_BODY_SIZE_LIMIT),
         debug: z.boolean().default(false),
-        endpoint: z.string().default(DEFAULT_STREAMABLE_HTTP_ENDPOINT),
-        stateless: z.boolean().default(DEFAULT_STREAMABLE_HTTP_STATELESS),
+        endpoint: z.string().default(DEFAULT_HTTP_ENDPOINT),
+        stateless: z.boolean().default(DEFAULT_HTTP_STATELESS),
         cors: corsConfigSchema.optional(),
       }),
     ])
@@ -59,7 +57,7 @@ export function getConfig(configFilePath: string): XmcpConfig {
   if (!content) {
     return {
       stdio: true,
-      "streamable-http": true,
+      http: true,
     };
   }
   return validateConfig(JSON.parse(content));
