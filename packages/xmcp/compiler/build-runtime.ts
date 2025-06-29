@@ -25,20 +25,21 @@ const libsToExcludeFromCompilation = [
   "xmcp/headers",
 ];
 
-/** Each key here must correspond to a file in the runtime folder
- * ej: "headers" -> "/runtime/headers.ts"
- */
-const runtimeExportedRoots = ["headers", "stdio", "sse", "streamable-http"];
+interface RuntimeRoot {
+  name: string;
+  path: string;
+}
 
-const entry: EntryObject = {
-  // stdio: path.join(srcPath, "runtime", "stdio.ts"),
-  // sse: path.join(srcPath, "runtime", "sse.ts"),
-  // "streamable-http": path.join(srcPath, "runtime", "streamable-http.ts"),
-};
+const runtimeRoots: RuntimeRoot[] = [
+  { name: "headers", path: "headers" },
+  { name: "stdio", path: "transports/stdio" },
+  { name: "http", path: "transports/http" },
+];
+const entry: EntryObject = {};
 
 // add dynamic entries
-for (const root of runtimeExportedRoots) {
-  entry[root] = path.join(srcPath, "runtime", `${root}.ts`);
+for (const root of runtimeRoots) {
+  entry[root.name] = path.join(srcPath, "runtime", root.path);
 }
 
 const config: Configuration = {
@@ -53,21 +54,6 @@ const config: Configuration = {
         return !libsToExcludeFromCompilation.includes(modulePath);
       },
     }),
-    // Make runtime-exports an external dependency to avoid duplication
-    function (data, callback) {
-      for (const root of runtimeExportedRoots) {
-        if (data.request?.endsWith(`/${root}`)) {
-          return callback(null, `commonjs2 ./${root}.js`);
-        }
-      }
-      callback();
-      // if (
-      //   data.request?.endsWith("runtime-exports")
-      // ) {
-      //   return callback(null, "commonjs2 ./runtime-exports.js");
-      // }
-      // callback();
-    },
   ],
   output: {
     filename: "[name].js",
@@ -114,7 +100,6 @@ const config: Configuration = {
       chunks: "all",
       cacheGroups: {
         shared: {
-          name: "shared",
           minChunks: 2,
           priority: 10,
           reuseExistingChunk: true,
@@ -129,7 +114,11 @@ const config: Configuration = {
     },
   },
   plugins: [
-    new ForkTsCheckerWebpackPlugin(),
+    new ForkTsCheckerWebpackPlugin({
+      typescript: {
+        configFile: path.join(srcPath, "..", "tsconfig.json"),
+      },
+    }),
     new CleanWebpackPlugin({
       cleanStaleWebpackAssets: false,
       cleanOnceBeforeBuildPatterns: [outputPath],

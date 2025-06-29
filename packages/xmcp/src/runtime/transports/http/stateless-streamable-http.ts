@@ -13,10 +13,13 @@ import contentType from "content-type";
 import {
   BaseHttpServerTransport,
   JsonRpcMessage,
-  StreamableHttpTransportOptions,
+  HttpTransportOptions,
 } from "./base-streamable-http";
-import homeTemplate from "../templates/home";
-import { httpContext } from "./http-context";
+import homeTemplate from "../../../templates/home";
+import { httpContextProvider } from "./http-context";
+import chalk from "chalk";
+
+const greenCheck = chalk.bold.green("✔");
 
 type CorsOptions = {
   origin?: string | string[] | boolean;
@@ -269,14 +272,14 @@ export class StatelessStreamableHTTPTransport {
   private port: number;
   private endpoint: string;
   private debug: boolean;
-  private options: StreamableHttpTransportOptions;
+  private options: HttpTransportOptions;
   private createServerFn: () => Promise<McpServer>;
   private corsOptions: CorsOptions;
   private middleware: RequestHandler | undefined;
 
   constructor(
     createServerFn: () => Promise<McpServer>,
-    options: StreamableHttpTransportOptions = {},
+    options: HttpTransportOptions = {},
     corsOptions: CorsOptions = {},
     middleware: RequestHandler | undefined
   ) {
@@ -375,7 +378,7 @@ export class StatelessStreamableHTTPTransport {
     // isolate requests context
     this.app.use((req: Request, res: Response, next: NextFunction) => {
       const id = crypto.randomUUID();
-      httpContext.run({ id, headers: req.headers }, () => {
+      httpContextProvider({ id, headers: req.headers }, () => {
         next();
       });
     });
@@ -412,7 +415,7 @@ export class StatelessStreamableHTTPTransport {
 
       await transport.handleRequest(req, res, req.body);
     } catch (error) {
-      console.error("[StatelessHTTP] Error handling MCP request:", error);
+      console.error("[HTTP-server] Error handling MCP request:", error);
       if (!res.headersSent) {
         res.status(500).json({
           jsonrpc: "2.0",
@@ -431,14 +434,8 @@ export class StatelessStreamableHTTPTransport {
 
     this.server.listen(this.port, host, () => {
       console.log(
-        `[StatelessHTTP] MCP Server running on http://${host}:${this.port}`
+        `${greenCheck} MCP Server running on http://${host}:${this.port}${this.endpoint}`
       );
-      console.log(
-        `[StatelessHTTP] - MCP endpoint: http://${host}:${this.port}${this.endpoint}`
-      );
-      if (this.debug) {
-        console.log("[StatelessHTTP] Debug mode: enabled");
-      }
 
       this.setupShutdownHandlers();
     });

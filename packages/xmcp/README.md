@@ -171,8 +171,8 @@ npm run build
 # Start built server (stdio transport)
 node dist/stdio.js
 
-# Start built server (SSE transport)
-node dist/sse.js
+# Start built server (HTTP transport)
+node dist/http.js
 ```
 
 ## Project Structure
@@ -206,7 +206,7 @@ your-project/
 ### MCP Compatibility
 
 - Tools return MCP-compatible response objects
-- Supports both `stdio` and `sse` transports
+- Supports both `stdio` and `http` transports
 - Full compatibility with MCP clients and AI models
 
 ## Vercel Deployment

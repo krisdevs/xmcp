@@ -1,6 +1,6 @@
 import { IncomingMessage, ServerResponse } from "http";
 
-export interface StreamableHttpTransportOptions {
+export interface HttpTransportOptions {
   port?: number;
   endpoint?: string;
   bodySizeLimit?: string;

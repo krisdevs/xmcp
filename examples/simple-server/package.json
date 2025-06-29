@@ -4,7 +4,7 @@
   "scripts": {
     "build": "xmcp build",
     "dev": "xmcp dev",
-    "start-sse": "node dist/sse.js",
+    "start-http": "node dist/http.js",
     "start-stdio": "node dist/stdio.js"
   },
   "dependencies": {

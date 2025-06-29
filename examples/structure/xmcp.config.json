@@ -1,5 +1,5 @@
 {
-  "streamable-http": {
+  "http": {
     "port": 3002,
     "stateless": true,
     "cors": {

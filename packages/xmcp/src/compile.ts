@@ -19,8 +19,10 @@ dotenv.config();
 
 let httpServerProcess: ChildProcess | null = null;
 
+const greenCheck = chalk.bold.green("✔");
+
 function spawnHttpServer() {
-  const process = spawn("node", ["dist/streamable-http.js"], {
+  const process = spawn("node", ["dist/http.js"], {
     stdio: "inherit",
     shell: true,
   });
@@ -37,13 +39,15 @@ async function killProcess(process: ChildProcess) {
   });
 }
 
+const yellowArrow = chalk.bold.yellow("❯");
+
 async function startHttpServer() {
   if (!httpServerProcess) {
-    console.log("Starting http server");
+    console.log(`${yellowArrow} Starting http server`);
     // first time starting the server
     httpServerProcess = spawnHttpServer();
   } else {
-    console.log("Restarting http server");
+    console.log(`${yellowArrow} Restarting http server`);
     // restart the server
     await killProcess(httpServerProcess);
     httpServerProcess = spawnHttpServer();
@@ -171,13 +175,15 @@ export function compile({
         firstBuild = false;
         const endTime = Date.now();
         const duration = endTime - startTime;
-        console.log(`Compiled in ${chalk.bold.green(`${duration}ms`)}`);
+        console.log(
+          `${greenCheck} Compiled in ${chalk.bold.green(`${duration}ms`)}`
+        );
         onFirstBuild(mode, xmpcConfig);
         // user defined callback
         onBuild?.();
       } else {
         // on dev mode, webpack will recompile the code, so we need to start the http server after the first one
-        if (mode === "development" && xmpcConfig["streamable-http"]) {
+        if (mode === "development" && xmpcConfig["http"]) {
           startHttpServer();
         }
       }
@@ -203,7 +209,7 @@ function generateCode(pathlist: string[], hasMiddleware: boolean) {
 
 function onFirstBuild(mode: CompilerMode, xmcpConfig: XmcpConfig) {
   if (mode === "development") {
-    console.log(chalk.bold.green("Starting inspector..."));
+    console.log("🔍 Starting inspector...");
 
     const inspectorArgs = ["@modelcontextprotocol/inspector@latest"];
 
@@ -211,32 +217,49 @@ function onFirstBuild(mode: CompilerMode, xmcpConfig: XmcpConfig) {
       inspectorArgs.push("node", "dist/stdio.js");
     }
 
-    const inspector = watchdog(
-      spawn("npx", inspectorArgs, {
-        stdio: "inherit",
-        shell: true,
-      })
-    );
+    const inspectorProcess = spawn("npx", inspectorArgs, {
+      stdio: ["inherit", "pipe", "pipe"],
+      shell: true,
+    });
 
-    inspector.on("error", (err: Error) => {
-      console.error("Failed to start inspector:", err);
+    watchdog(inspectorProcess);
+
+    // Prefix inspector output with [Inspector]
+    inspectorProcess.stdout?.on("data", (data: Buffer) => {
+      const lines = data.toString().split("\n");
+      lines.forEach((line) => {
+        if (line.trim()) {
+          if (line.includes("?MCP_PROXY_AUTH_TOKEN")) {
+            console.log(`🔍 Inspector started at ${line}`);
+          }
+        }
+      });
+    });
+
+    inspectorProcess.stderr?.on("data", (data: Buffer) => {
+      const lines = data.toString().split("\n");
+      lines.forEach((line) => {
+        if (line.trim()) {
+          console.error(`[Inspector] ${line}`);
+        }
+      });
+    });
+
+    inspectorProcess.on("error", (err: Error) => {
+      console.error("[Inspector] Failed to start inspector:", err);
     });
   }
 
   const builtResults = [];
 
-  if (xmcpConfig.sse) {
-    builtResults.push("- SSE server");
-  }
   if (xmcpConfig.stdio) {
-    builtResults.push("- STDIO server");
+    builtResults.push(`${greenCheck} Built STDIO server`);
   }
-  if (xmcpConfig["streamable-http"]) {
-    builtResults.push("- Streamable HTTP server");
+  if (xmcpConfig["http"]) {
+    builtResults.push(`${greenCheck} Built HTTP server`);
   }
 
-  console.log(chalk.bold.green("Built:"));
   builtResults.forEach((result) => {
-    console.log(chalk.bold(result));
+    console.log(result);
   });
 }

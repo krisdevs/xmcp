@@ -52,7 +52,7 @@ async function buildVercelOutput() {
   fs.mkdirSync(functionsDir, { recursive: true });
 
   const distDir = path.join(rootDir, "dist");
-  const sourceFile = path.join(distDir, "streamable-http.js");
+  const sourceFile = path.join(distDir, "http.js");
   const targetFile = path.join(functionsDir, "index.js");
 
   if (!fs.existsSync(distDir)) {
@@ -67,7 +67,7 @@ async function buildVercelOutput() {
     );
   }
 
-  // copy all other files from dist directory that streamable-http.js might depend on
+  // copy all other files from dist directory that http.js might depend on
   const distContents = fs.readdirSync(distDir);
 
   // to do add proper error handling for failed copy
@@ -75,12 +75,7 @@ async function buildVercelOutput() {
     const sourcePath = path.join(distDir, item);
     const targetPath = path.join(functionsDir, item);
 
-    if (
-      item === "streamable-http.js" ||
-      item === "sse.js" ||
-      item === "stdio.js"
-    )
-      continue;
+    if (item === "http.js" || item === "stdio.js") continue;
 
     const stat = fs.statSync(sourcePath);
     if (stat.isFile()) {

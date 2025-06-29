@@ -14,7 +14,7 @@ yarn dev
 pnpm dev
 ```
 
-This will start the MCP server with both SSE and STDIO transport methods.
+This will start the MCP server with both HTTP and STDIO transport methods.
 
 ## Project Structure
 
@@ -78,7 +78,7 @@ This will compile your TypeScript code and output it to the `dist` directory.
 To run your bundled MCP server in production:
 
 ```bash
-npm run start-sse
+npm run start-http
 # or
 npm run start-stdio
 ```
