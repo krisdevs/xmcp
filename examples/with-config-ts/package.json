@@ -1,0 +1,13 @@
+{
+  "name": "with-config-ts",
+  "description": "A simple mcp server with xmcp.config.ts",
+  "scripts": {
+    "build": "xmcp build",
+    "dev": "xmcp dev",
+    "start": "node dist/http.js"
+  },
+  "dependencies": {
+    "xmcp": "workspace:*",
+    "zod": "^3.24.4"
+  }
+}

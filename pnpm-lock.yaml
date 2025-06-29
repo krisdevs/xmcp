@@ -154,6 +154,15 @@ importers:
         specifier: ^3.24.4
         version: 3.24.4
 
+  examples/with-config-ts:
+    dependencies:
+      xmcp:
+        specifier: workspace:*
+        version: link:../../packages/xmcp
+      zod:
+        specifier: ^3.24.4
+        version: 3.24.4
+
   packages/create-xmcp-app:
     dependencies:
       chalk:
