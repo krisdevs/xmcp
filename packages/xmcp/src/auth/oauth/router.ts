@@ -5,7 +5,10 @@ import {
   TokenParams,
   RevokeParams,
   OAuthError,
+  OAuthClient,
+  ProxyOAuthServerProvider,
 } from "./types";
+import { createHash } from "crypto";
 
 export function createOAuthRouter(config: OAuthRouterConfig): Router {
   const router = Router();
@@ -20,6 +23,7 @@ export function createOAuthRouter(config: OAuthRouterConfig): Router {
   // to do this actually should be done in the middleware, not the router
   // for testing purposes only
   router.use((req: Request, res: Response, next: NextFunction) => {
+    // to do check: cors config from ts file is overriding and failing to add headers
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
     res.setHeader(
@@ -256,18 +260,189 @@ export function createOAuthRouter(config: OAuthRouterConfig): Router {
     }
   );
 
-  // dynamic client registration endpoint - redirect to external provider
+  // dynamic client registration endpoint - check for existing client first, then register if needed
   // DCR is mandatory - no fallback needed since registerUrl is required
-  router.all(`${pathPrefix}/register`, (req: Request, res: Response) => {
-    if (req.method === "GET") {
-      res.redirect(provider.endpoints.registerUrl);
-    } else {
-      // For POST requests, redirect with 307 to preserve method and body
-      res.redirect(307, provider.endpoints.registerUrl);
+  router.all(`${pathPrefix}/register`, async (req: Request, res: Response) => {
+    try {
+      if (req.method === "GET") {
+        // For GET requests, just redirect to the external provider's registration page
+        res.redirect(provider.endpoints.registerUrl);
+        return;
+      }
+
+      // For POST requests, implement proper DCR deduplication logic
+      const registrationRequest = req.body;
+
+      const platformId = generatePlatformId(registrationRequest);
+
+      const existingClient = await findExistingClientByPlatform(
+        provider,
+        platformId,
+        registrationRequest
+      );
+
+      if (existingClient) {
+        // return the existing client information in DCR response format
+        const response = {
+          client_id: existingClient.client_id,
+          client_secret: existingClient.client_secret,
+          redirect_uris: existingClient.redirect_uris,
+          grant_types: existingClient.grant_types || ["authorization_code"],
+          response_types: existingClient.response_types || ["code"],
+          scope: existingClient.scopes
+            ? existingClient.scopes.join(" ")
+            : "openid profile email",
+        };
+
+        res.json(response);
+        return;
+      }
+
+      // no existing client found, proceed with new registration
+
+      const response = await fetch(provider.endpoints.registerUrl, {
+        method: req.method,
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          ...(req.headers["user-agent"] && {
+            "User-Agent": req.headers["user-agent"] as string,
+          }),
+        },
+        body: JSON.stringify(registrationRequest),
+      });
+
+      const registrationData = await response.json();
+
+      if (!response.ok) {
+        res.status(response.status).json(registrationData);
+        return;
+      }
+
+      // if registration was successful, store the client with platform identifier
+      if (registrationData.client_id) {
+        const client = {
+          client_id: registrationData.client_id,
+          client_secret: registrationData.client_secret,
+          redirect_uris: registrationData.redirect_uris || [],
+          grant_types: registrationData.grant_types || ["authorization_code"],
+          response_types: registrationData.response_types || ["code"],
+          scopes: registrationData.scope
+            ? registrationData.scope.split(" ")
+            : ["openid", "profile", "email"],
+          platform_id: platformId,
+        };
+
+        await provider.saveClient(client);
+      }
+
+      res.json(registrationData);
+    } catch (error) {
+      console.error("Error in registration endpoint:", error);
+      res.status(500).json({
+        error: "server_error",
+        error_description: "Failed to register client",
+      });
     }
   });
 
   return router;
+}
+
+/**
+ * Generate a platform identifier from the registration request
+ * This is used to identify if a client for this platform already exists
+ */
+function generatePlatformId(registrationRequest: any): string {
+  // Use a combination of redirect_uris and client_name to create a platform ID
+  // this ensures clients with the same configuration are treated as the same platform
+  // to do check: maybe use a set of all fields that are relevant to the client or are provided by registration, not just redirect_uris
+  const redirect_uris = Array.isArray(registrationRequest.redirect_uris)
+    ? registrationRequest.redirect_uris.sort().join(",")
+    : "";
+  const client_name = registrationRequest.client_name || "";
+
+  const platformData = `${redirect_uris}|${client_name}`;
+  return createHash("sha256")
+    .update(platformData)
+    .digest("hex")
+    .substring(0, 16);
+}
+
+/**
+ * Find an existing client by platform identifier and matching metadata
+ */
+async function findExistingClientByPlatform(
+  provider: ProxyOAuthServerProvider,
+  platformId: string,
+  registrationRequest: any
+): Promise<OAuthClient | null> {
+  try {
+    const memoryStorage = (provider as any).storage;
+    if (!memoryStorage || !memoryStorage.clients) {
+      return null;
+    }
+
+    const clientsMap = (memoryStorage.clients as any).clients;
+    if (!clientsMap || typeof clientsMap.values !== "function") {
+      return null;
+    }
+
+    for (const client of clientsMap.values()) {
+      if (client.platform_id === platformId) {
+        if (clientMatchesRegistrationRequest(client, registrationRequest)) {
+          return client;
+        }
+      }
+
+      // Also check for clients that match the configuration but don't have platform_id set
+      // (for backwards compatibility)
+      if (
+        !client.platform_id &&
+        clientMatchesRegistrationRequest(client, registrationRequest)
+      ) {
+        // update the client to include the platform_id for future lookups
+        client.platform_id = platformId;
+        await provider.saveClient(client);
+        return client;
+      }
+    }
+
+    return null;
+  } catch (error) {
+    console.error("Error finding existing client:", error);
+    return null;
+  }
+}
+
+/**
+ * Check if an existing client matches the registration request
+ */
+function clientMatchesRegistrationRequest(
+  client: OAuthClient,
+  registrationRequest: any
+): boolean {
+  // Compare key fields to see if this is the same client configuration
+  const requestUris = Array.isArray(registrationRequest.redirect_uris)
+    ? registrationRequest.redirect_uris.sort()
+    : [];
+  const clientUris = Array.isArray(client.redirect_uris)
+    ? client.redirect_uris.sort()
+    : [];
+
+  if (requestUris.length !== clientUris.length) {
+    return false;
+  }
+
+  for (let i = 0; i < requestUris.length; i++) {
+    if (requestUris[i] !== clientUris[i]) {
+      return false;
+    }
+  }
+
+  // additional checks could include client_name, grant_types, etc. TBD
+  // actually it should probably go over all the fields and check if they match
+  return true;
 }
 
 // create middleware for protecting routes

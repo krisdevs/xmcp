@@ -37,6 +37,11 @@ export class ProxyOAuthServerProvider implements IProxyOAuthServerProvider {
     return await this.storage.clients.getClient(clientId);
   }
 
+  async saveClient(client: OAuthClient): Promise<void> {
+    // store client after registration (if not already in storage)
+    return await this.storage.clients.saveClient(client);
+  }
+
   async verifyAccessToken(token: string): Promise<AccessToken> {
     // Use custom verifyAccessToken function if provided
 

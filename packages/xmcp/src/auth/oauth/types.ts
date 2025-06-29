@@ -5,6 +5,7 @@ export interface OAuthClient {
   grant_types?: string[];
   response_types?: string[];
   scopes?: string[];
+  platform_id?: string; // Optional platform identifier for deduplication
 }
 
 export interface AccessToken {
@@ -79,6 +80,7 @@ export interface OAuthRouterConfig {
 
 export interface ProxyOAuthServerProvider {
   getClient(clientId: string): Promise<OAuthClient | null>;
+  saveClient(client: OAuthClient): Promise<void>;
   verifyAccessToken(token: string): Promise<AccessToken>;
   authorize(params: AuthorizeParams): Promise<string>;
   token(params: TokenParams): Promise<TokenResponse>;

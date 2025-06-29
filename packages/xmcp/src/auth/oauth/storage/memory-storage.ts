@@ -14,50 +14,56 @@ import {
  * Specially since deploying in Vercel is a serverless environment and the memory storage won't persist.
  */
 
+// Module-level storage maps that persist across instances (SINGLETON PATTERN)
+const clientsMap = new Map<string, OAuthClient>();
+const tokensMap = new Map<string, AccessToken>();
+
 export class MemoryClientStorage implements ClientStorage {
-  private clients = new Map<string, OAuthClient>();
+  // instead of instance level otherwise it will be a new instance for each request
+  public clients = clientsMap; // exposing for access
 
   async getClient(clientId: string): Promise<OAuthClient | null> {
-    return this.clients.get(clientId) || null;
+    return clientsMap.get(clientId) || null;
   }
 
   async saveClient(client: OAuthClient): Promise<void> {
-    this.clients.set(client.client_id, client);
+    clientsMap.set(client.client_id, client);
   }
 
   async deleteClient(clientId: string): Promise<void> {
-    this.clients.delete(clientId);
+    clientsMap.delete(clientId);
   }
 }
 
 export class MemoryTokenStorage implements TokenStorage {
-  private tokens = new Map<string, AccessToken>();
+  // same, module level map
+  public tokens = tokensMap;
 
   async getToken(token: string): Promise<AccessToken | null> {
-    const accessToken = this.tokens.get(token);
+    const accessToken = tokensMap.get(token);
     if (
       accessToken &&
       accessToken.expiresAt &&
       accessToken.expiresAt < new Date()
     ) {
-      this.tokens.delete(token);
+      tokensMap.delete(token);
       return null;
     }
     return accessToken || null;
   }
 
   async saveToken(token: AccessToken): Promise<void> {
-    this.tokens.set(token.token, token);
+    tokensMap.set(token.token, token);
   }
 
   async deleteToken(token: string): Promise<void> {
-    this.tokens.delete(token);
+    tokensMap.delete(token);
   }
 
   async deleteTokensByClient(clientId: string): Promise<void> {
-    for (const [tokenValue, tokenData] of this.tokens.entries()) {
+    for (const [tokenValue, tokenData] of tokensMap.entries()) {
       if (tokenData.clientId === clientId) {
-        this.tokens.delete(tokenValue);
+        tokensMap.delete(tokenValue);
       }
     }
   }
