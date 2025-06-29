@@ -92,6 +92,9 @@ export interface AuthorizeParams {
   redirect_uri: string;
   scope?: string;
   state?: string;
+  // PKCE parameters (RFC 7636) - mandatory for security
+  code_challenge: string;
+  code_challenge_method: string;
 }
 
 export interface TokenParams {
@@ -101,6 +104,8 @@ export interface TokenParams {
   code?: string;
   redirect_uri?: string;
   refresh_token?: string;
+  // PKCE parameter (RFC 7636) - mandatory when using authorization_code grant
+  code_verifier?: string;
 }
 
 export interface RevokeParams {

@@ -83,6 +83,8 @@ export function createOAuthRouter(config: OAuthRouterConfig): Router {
             "client_secret_basic",
           ],
           scopes_supported: ["openid", "profile", "email"],
+          // PKCE support (RFC 7636) - S256 mandatory for security
+          code_challenge_methods_supported: ["S256"],
           // DCR is mandatory - all clients must register
           // this is what MCP recommends doing to handle the entire OAuth flow
           // cause we're not supporting manually setting up the client
@@ -112,12 +114,34 @@ export function createOAuthRouter(config: OAuthRouterConfig): Router {
         redirect_uri: req.query.redirect_uri as string,
         scope: req.query.scope as string,
         state: req.query.state as string,
+        // PKCE parameters (RFC 7636)
+        code_challenge: req.query.code_challenge as string,
+        code_challenge_method: req.query.code_challenge_method as string,
       };
 
       if (!params.response_type || !params.client_id || !params.redirect_uri) {
         res.status(400).json({
           error: "invalid_request",
           error_description: "Missing required parameters",
+        });
+        return;
+      }
+
+      // PKCE params validation
+      if (!params.code_challenge || !params.code_challenge_method) {
+        res.status(400).json({
+          error: "invalid_request",
+          error_description:
+            "PKCE parameters (code_challenge, code_challenge_method) are required",
+        });
+        return;
+      }
+
+      // only allow S256 method
+      if (params.code_challenge_method !== "S256") {
+        res.status(400).json({
+          error: "invalid_request",
+          error_description: "Only S256 code challenge method is supported",
         });
         return;
       }
@@ -141,12 +165,24 @@ export function createOAuthRouter(config: OAuthRouterConfig): Router {
         code: req.body.code,
         redirect_uri: req.body.redirect_uri,
         refresh_token: req.body.refresh_token,
+        // PKCE parameter (RFC 7636)
+        code_verifier: req.body.code_verifier,
       };
 
       if (!params.grant_type || !params.client_id) {
         res.status(400).json({
           error: "invalid_request",
           error_description: "Missing required parameters",
+        });
+        return;
+      }
+
+      // PKCE is mandatory for authorization_code grant
+      if (params.grant_type === "authorization_code" && !params.code_verifier) {
+        res.status(400).json({
+          error: "invalid_request",
+          error_description:
+            "code_verifier is required for authorization_code grant (PKCE)",
         });
         return;
       }
