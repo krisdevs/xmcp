@@ -13,7 +13,7 @@ import contentType from "content-type";
 import {
   BaseHttpServerTransport,
   JsonRpcMessage,
-  StreamableHttpTransportOptions,
+  HttpTransportOptions,
 } from "./base-streamable-http";
 import homeTemplate from "../../../templates/home";
 import { httpContextProvider } from "./http-context";
@@ -272,14 +272,14 @@ export class StatelessStreamableHTTPTransport {
   private port: number;
   private endpoint: string;
   private debug: boolean;
-  private options: StreamableHttpTransportOptions;
+  private options: HttpTransportOptions;
   private createServerFn: () => Promise<McpServer>;
   private corsOptions: CorsOptions;
   private middleware: RequestHandler | undefined;
 
   constructor(
     createServerFn: () => Promise<McpServer>,
-    options: StreamableHttpTransportOptions = {},
+    options: HttpTransportOptions = {},
     corsOptions: CorsOptions = {},
     middleware: RequestHandler | undefined
   ) {
