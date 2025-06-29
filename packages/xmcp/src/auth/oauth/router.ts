@@ -83,6 +83,10 @@ export function createOAuthRouter(config: OAuthRouterConfig): Router {
             "client_secret_basic",
           ],
           scopes_supported: ["openid", "profile", "email"],
+          // DCR is mandatory - all clients must register
+          // this is what MCP recommends doing to handle the entire OAuth flow
+          // cause we're not supporting manually setting up the client
+          registration_endpoint: `${baseUrl.toString().replace(/\/$/, "")}${pathPrefix}/register`,
           ...(serviceDocumentationUrl && {
             service_documentation: serviceDocumentationUrl.toString(),
           }),
@@ -215,6 +219,17 @@ export function createOAuthRouter(config: OAuthRouterConfig): Router {
       }
     }
   );
+
+  // dynamic client registration endpoint - redirect to external provider
+  // DCR is mandatory - no fallback needed since registerUrl is required
+  router.all(`${pathPrefix}/register`, (req: Request, res: Response) => {
+    if (req.method === "GET") {
+      res.redirect(provider.endpoints.registerUrl);
+    } else {
+      // For POST requests, redirect with 307 to preserve method and body
+      res.redirect(307, provider.endpoints.registerUrl);
+    }
+  });
 
   return router;
 }

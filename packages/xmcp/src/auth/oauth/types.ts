@@ -22,6 +22,7 @@ export interface OAuthEndpoints {
   tokenUrl: string;
   revocationUrl?: string;
   userInfoUrl?: string;
+  registerUrl: string; // DCR is mandatory
 }
 
 export interface OAuthError {
@@ -62,7 +63,7 @@ export interface ProxyOAuthProviderConfig {
   endpoints: OAuthEndpoints;
   storage?: OAuthStorage;
   verifyAccessToken?: (token: string) => Promise<AccessToken>;
-  getClient?: (clientId: string) => Promise<OAuthClient | null>;
+  // getClient removed - all clients must be registered through DCR
   issuerUrl?: string;
   defaultScopes?: string[];
 }

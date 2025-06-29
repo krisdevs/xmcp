@@ -32,21 +32,8 @@ export class ProxyOAuthServerProvider implements IProxyOAuthServerProvider {
   }
 
   async getClient(clientId: string): Promise<OAuthClient | null> {
-    // Use custom getClient function if provided, otherwise use storage
-
-    /* custom getClient example:
-
-        getClient: async (client_id) => {
-            return {
-                client_id,
-                redirect_uris: ["http://localhost:3000/callback"],
-            }
-        }
-    */
-
-    if (this.config.getClient) {
-      return await this.config.getClient(clientId);
-    }
+    // only accept clients that were registered through DCR
+    // all clients must exist in storage (no hardcoded clients allowed)
     return await this.storage.clients.getClient(clientId);
   }
 

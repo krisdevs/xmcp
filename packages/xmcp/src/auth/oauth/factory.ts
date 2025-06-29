@@ -25,7 +25,7 @@ export interface OAuthProxyConfig {
 
   // custom verification functions (optional, in case we need to override the default, otherwise default to the provider)
   verifyAccessToken?: (token: string) => Promise<any>;
-  getClient?: (clientId: string) => Promise<any>;
+  // getClient removed - all clients must be registered through DCR
 
   // default scopes
   defaultScopes?: string[];
@@ -40,7 +40,6 @@ export function createOAuthProxy(config: OAuthProxyConfig) {
     endpoints: config.endpoints,
     storage: config.storage || new MemoryOAuthStorage(),
     verifyAccessToken: config.verifyAccessToken,
-    getClient: config.getClient,
     defaultScopes: config.defaultScopes,
   };
 
