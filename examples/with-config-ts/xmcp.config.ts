@@ -5,9 +5,10 @@ const config: XmcpConfig = {
     port: 3002,
   },
   webpack: (config) => {
-    console.log("webpack config", config);
+    // Edit webpack config if needed
     return config;
   },
+  stdio: true,
 };
 
 export default config;
