@@ -9,7 +9,7 @@
     "build": "xmcp build",
     "dev": "xmcp dev",
     "start-stdio": "node dist/stdio.js",
-    "start-http": "node dist/streamable-http.js"
+    "start-http": "node dist/http.js"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.11.4",
