@@ -49,12 +49,6 @@ export type XmcpParsedConfig = Omit<OutputSchema, "webpack"> & {
   webpack?: (config: Configuration) => Configuration;
 };
 
-const a = {
-  http: {
-    port: 3002,
-  },
-} satisfies XmcpInputConfig;
-
 function validateConfig(config: unknown): XmcpParsedConfig {
   return configSchema.parse(config);
 }
