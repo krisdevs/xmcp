@@ -5,7 +5,6 @@ export interface OAuthClient {
   grant_types?: string[];
   response_types?: string[];
   scopes?: string[];
-  platform_id?: string; // Optional platform identifier for deduplication
 }
 
 export interface AccessToken {
