@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { Command } from "commander";
-import { compile } from "./compile";
+import { compile, compilerContext } from "./compile";
 import { buildVercelOutput } from "./platforms/build-vercel-output";
 import chalk from "chalk";
 
@@ -15,7 +15,16 @@ program
   .description("Start development mode")
   .action(() => {
     console.log(`${xmcpLogo} Starting development mode...`);
-    compile({ mode: "development" });
+    compilerContext.provider(
+      {
+        mode: "development",
+        // Ignore platforms on dev mode
+        platforms: {},
+      },
+      () => {
+        compile();
+      }
+    );
   });
 
 program
@@ -24,22 +33,31 @@ program
   .option("--vercel", "Build for Vercel deployment")
   .action(async (options) => {
     console.log(`${xmcpLogo} Building for production...`);
-    compile({
-      mode: "production",
-      onBuild: async () => {
-        if (options.vercel) {
-          console.log(`${xmcpLogo} Building for Vercel...`);
-          try {
-            await buildVercelOutput();
-          } catch (error) {
-            console.error(
-              chalk.red("❌ Failed to create Vercel output structure:"),
-              error
-            );
-          }
-        }
+    compilerContext.provider(
+      {
+        mode: "production",
+        platforms: {
+          vercel: options.vercel,
+        },
       },
-    });
+      () => {
+        compile({
+          onBuild: async () => {
+            if (options.vercel) {
+              console.log(`${xmcpLogo} Building for Vercel...`);
+              try {
+                await buildVercelOutput();
+              } catch (error) {
+                console.error(
+                  chalk.red("❌ Failed to create Vercel output structure:"),
+                  error
+                );
+              }
+            }
+          },
+        });
+      }
+    );
   });
 
 program.parse();

@@ -3,6 +3,7 @@ import path from "path";
 import { z } from "zod";
 import { webpack, type Configuration } from "webpack";
 import { createFsFromVolume, Volume } from "memfs";
+import { compilerContext } from "../compile";
 
 export const DEFAULT_HTTP_PORT = 3002;
 export const DEFAULT_HTTP_BODY_SIZE_LIMIT = 1024 * 1024 * 10; // 10MB
@@ -71,6 +72,19 @@ const configPaths = {
  * Parse and validate xmcp config file
  */
 export async function getConfig(): Promise<XmcpParsedConfig> {
+  const config = await readConfig();
+  const { platforms } = compilerContext.getContext();
+  if (platforms.vercel) {
+    // Remove stdio to deploy on vercel
+    delete config.stdio;
+  }
+  return config;
+}
+
+/**
+ * Read config from file or return default
+ */
+export async function readConfig(): Promise<XmcpParsedConfig> {
   // Simple json config
   const jsonFile = readConfigFile(configPaths.json);
   if (jsonFile) {
