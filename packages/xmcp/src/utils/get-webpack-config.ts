@@ -3,7 +3,7 @@ import path from "path";
 import { outputPath, runtimeFolderPath } from "./constants";
 import fs from "fs-extra";
 import nodeExternals from "webpack-node-externals";
-import { type CompilerMode } from "../compile";
+import { compilerContext } from "../compile";
 import {
   DEFAULT_HTTP_PORT,
   DEFAULT_HTTP_BODY_SIZE_LIMIT,
@@ -22,11 +22,9 @@ type CorsConfig = {
   maxAge?: number;
 };
 
-export function getWebpackConfig(
-  mode: CompilerMode,
-  xmcpConfig: XmcpParsedConfig
-): Configuration {
+export function getWebpackConfig(xmcpConfig: XmcpParsedConfig): Configuration {
   const processFolder = process.cwd();
+  const { mode } = compilerContext.getContext();
   const config: Configuration = {
     mode,
     watch: mode === "development",

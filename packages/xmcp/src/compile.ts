@@ -14,7 +14,19 @@ export { type Middleware } from "./types/middleware";
 import { watchdog } from "./utils/spawn-process";
 import { type ChildProcess, spawn } from "child_process";
 import { generateEnvCode } from "./utils/generate-env-code";
+import { createContext } from "./utils/context";
 dotenv.config();
+
+interface CompilerContext {
+  mode: CompilerMode;
+  platforms: {
+    vercel?: boolean;
+  };
+}
+
+export const compilerContext = createContext<CompilerContext>({
+  name: "xmcp-compiler",
+});
 
 let httpServerProcess: ChildProcess | null = null;
 
@@ -56,16 +68,16 @@ async function startHttpServer() {
 export type CompilerMode = "development" | "production";
 
 export interface CompileOptions {
-  mode: CompilerMode;
   onBuild?: () => void;
 }
 
-export async function compile({ mode, onBuild }: CompileOptions) {
+export async function compile({ onBuild }: CompileOptions = {}) {
+  const { mode } = compilerContext.getContext();
   const startTime = Date.now();
   let compilerStarted = false;
 
   const xmpcConfig = await getConfig();
-  let config = getWebpackConfig(mode, xmpcConfig);
+  let config = getWebpackConfig(xmpcConfig);
 
   if (xmpcConfig.webpack) {
     config = xmpcConfig.webpack(config);
