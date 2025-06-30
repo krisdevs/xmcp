@@ -41,14 +41,7 @@ export interface TokenResponse {
 
 // Storage interfaces for OAuth proxy (codes handled by external provider)
 export interface OAuthStorage {
-  clients: ClientStorage;
   tokens: TokenStorage;
-}
-
-export interface ClientStorage {
-  getClient(clientId: string): Promise<OAuthClient | null>;
-  saveClient(client: OAuthClient): Promise<void>;
-  deleteClient(clientId: string): Promise<void>;
 }
 
 export interface TokenStorage {
@@ -78,8 +71,6 @@ export interface OAuthRouterConfig {
 }
 
 export interface ProxyOAuthServerProvider {
-  getClient(clientId: string): Promise<OAuthClient | null>;
-  saveClient(client: OAuthClient): Promise<void>;
   verifyAccessToken(token: string): Promise<AccessToken>;
   authorize(params: AuthorizeParams): Promise<string>;
   token(params: TokenParams): Promise<TokenResponse>;

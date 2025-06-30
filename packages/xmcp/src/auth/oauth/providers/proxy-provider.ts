@@ -1,7 +1,6 @@
 import {
   ProxyOAuthServerProvider as IProxyOAuthServerProvider,
   ProxyOAuthProviderConfig,
-  OAuthClient,
   AccessToken,
   AuthorizeParams,
   TokenParams,
@@ -29,17 +28,6 @@ export class ProxyOAuthServerProvider implements IProxyOAuthServerProvider {
   // Expose config for router access
   get endpoints() {
     return this.config.endpoints;
-  }
-
-  async getClient(clientId: string): Promise<OAuthClient | null> {
-    // only accept clients that were registered through DCR
-    // all clients must exist in storage (no hardcoded clients allowed)
-    return await this.storage.clients.getClient(clientId);
-  }
-
-  async saveClient(client: OAuthClient): Promise<void> {
-    // store client after registration (if not already in storage)
-    return await this.storage.clients.saveClient(client);
   }
 
   async verifyAccessToken(token: string): Promise<AccessToken> {
@@ -73,18 +61,7 @@ export class ProxyOAuthServerProvider implements IProxyOAuthServerProvider {
   async authorize(params: AuthorizeParams): Promise<string> {
     const { client_id, redirect_uri, response_type, scope, state } = params;
 
-    // Validate client
-    const client = await this.getClient(client_id);
-    if (!client) {
-      throw new Error("Invalid client");
-    }
-
-    // Validate redirect URI
-    if (!client.redirect_uris.includes(redirect_uri)) {
-      throw new Error("Invalid redirect URI");
-    }
-
-    // Build authorization URL for external provider
+    // Let Auth0 handle all client validation - just build the authorization URL
     const authUrl = new URL(this.config.endpoints.authorizationUrl);
     authUrl.searchParams.set("response_type", response_type);
     authUrl.searchParams.set("client_id", client_id);
@@ -113,14 +90,8 @@ export class ProxyOAuthServerProvider implements IProxyOAuthServerProvider {
       refresh_token,
     } = params;
 
-    // Validate client
-    const client = await this.getClient(client_id);
-    if (!client) {
-      throw this.createOAuthError("invalid_client", "Invalid client");
-    }
-
     try {
-      // Forward token request to external provider
+      // Forward token request to external provider (let Auth0 handle client validation)
       const response = await fetch(this.config.endpoints.tokenUrl, {
         method: "POST",
         headers: {

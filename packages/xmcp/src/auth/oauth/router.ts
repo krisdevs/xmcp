@@ -5,7 +5,6 @@ import {
   TokenParams,
   RevokeParams,
   OAuthError,
-  OAuthClient,
   ProxyOAuthServerProvider,
 } from "./types";
 
@@ -149,81 +148,7 @@ export function createOAuthRouter(config: OAuthRouterConfig): Router {
         return;
       }
 
-      // Check if client exists, if not attempt automatic registration
-      let client = await provider.getClient(params.client_id);
-      if (!client) {
-        try {
-          // Attempt automatic client registration using DCR
-          const registrationRequest = {
-            client_id: params.client_id,
-            redirect_uris: [params.redirect_uri],
-            grant_types: ["authorization_code", "refresh_token"],
-            response_types: ["code"],
-            scope: params.scope || "openid profile email",
-            client_name: `Auto-registered client ${params.client_id}`,
-            token_endpoint_auth_method: "client_secret_post",
-          };
-
-          const response = await fetch(provider.endpoints.registerUrl, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Accept: "application/json",
-            },
-            body: JSON.stringify(registrationRequest),
-          });
-
-          if (response.ok) {
-            const registrationData = await response.json();
-
-            // Store the registered client
-            if (registrationData.client_id) {
-              const newClient = {
-                client_id: registrationData.client_id,
-                client_secret: registrationData.client_secret,
-                redirect_uris: registrationData.redirect_uris || [
-                  params.redirect_uri,
-                ],
-                grant_types: registrationData.grant_types || [
-                  "authorization_code",
-                ],
-                response_types: registrationData.response_types || ["code"],
-                scopes: registrationData.scope
-                  ? registrationData.scope.split(" ")
-                  : params.scope?.split(" ") || ["openid", "profile", "email"],
-              };
-
-              await provider.saveClient(newClient);
-              client = newClient;
-            }
-          } else {
-            // Registration failed, return error
-            const errorData = await response.json().catch(() => ({}));
-            res.status(400).json({
-              error: "registration_failed",
-              error_description: `Client registration failed: ${errorData.error_description || response.statusText}`,
-            });
-            return;
-          }
-        } catch (error) {
-          console.error("Error during automatic client registration:", error);
-          res.status(500).json({
-            error: "registration_error",
-            error_description: "Failed to register client automatically",
-          });
-          return;
-        }
-      }
-
-      if (!client) {
-        res.status(400).json({
-          error: "invalid_client",
-          error_description:
-            "Client registration failed and client does not exist",
-        });
-        return;
-      }
-
+      // Let Auth0 handle client validation - just build the authorization URL
       const authUrl = await provider.authorize(params);
 
       res.redirect(authUrl);
@@ -335,18 +260,16 @@ export function createOAuthRouter(config: OAuthRouterConfig): Router {
   );
 
   // dynamic client registration endpoint - check for existing client first, then register if needed
-  // DCR is mandatory - no fallback needed since registerUrl is required
+  // dynamic client registration endpoint - simple proxy to Auth0
   router.all(`${pathPrefix}/register`, async (req: Request, res: Response) => {
     try {
       if (req.method === "GET") {
-        // For GET requests, just redirect to the external provider's registration page
+        // For GET requests, redirect to the external provider's registration page
         res.redirect(provider.endpoints.registerUrl);
         return;
       }
 
-      // For POST requests, proceed with registration
-      const registrationRequest = req.body;
-
+      // For POST requests, proxy to Auth0 (no local storage needed)
       const response = await fetch(provider.endpoints.registerUrl, {
         method: req.method,
         headers: {
@@ -356,33 +279,11 @@ export function createOAuthRouter(config: OAuthRouterConfig): Router {
             "User-Agent": req.headers["user-agent"] as string,
           }),
         },
-        body: JSON.stringify(registrationRequest),
+        body: JSON.stringify(req.body),
       });
 
       const registrationData = await response.json();
-
-      if (!response.ok) {
-        res.status(response.status).json(registrationData);
-        return;
-      }
-
-      // if registration was successful, store the client
-      if (registrationData.client_id) {
-        const client = {
-          client_id: registrationData.client_id,
-          client_secret: registrationData.client_secret,
-          redirect_uris: registrationData.redirect_uris || [],
-          grant_types: registrationData.grant_types || ["authorization_code"],
-          response_types: registrationData.response_types || ["code"],
-          scopes: registrationData.scope
-            ? registrationData.scope.split(" ")
-            : ["openid", "profile", "email"],
-        };
-
-        await provider.saveClient(client);
-      }
-
-      res.json(registrationData);
+      res.status(response.status).json(registrationData);
     } catch (error) {
       console.error("Error in registration endpoint:", error);
       res.status(500).json({

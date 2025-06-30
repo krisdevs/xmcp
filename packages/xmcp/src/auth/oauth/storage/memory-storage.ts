@@ -1,39 +1,15 @@
-import {
-  OAuthStorage,
-  ClientStorage,
-  TokenStorage,
-  OAuthClient,
-  AccessToken,
-} from "../types";
+import { OAuthStorage, TokenStorage, AccessToken } from "../types";
 
 /**
- * Memory storage for OAuth
+ * Memory storage for OAuth tokens only
  *
- * This is a simple in-memory storage implementation for OAuth. Used for development and testing.
+ * This is a simple in-memory storage implementation for OAuth tokens. Used for development and testing.
  * It is not suitable for production environments. Should be warned against using it in production when building or deploying the app.
  * Specially since deploying in Vercel is a serverless environment and the memory storage won't persist.
  */
 
-// Module-level storage maps that persist across instances (SINGLETON PATTERN)
-const clientsMap = new Map<string, OAuthClient>();
+// Module-level storage map that persists across instances (SINGLETON PATTERN)
 const tokensMap = new Map<string, AccessToken>();
-
-export class MemoryClientStorage implements ClientStorage {
-  // instead of instance level otherwise it will be a new instance for each request
-  public clients = clientsMap; // exposing for access
-
-  async getClient(clientId: string): Promise<OAuthClient | null> {
-    return clientsMap.get(clientId) || null;
-  }
-
-  async saveClient(client: OAuthClient): Promise<void> {
-    clientsMap.set(client.client_id, client);
-  }
-
-  async deleteClient(clientId: string): Promise<void> {
-    clientsMap.delete(clientId);
-  }
-}
 
 export class MemoryTokenStorage implements TokenStorage {
   // same, module level map
@@ -70,11 +46,9 @@ export class MemoryTokenStorage implements TokenStorage {
 }
 
 export class MemoryOAuthStorage implements OAuthStorage {
-  public clients: ClientStorage;
   public tokens: TokenStorage;
 
   constructor() {
-    this.clients = new MemoryClientStorage();
     this.tokens = new MemoryTokenStorage();
   }
 }
