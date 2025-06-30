@@ -12,9 +12,6 @@
     "start-http": "node dist/http.js"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.11.4",
-    "ts-loader": "^9.4.2",
-    "typescript": "^5.0.4",
     "xmcp": "latest",
     "zod": "^3.24.4"
   },
