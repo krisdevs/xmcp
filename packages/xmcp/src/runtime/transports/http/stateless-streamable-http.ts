@@ -15,7 +15,7 @@ import {
   JsonRpcMessage,
   HttpTransportOptions,
 } from "./base-streamable-http";
-import homeTemplate from "../../../templates/home";
+import homeTemplate from "../../templates/home";
 import { httpContextProvider } from "./http-context";
 import chalk from "chalk";
 
