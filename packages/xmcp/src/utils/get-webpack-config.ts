@@ -2,7 +2,7 @@ import { Compiler, Configuration, DefinePlugin, ProvidePlugin } from "webpack";
 import path from "path";
 import { outputPath, runtimeFolderPath } from "./constants";
 import fs from "fs-extra";
-import nodeExternals from "webpack-node-externals";
+import { builtinModules } from "module";
 import { compilerContext } from "../compile";
 import {
   DEFAULT_HTTP_PORT,
@@ -35,9 +35,26 @@ export function getWebpackConfig(xmcpConfig: XmcpParsedConfig): Configuration {
     },
     target: "node",
     externals: [
-      nodeExternals({
-        allowlist: ["xmcp/headers"],
-      }),
+      /**
+       * Externalize Node.js built-in modules, bundle everything else
+       */
+      function (data, callback) {
+        const { request } = data;
+
+        if (!request) {
+          return callback();
+        }
+
+        const isBuiltinModule =
+          builtinModules.includes(request) ||
+          builtinModules.includes(request.replace(/^node:/, ""));
+
+        if (isBuiltinModule) {
+          return callback(null, `commonjs ${request}`);
+        }
+
+        callback();
+      },
     ],
     resolve: {
       fallback: {
