@@ -1,6 +1,8 @@
 import fs from "fs";
 import path from "path";
 import { z } from "zod";
+import { webpack, type Configuration } from "webpack";
+import { createFsFromVolume, Volume } from "memfs";
 
 export const DEFAULT_HTTP_PORT = 3002;
 export const DEFAULT_HTTP_BODY_SIZE_LIMIT = 1024 * 1024 * 10; // 10MB
@@ -27,7 +29,6 @@ const configSchema = z.object({
         bodySizeLimit: z.number().default(DEFAULT_HTTP_BODY_SIZE_LIMIT),
         debug: z.boolean().default(false),
         endpoint: z.string().default(DEFAULT_HTTP_ENDPOINT),
-        stateless: z.boolean().default(DEFAULT_HTTP_STATELESS),
         cors: corsConfigSchema.optional(),
       }),
     ])
@@ -35,9 +36,20 @@ const configSchema = z.object({
   webpack: z.function().args(z.any()).returns(z.any()).optional(),
 });
 
-export type XmcpConfig = z.infer<typeof configSchema>;
+type InputSchema = z.input<typeof configSchema>;
+type OutputSchema = z.output<typeof configSchema>;
 
-function validateConfig(config: unknown): XmcpConfig {
+/** Config type for the user to provide */
+export type XmcpInputConfig = Omit<InputSchema, "webpack"> & {
+  webpack?: (config: Configuration) => Configuration;
+};
+
+/** Config with defaults applied */
+export type XmcpParsedConfig = Omit<OutputSchema, "webpack"> & {
+  webpack?: (config: Configuration) => Configuration;
+};
+
+function validateConfig(config: unknown): XmcpParsedConfig {
   return configSchema.parse(config);
 }
 
@@ -50,15 +62,155 @@ function readConfigFile(pathToConfig: string): string | null {
   return fs.readFileSync(configPath, "utf8");
 }
 
-// parse and validate config
-export function getConfig(configFilePath: string): XmcpConfig {
-  const content = readConfigFile(configFilePath);
+const configPaths = {
+  ts: "xmcp.config.ts",
+  json: "xmcp.config.json",
+};
 
-  if (!content) {
-    return {
-      stdio: true,
-      http: true,
-    };
+/**
+ * Parse and validate xmcp config file
+ */
+export async function getConfig(): Promise<XmcpParsedConfig> {
+  // Simple json config
+  const jsonFile = readConfigFile(configPaths.json);
+  if (jsonFile) {
+    return validateConfig(JSON.parse(jsonFile));
   }
-  return validateConfig(JSON.parse(content));
+
+  // TypeScript config, compile it
+  const tsFile = readConfigFile(configPaths.ts);
+  if (tsFile) {
+    try {
+      return await compileConfig();
+    } catch (error) {
+      console.error("Failed to compile TypeScript config:", error);
+      // Fallback to default config if compilation fails
+      return {
+        stdio: true,
+        http: true,
+      } satisfies XmcpInputConfig;
+    }
+  }
+
+  // Default config
+  return {
+    stdio: true,
+    http: true,
+  } satisfies XmcpInputConfig;
+}
+
+/**
+ * If the user is using a typescript config file,
+ * we need to bundle it, run it and return its copiled code
+ * */
+async function compileConfig(): Promise<XmcpParsedConfig> {
+  const configPath = path.resolve(process.cwd(), configPaths.ts);
+
+  // Create memory filesystem
+  const memoryFs = createFsFromVolume(new Volume());
+
+  // Webpack configuration
+  const webpackConfig: Configuration = {
+    mode: "production",
+    entry: configPath,
+    target: "node",
+    output: {
+      path: "/",
+      filename: "config.js",
+      library: {
+        type: "commonjs2",
+      },
+    },
+    resolve: {
+      extensions: [".ts", ".js"],
+    },
+    module: {
+      rules: [
+        {
+          test: /\.ts$/,
+          use: {
+            loader: "swc-loader",
+            options: {
+              jsc: {
+                parser: {
+                  syntax: "typescript",
+                },
+                target: "es2020",
+              },
+              module: {
+                type: "commonjs",
+              },
+            },
+          },
+          exclude: /node_modules/,
+        },
+      ],
+    },
+    externals: {
+      webpack: "commonjs2 webpack",
+    },
+  };
+
+  return new Promise((resolve, reject) => {
+    const compiler = webpack(webpackConfig);
+
+    // Use memory filesystem for output
+    compiler.outputFileSystem = memoryFs as any;
+
+    compiler.run((err, stats) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+
+      if (stats?.hasErrors()) {
+        reject(new Error(stats.toString({ colors: false, errors: true })));
+        return;
+      }
+
+      try {
+        // Read the bundled code from memory
+        const bundledCode = memoryFs.readFileSync(
+          "/config.js",
+          "utf8"
+        ) as string;
+
+        // Create a temporary module to evaluate the bundled code
+        const module = { exports: {} };
+        const require = (id: string) => {
+          // Handle webpack require
+          if (id === "webpack") {
+            return webpack;
+          }
+          throw new Error(`Cannot resolve module: ${id}`);
+        };
+
+        // Evaluate the bundled code
+        const func = new Function(
+          "module",
+          "exports",
+          "require",
+          "__filename",
+          "__dirname",
+          bundledCode
+        );
+        func(
+          module,
+          module.exports,
+          require,
+          configPath,
+          path.dirname(configPath)
+        );
+
+        // Extract the config - it could be default export or direct export
+        const configExport = (module.exports as any).default || module.exports;
+        const config =
+          typeof configExport === "function" ? configExport() : configExport;
+
+        resolve(validateConfig(config));
+      } catch (evalError) {
+        reject(evalError);
+      }
+    });
+  });
 }
