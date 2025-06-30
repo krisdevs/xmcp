@@ -1,52 +1,13 @@
 import path from "path";
 import fs from "fs";
-import { execSync } from "child_process";
 
 const rootDir = process.cwd();
-
-function detectPackageManager(): {
-  manager: string;
-  lockFile: string;
-  installCmd: string;
-} {
-  const pnpmLock = path.join(rootDir, "pnpm-lock.yaml");
-  const npmLock = path.join(rootDir, "package-lock.json");
-  const yarnLock = path.join(rootDir, "yarn.lock");
-
-  if (fs.existsSync(pnpmLock)) {
-    return {
-      manager: "pnpm",
-      lockFile: "pnpm-lock.yaml",
-      installCmd: "pnpm install",
-    };
-  } else if (fs.existsSync(npmLock)) {
-    return {
-      manager: "npm",
-      lockFile: "package-lock.json",
-      installCmd: "npm install",
-    };
-  } else if (fs.existsSync(yarnLock)) {
-    return {
-      manager: "yarn",
-      lockFile: "yarn.lock",
-      installCmd: "yarn install",
-    };
-  } else {
-    return {
-      manager: "npm",
-      lockFile: "",
-      installCmd: "npm install",
-    };
-  }
-}
 
 async function buildVercelOutput() {
   const outputDir = path.join(rootDir, ".vercel", "output");
   const functionsDir = path.join(outputDir, "functions", "api", "index.func");
-  const packageManager = detectPackageManager();
 
   console.log("🚀 Building Vercel output structure...");
-  console.log(`📦 Detected package manager: ${packageManager.manager}`);
 
   fs.mkdirSync(outputDir, { recursive: true });
   fs.mkdirSync(functionsDir, { recursive: true });
@@ -120,20 +81,6 @@ async function buildVercelOutput() {
     path.join(outputDir, "config.json"),
     JSON.stringify(config, null, 2)
   );
-
-  // Install dependencies last, after all files and configs are in place
-  console.log("📦 Installing production dependencies...");
-
-  try {
-    execSync(packageManager.installCmd, {
-      cwd: functionsDir,
-      stdio: "inherit",
-    });
-    console.log("✅ Dependencies installed");
-  } catch (error) {
-    console.error("❌ Failed to install dependencies:", error);
-    throw error;
-  }
 
   console.log("✅ Vercel output structure created successfully");
 }
