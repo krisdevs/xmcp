@@ -20,6 +20,9 @@ importers:
 
   apps/website:
     dependencies:
+      '@vercel/analytics':
+        specifier: ^1.5.0
+        version: 1.5.0(next@15.3.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -92,7 +95,7 @@ importers:
         version: 5.8.3
       xmcp:
         specifier: latest
-        version: 0.0.15(typescript@5.8.3)
+        version: 0.0.16(typescript@5.8.3)
       zod:
         specifier: ^3.24.4
         version: 3.25.67
@@ -120,7 +123,7 @@ importers:
         version: 5.8.3
       xmcp:
         specifier: latest
-        version: 0.0.15(typescript@5.8.3)
+        version: 0.0.16(typescript@5.8.3)
       zod:
         specifier: ^3.24.4
         version: 3.25.67
@@ -160,7 +163,7 @@ importers:
         version: 5.8.3
       xmcp:
         specifier: latest
-        version: 0.0.15(typescript@5.8.3)
+        version: 0.0.16(typescript@5.8.3)
       zod:
         specifier: ^3.24.4
         version: 3.25.67
@@ -1732,6 +1735,32 @@ packages:
     resolution: {integrity: sha512-ryoo+EB19lMxAd80ln9BVf8pdOAxLb97amrQ3SFN9OCRn/5M5wvwDgAe4i8ZjhpbiHoDeP8yavcTEnpKBo7lZg==}
     cpu: [x64]
     os: [win32]
+
+  '@vercel/analytics@1.5.0':
+    resolution: {integrity: sha512-MYsBzfPki4gthY5HnYN7jgInhAZ7Ac1cYDoRWFomwGHWEX7odTEzbtg9kf/QSo7XEsEAqlQugA6gJ2WS2DEa3g==}
+    peerDependencies:
+      '@remix-run/react': ^2
+      '@sveltejs/kit': ^1 || ^2
+      next: '>= 13'
+      react: ^18 || ^19 || ^19.0.0-rc
+      svelte: '>= 4'
+      vue: ^3
+      vue-router: ^4
+    peerDependenciesMeta:
+      '@remix-run/react':
+        optional: true
+      '@sveltejs/kit':
+        optional: true
+      next:
+        optional: true
+      react:
+        optional: true
+      svelte:
+        optional: true
+      vue:
+        optional: true
+      vue-router:
+        optional: true
 
   '@webassemblyjs/ast@1.14.1':
     resolution: {integrity: sha512-nuBEDgQfm1ccRp/8bCQrx1frohyufl4JlbMMZ4P1wpeOfDhF6FQkxZJ1b/e+PLwr6X1Nhw6OLme5usuBWYBvuQ==}
@@ -4490,8 +4519,8 @@ packages:
       utf-8-validate:
         optional: true
 
-  xmcp@0.0.15:
-    resolution: {integrity: sha512-svjCrhQcXog8Q9Hl/C1yCEh3C8UeCN6saUv/sBU8MXfYrf7Tl3Pujkdz56TOaaDomlFSh6onksyOxyoJjXxV7w==}
+  xmcp@0.0.16:
+    resolution: {integrity: sha512-B0xCSjFbUkGMmZf4SqtS8TUb2hXd1sUoetqEP8JCAR5HUWcR6Ng7ZD3bycul8xDnJdX+v4uu2m5MpzuwdPv49g==}
     hasBin: true
 
   xmcp@0.0.2:
@@ -5890,6 +5919,11 @@ snapshots:
 
   '@unrs/resolver-binding-win32-x64-msvc@1.9.2':
     optional: true
+
+  '@vercel/analytics@1.5.0(next@15.3.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)':
+    optionalDependencies:
+      next: 15.3.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      react: 19.1.0
 
   '@webassemblyjs/ast@1.14.1':
     dependencies:
@@ -9051,7 +9085,7 @@ snapshots:
 
   ws@8.18.3: {}
 
-  xmcp@0.0.15(typescript@5.8.3):
+  xmcp@0.0.16(typescript@5.8.3):
     dependencies:
       '@modelcontextprotocol/inspector': 0.14.3(@swc/core@1.12.7)(@types/node@22.15.34)(@types/react-dom@19.1.6(@types/react@19.1.8))(@types/react@19.1.8)(typescript@5.8.3)
       '@modelcontextprotocol/sdk': 1.13.2
