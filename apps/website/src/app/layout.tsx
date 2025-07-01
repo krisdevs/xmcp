@@ -16,6 +16,12 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "xmcp",
   description: "The framework for building & shipping MCP applications.",
+  icons: {
+    icon: "/favicon.ico",
+  },
+  openGraph: {
+    images: "/og-image.png",
+  },
 };
 
 export default function RootLayout({
