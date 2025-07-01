@@ -25,6 +25,7 @@
   },
   "homepage": "https://xmcp.run",
   "scripts": {
+    "website": "turbo run dev --filter=website",
     "xmcp": "turbo run dev --filter=xmcp",
     "build": "turbo run build --filter=xmcp --filter=create-xmcp-app",
     "build:all": "turbo run build",

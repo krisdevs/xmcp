@@ -1,0 +1,38 @@
+.container {
+  border: 0.516px solid #929292;
+  background:
+    radial-gradient(
+      88.13% 114.4% at 100% 44.44%,
+      rgba(255, 255, 255, 0) 43.51%,
+      rgba(255, 255, 255, 0.4) 70.35%
+    ),
+    linear-gradient(
+      214deg,
+      rgba(234, 234, 234, 0.7) 19.77%,
+      rgba(234, 234, 234, 0.95) 22.28%,
+      rgba(237, 237, 237, 0) 100%
+    );
+  box-shadow:
+    -2.582px -1.549px 11.878px 0px rgba(0, 0, 0, 0.04) inset,
+    -1.033px -0.516px 0px 0px #fff inset,
+    -1.033px -1.549px 1.446px 0px rgba(255, 255, 255, 0.55) inset,
+    -1.033px 0.516px 0px 0px #fff inset,
+    0px 1.033px 1.239px 0px rgba(0, 0, 0, 0.15);
+}
+
+/* Start Generation Here */
+@keyframes blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.cursor {
+  animation: blink 1s infinite;
+}
+/* End Generation Here */
