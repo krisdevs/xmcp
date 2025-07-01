@@ -8,17 +8,17 @@ The framework handles complex tasks like transports, building and authentication
 
 ## Features
 
-- 🚀 **Hot Reloading** - Instant development feedback with automatic rebuilds
-- 🔍 **File system routing** - Tools are automatically discovered and registered from `src/tools` directory.
-- 📝 **TypeScript First** - Full TypeScript support with type inference
-- 🎯 **Schema Validation** - Built-in parameter validation with Zod
-- 🛠️ **Rich Tooling** - Built-in CLI for development and building
-- 🔌 **MCP Compatible** - Full compatibility with Model Context Protocol
-- 📡 **STDIO Transport** - Standard I/O transport for local MCP servers
-- 🌐 **HTTP Transport** - Stramable HTTP transport for web-based MCP servers
-- 🔧 **Middleware Support** - Extensible middleware system for request/response processing
-- 🚀 **Deploy Anywhere** - Deploy to any platform.
-- 📦 **Vercel Support** - Built-in support for Vercel deployment
+- **Hot Reloading** - Instant development feedback with automatic rebuilds
+- **File system routing** - Tools are automatically discovered and registered from `src/tools` directory.
+- **TypeScript First** - Full TypeScript support with type inference
+- **Schema Validation** - Built-in parameter validation with Zod
+- **Rich Tooling** - Built-in CLI for development and building
+- **MCP Compatible** - Full compatibility with Model Context Protocol
+- **STDIO Transport** - Standard I/O transport for local MCP servers
+- **HTTP Transport** - Stramable HTTP transport for web-based MCP servers
+- **Middleware Support** - Extensible middleware system for request/response processing
+- **Deploy Anywhere** - Deploy to any platform.
+- **Vercel Support** - Built-in support for Vercel deployment
 
 ## Quick Start
 

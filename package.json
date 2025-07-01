@@ -18,6 +18,12 @@
       "url": "https://github.com/matiasngf"
     }
   ],
+  "keywords": [
+    "mcp",
+    "modelcontextprotocol",
+    "http",
+    "stdio"
+  ],
   "license": "MIT",
   "repository": {
     "type": "git",
