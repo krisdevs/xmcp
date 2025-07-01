@@ -2,14 +2,14 @@ import { Compiler, Configuration, DefinePlugin, ProvidePlugin } from "webpack";
 import path from "path";
 import { outputPath, runtimeFolderPath } from "./constants";
 import fs from "fs-extra";
-import nodeExternals from "webpack-node-externals";
-import { type CompilerMode } from "../compile";
+import { builtinModules } from "module";
+import { compilerContext } from "../compile";
 import {
   DEFAULT_HTTP_PORT,
   DEFAULT_HTTP_BODY_SIZE_LIMIT,
   DEFAULT_HTTP_ENDPOINT,
   DEFAULT_HTTP_STATELESS,
-  XmcpConfig,
+  XmcpParsedConfig,
 } from "./parse-config";
 
 // Add this type for local use
@@ -22,11 +22,9 @@ type CorsConfig = {
   maxAge?: number;
 };
 
-export function getWebpackConfig(
-  mode: CompilerMode,
-  xmcpConfig: XmcpConfig
-): Configuration {
+export function getWebpackConfig(xmcpConfig: XmcpParsedConfig): Configuration {
   const processFolder = process.cwd();
+  const { mode } = compilerContext.getContext();
   const config: Configuration = {
     mode,
     watch: mode === "development",
@@ -37,9 +35,26 @@ export function getWebpackConfig(
     },
     target: "node",
     externals: [
-      nodeExternals({
-        allowlist: ["xmcp/headers"],
-      }),
+      /**
+       * Externalize Node.js built-in modules, bundle everything else
+       */
+      function (data, callback) {
+        const { request } = data;
+
+        if (!request) {
+          return callback();
+        }
+
+        const isBuiltinModule =
+          builtinModules.includes(request) ||
+          builtinModules.includes(request.replace(/^node:/, ""));
+
+        if (isBuiltinModule) {
+          return callback(null, `commonjs ${request}`);
+        }
+
+        callback();
+      },
     ],
     resolve: {
       fallback: {
@@ -97,7 +112,7 @@ export function getWebpackConfig(
       definedVariables.HTTP_ENDPOINT = JSON.stringify(
         xmcpConfig["http"].endpoint
       );
-      definedVariables.HTTP_STATELESS = xmcpConfig["http"].stateless;
+      definedVariables.HTTP_STATELESS = DEFAULT_HTTP_STATELESS;
       cors = xmcpConfig["http"].cors || {};
     } else {
       // http config is boolean

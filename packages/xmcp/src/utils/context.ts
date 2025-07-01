@@ -24,10 +24,27 @@ const getGlobalContext = <T>(key: symbol): T => {
   return (globalThis as any)[key] as T;
 };
 
+/**
+ * Create context allows you to create scoped variables for fucntions.
+ * Similar to React's context API.
+ * Usage:
+ * ```ts
+ * interface MyContext {
+ *   value: string;
+ * }
+ *
+ * const context = createContext({ name: "my-context" });
+ *
+ * context.provider({
+ *   value: "hello",
+ * }, () => {
+ *   // Do something with the context
+ * })```
+ */
 export function createContext<T extends Object>({
   name,
 }: CreateContextOptions): Context<T> {
-  const storageKey = Symbol.for(name);
+  const storageKey = Symbol.for(`xmcp-context-${name}`);
 
   if (getGlobalContext(storageKey)) {
     return getGlobalContext<Context<T>>(storageKey);

@@ -1,7 +1,7 @@
 import { webpack } from "webpack";
 import { getWebpackConfig } from "./utils/get-webpack-config";
 import chalk from "chalk";
-import { getConfig, XmcpConfig } from "./utils/parse-config";
+import { getConfig, XmcpInputConfig } from "./utils/parse-config";
 import chokidar from "chokidar";
 import { generateImportCode } from "./utils/generate-import-code";
 import fs from "fs";
@@ -9,13 +9,24 @@ import { rootFolder, runtimeFolderPath } from "./utils/constants";
 import { createFolder } from "./utils/fs-utils";
 import path from "path";
 import { deleteSync } from "del";
-import { type z } from "zod";
 import dotenv from "dotenv";
 export { type Middleware } from "./types/middleware";
 import { watchdog } from "./utils/spawn-process";
 import { type ChildProcess, spawn } from "child_process";
 import { generateEnvCode } from "./utils/generate-env-code";
+import { createContext } from "./utils/context";
 dotenv.config();
+
+interface CompilerContext {
+  mode: CompilerMode;
+  platforms: {
+    vercel?: boolean;
+  };
+}
+
+export const compilerContext = createContext<CompilerContext>({
+  name: "xmcp-compiler",
+});
 
 let httpServerProcess: ChildProcess | null = null;
 
@@ -57,21 +68,16 @@ async function startHttpServer() {
 export type CompilerMode = "development" | "production";
 
 export interface CompileOptions {
-  mode: CompilerMode;
   onBuild?: () => void;
-  configFilePath?: string;
 }
 
-export function compile({
-  mode,
-  onBuild,
-  configFilePath = "xmcp.config.json",
-}: CompileOptions) {
+export async function compile({ onBuild }: CompileOptions = {}) {
+  const { mode } = compilerContext.getContext();
   const startTime = Date.now();
   let compilerStarted = false;
 
-  const xmpcConfig = getConfig(configFilePath);
-  let config = getWebpackConfig(mode, xmpcConfig);
+  const xmpcConfig = await getConfig();
+  let config = getWebpackConfig(xmpcConfig);
 
   if (xmpcConfig.webpack) {
     config = xmpcConfig.webpack(config);
@@ -207,7 +213,7 @@ function generateCode(pathlist: string[], hasMiddleware: boolean) {
   fs.writeFileSync(envFilePath, runtimeExportsCode);
 }
 
-function onFirstBuild(mode: CompilerMode, xmcpConfig: XmcpConfig) {
+function onFirstBuild(mode: CompilerMode, xmcpConfig: XmcpInputConfig) {
   if (mode === "development") {
     console.log("🔍 Starting inspector...");
 

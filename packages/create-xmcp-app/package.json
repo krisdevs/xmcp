@@ -23,7 +23,7 @@
     "type": "git",
     "url": "https://github.com/basementstudio/xmcp"
   },
-  "homepage": "https://xmcp.run",
+  "homepage": "https://xmcp.dev",
   "description": "Create XMCP apps with one command",
   "main": "index.js",
   "bin": {
