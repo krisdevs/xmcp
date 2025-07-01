@@ -29,7 +29,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-[100svh] flex flex-col`}
       >
         <div className="grow relative">{children}</div>
-        <footer className="text-center text-sm text-white flex uppercase p-8 font-mono [&_a:hover]:underline">
+        <footer className="text-center text-sm text-white flex flex-col lg:flex-row uppercase p-8 font-mono [&_a:hover]:underline gap-4">
           <div className="flex-1 justify-center flex gap-4">
             <Link target="_blank" href="https://github.com/basementstudio/xmcp">
               GitHub
