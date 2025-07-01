@@ -18,10 +18,15 @@ function TerminalContainer({ children }: { children: React.ReactNode }) {
 export function Terminal() {
   return (
     <TerminalContainer>
-      <div className="aspect-video">
+      <div className="aspect-[16/8]">
         <div className="text-left flex gap-2 items-center leading-none">
           <code>⊹ npx create-xmcp-app</code>
-          <div className="bg-white h-4 w-1.5 top-[1px] relative" />
+          <div
+            className={cn(
+              styles.cursor,
+              "bg-white h-4 w-1.5 top-[1px] relative"
+            )}
+          />
         </div>
       </div>
     </TerminalContainer>

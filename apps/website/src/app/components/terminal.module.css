@@ -19,3 +19,20 @@
     -1.033px 0.516px 0px 0px #fff inset,
     0px 1.033px 1.239px 0px rgba(0, 0, 0, 0.15);
 }
+
+/* Start Generation Here */
+@keyframes blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.cursor {
+  animation: blink 1s infinite;
+}
+/* End Generation Here */
