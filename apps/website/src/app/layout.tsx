@@ -29,7 +29,13 @@ export const metadata: Metadata = {
     ],
   },
   openGraph: {
+    siteName: "xmcp",
     images: "/og-image.png",
+    url: "https://xmcp.dev",
+    type: "website",
+    locale: "en_US",
+    title: "xmcp | The MCP framework",
+    description: "The framework for building & shipping MCP applications.",
   },
   manifest: "/site.webmanifest",
   appleWebApp: {
