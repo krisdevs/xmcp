@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { Terminal } from "./components/terminal";
-import logo from "@public/xmcp-logo.svg";
+import Logo from "@public/xmcp-logo.svg";
 
 export default function Home() {
   return (
@@ -14,7 +14,7 @@ export default function Home() {
           width={110}
           height={110}
           className="mx-auto"
-          src={logo}
+          src={Logo}
           alt="XMCP Logo"
         />
         <Terminal />
