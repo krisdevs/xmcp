@@ -1,24 +1,24 @@
-# XMCP
+# xmcp
 
 **The MCP Framework**
 
-XMCP is framework for building and shipping MCP applications. Designed with DX in mind, it streamlines development and lowers the barrier to entry for anyone looking to create and deploy powerful tools on top of the MCP ecosystem.
+xmcp is framework for building and shipping MCP applications. Designed with DX in mind, it streamlines development and lowers the barrier to entry for anyone looking to create and deploy powerful tools on top of the MCP ecosystem.
 
 The framework handles complex tasks like transports, building and authentication, so developers can focus on what matters most: coding the tools, resources, or clients they want to bring to life.
 
 ## Features
 
-- 🚀 **Hot Reloading** - Instant development feedback with automatic rebuilds
-- 🔍 **File system routing** - Tools are automatically discovered and registered from `src/tools` directory.
-- 📝 **TypeScript First** - Full TypeScript support with type inference
-- 🎯 **Schema Validation** - Built-in parameter validation with Zod
-- 🛠️ **Rich Tooling** - Built-in CLI for development and building
-- 🔌 **MCP Compatible** - Full compatibility with Model Context Protocol
-- 📡 **STDIO Transport** - Standard I/O transport for local MCP servers
-- 🌐 **HTTP Transport** - Stramable HTTP transport for web-based MCP servers
-- 🔧 **Middleware Support** - Extensible middleware system for request/response processing
-- 🚀 **Deploy Anywhere** - Deploy to any platform.
-- 📦 **Vercel Support** - Built-in support for Vercel deployment
+- **Hot Reloading** - Instant development feedback with automatic rebuilds
+- **File system routing** - Tools are automatically discovered and registered from `src/tools` directory.
+- **TypeScript First** - Full TypeScript support with type inference
+- **Schema Validation** - Built-in parameter validation with Zod
+- **Rich Tooling** - Built-in CLI for development and building
+- **MCP Compatible** - Full compatibility with Model Context Protocol
+- **STDIO Transport** - Standard I/O transport for local MCP servers
+- **HTTP Transport** - Stramable HTTP transport for web-based MCP servers
+- **Middleware Support** - Extensible middleware system for request/response processing
+- **Deploy Anywhere** - Deploy to any platform.
+- **Vercel Support** - Built-in support for Vercel deployment
 
 ## Quick Start
 
@@ -49,7 +49,7 @@ my-project/
 
 ## Creating Tools
 
-MXCP detects files under `src/tools/` directory and registers them as tools.
+xmcp detects files under `src/tools/` directory and registers them as tools.
 
 The tool file should export three elements:
 
@@ -193,7 +193,7 @@ node dist/http.js
 
 ## Vercel Deployment
 
-XMCP can be deployed to Vercel with the `--vercel` flag. This will create `.vercel` directory with the built output.
+xmcp can be deployed to Vercel with the `--vercel` flag. This will create `.vercel` directory with the built output.
 
 ```bash
 xmcp build --vercel
@@ -219,7 +219,7 @@ The middleware function receives the request and the next function to call. You 
 
 ## xmcp/headers
 
-If you are building an `http` mcp server, you can access the request headers using the `xmcp/headers` module.
+If you are building an `http` MCP server, you can access the request headers using the `xmcp/headers` module.
 
 ```typescript
 import { headers } from "xmcp/headers";

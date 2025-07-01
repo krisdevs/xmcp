@@ -20,6 +20,12 @@
     }
   ],
   "license": "MIT",
+  "keywords": [
+    "mcp",
+    "modelcontextprotocol",
+    "http",
+    "stdio"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/basementstudio/xmcp"
