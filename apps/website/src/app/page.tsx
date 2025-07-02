@@ -12,7 +12,7 @@ export default async function Home() {
         style={{ gap: "calc(var(--spacing) * 12)" }}
       >
         <h1 className="text-lg">xmcp_</h1>
-        <div className="relative w-full h-[150px]">
+        <div className="relative w-full h-[150px] flex items-center justify-center">
           <CavasLogo matcap={assets.glLogoMatcap.url} />
         </div>
         <Terminal />
