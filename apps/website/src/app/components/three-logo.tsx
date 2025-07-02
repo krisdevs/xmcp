@@ -1,18 +1,21 @@
 "use client";
 
 import {
+  MeshDiscardMaterial,
   PerspectiveCamera,
+  useCursor,
   useGLTF,
   useMatcapTexture,
 } from "@react-three/drei";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { useEffect, useRef } from "react";
+import { Canvas, useFrame, useThree, ThreeEvent } from "@react-three/fiber";
+import { useEffect, useRef, useCallback, useState } from "react";
 import { GLTF } from "three/examples/jsm/Addons.js";
 import * as THREE from "three";
 import { useShader } from "@/hook/use-shader";
 import { animate, useMotionValue, useMotionValueEvent } from "framer-motion";
 import { cn } from "@/utils/cn";
 import { create } from "zustand";
+import { clamp } from "three/src/math/MathUtils.js";
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -103,7 +106,8 @@ function ThreeLogo() {
     }
   );
 
-  const isDragging = useRef(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const isDraggingRef = useRef(false);
   const previousMouseX = useRef(0);
   const velocity = useRef(0);
   const damping = 0.95;
@@ -124,9 +128,47 @@ function ThreeLogo() {
 
   const startedRef = useRef(false);
 
+  const handlePointerDown = useCallback((event: ThreeEvent<PointerEvent>) => {
+    isDraggingRef.current = true;
+    previousMouseX.current = event.clientX;
+    setIsDragging(true);
+    event.stopPropagation();
+  }, []);
+
+  const handlePointerMove = useCallback((event: ThreeEvent<PointerEvent>) => {
+    if (!isDraggingRef.current) return;
+
+    const deltaX = event.clientX - previousMouseX.current;
+
+    if (Math.abs(deltaX) < 1) {
+      return;
+    }
+
+    const dragSensitivity = 0.6;
+
+    const desiredVelocity = clamp(deltaX * dragSensitivity, -40, 40);
+
+    // Update velocity based on drag movement
+    velocity.current = THREE.MathUtils.lerp(
+      velocity.current,
+      desiredVelocity,
+      0.2
+    );
+    previousMouseX.current = event.clientX;
+
+    event.stopPropagation();
+  }, []);
+
+  const handlePointerUp = useCallback(() => {
+    isDraggingRef.current = false;
+    setIsDragging(false);
+  }, []);
+
+  const [hovered, setHovered] = useState(false);
+  useCursor(hovered, isDragging ? "grabbing" : "grab");
+
   useFrame((_, delta) => {
     if (!groupRef.current) return;
-
     velocity.current = THREE.MathUtils.lerp(
       velocity.current,
       autoRotationSpeed,
@@ -143,9 +185,16 @@ function ThreeLogo() {
 
   return (
     <>
-      <mesh>
-        <planeGeometry args={[1, 1]} />
-        <meshBasicMaterial color="red" />
+      <mesh
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onPointerOut={handlePointerUp}
+        onPointerEnter={() => setHovered(true)}
+        onPointerLeave={() => setHovered(false)}
+      >
+        <planeGeometry args={[4, 4]} />
+        <MeshDiscardMaterial />
       </mesh>
       <group ref={groupRef} scale-z={2} rotation-y={-Math.PI * 0.2}>
         <primitive object={nodes.Xmcp_1} material={matcapMaterial}></primitive>
