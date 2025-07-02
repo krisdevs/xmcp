@@ -116,7 +116,7 @@ export interface OAuthConfigOptions {
     registerUrl: string;
   };
   issuerUrl: string;
-  baseUrl?: string;
+  baseUrl: string;
   serviceDocumentationUrl?: string;
   pathPrefix?: string;
   defaultScopes?: string[];

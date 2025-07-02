@@ -33,7 +33,7 @@ const oauthEndpointsSchema = z.object({
 const oauthConfigSchema = z.object({
   endpoints: oauthEndpointsSchema,
   issuerUrl: z.string(),
-  baseUrl: z.string().optional(), // auto detect if not provided
+  baseUrl: z.string(),
   serviceDocumentationUrl: z.string().optional(),
   pathPrefix: z.string().default("/oauth2"),
   defaultScopes: z.array(z.string()).default(["openid", "profile", "email"]),
