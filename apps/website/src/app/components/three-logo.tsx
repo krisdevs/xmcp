@@ -12,6 +12,7 @@ import * as THREE from "three";
 import { useShader } from "@/hook/use-shader";
 import { animate, useMotionValue, useMotionValueEvent } from "framer-motion";
 import { cn } from "@/utils/cn";
+import { create } from "zustand";
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -23,6 +24,14 @@ type GLTFResult = GLTF & {
   };
 };
 
+const useGL = create<{
+  isLoaded: boolean;
+  setIsLoaded: (isLoaded: boolean) => void;
+}>((set) => ({
+  isLoaded: false,
+  setIsLoaded: (isLoaded) => set({ isLoaded }),
+}));
+
 function ThreeLogo() {
   const groupRef = useRef<THREE.Group>(null);
   const { nodes } = useGLTF("/xmcp.glb") as any as GLTFResult;
@@ -32,41 +41,6 @@ function ThreeLogo() {
   const gl = useThree((state) => state.gl);
 
   gl.setClearColor(0x000000, 1);
-
-  // const revealTarget = useFBO(1024, 1024, { type: THREE.FloatType });
-
-  // const revealShader = useShader(
-  //   {
-  //     vertexShader: /*glsl*/ `
-  //     void main() {
-  //       gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-  //     }
-  //   `,
-  //     fragmentShader: /*glsl*/ `
-
-  //     float revealSdf() {
-
-  //     }
-
-  //     void main() {
-  //       gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
-  //     }
-  //   `,
-  //   },
-  //   {
-  //     uTime: { value: 0 },
-  //     uReveal: { value: 0 },
-  //   }
-  // );
-
-  // useFrame((state) => {
-  //   const restore = saveGlState(state);
-
-  //   state.gl.setRenderTarget(revealTarget);
-  //   state.gl.clear();
-
-  //   restore();
-  // });
 
   const matcapMaterial = useShader(
     {
@@ -100,14 +74,11 @@ function ThreeLogo() {
       ${noise}
 
       float revealSdf() {
-        float s = vWorldPosition.y * 0.4 + 0.5 + noise(vWorldPosition * 10.) * 0.1;
-
-        s -= uReveal;
-
-        s = step(s, 0.02);
-
-        return s;
-      }
+         float s = -vWorldPosition.y * 0.4 + 0.5 + noise(vWorldPosition * 10.) * 0.1;
+         s -= uReveal;
+         s = step(s, 0.02);
+         return s;
+       }
 
       
       void main() {
@@ -140,14 +111,21 @@ function ThreeLogo() {
 
   useEffect(() => {
     animate(reveal, 0.9, {
-      duration: 1,
+      duration: 1.5,
       ease: "easeOut",
     });
   }, [reveal]);
 
+  const startedRef = useRef(false);
+
   useFrame((_, delta) => {
     if (groupRef.current) {
       groupRef.current.rotation.y += delta * 1;
+    }
+
+    if (!startedRef.current) {
+      startedRef.current = true;
+      useGL.setState({ isLoaded: true });
     }
   });
 
@@ -163,15 +141,7 @@ function ThreeLogo() {
 useGLTF.preload("/xmcp.glb");
 
 export const CavasLogo = () => {
-  const [isLoaded, setIsLoaded] = useState(false);
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setIsLoaded(true);
-    }, 100);
-
-    return () => clearTimeout(timeout);
-  }, []);
+  const { isLoaded } = useGL();
 
   return (
     <Canvas
@@ -187,7 +157,7 @@ export const CavasLogo = () => {
   );
 };
 
-const noise = `
+const noise = /*glsl*/ `
 float mod289(float x){return x - floor(x * (1.0 / 289.0)) * 289.0;}
 vec4 mod289(vec4 x){return x - floor(x * (1.0 / 289.0)) * 289.0;}
 vec4 perm(vec4 x){return mod289(((x * 34.0) + 1.0) * x);}
