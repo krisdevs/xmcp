@@ -37,6 +37,7 @@ const useGL = create<{
 
 function ThreeLogo() {
   const groupRef = useRef<THREE.Group>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { nodes } = useGLTF("/xmcp.glb") as any as GLTFResult;
 
   const [matcap] = useMatcapTexture("3B3C3F_DAD9D5_929290_ABACA8", 1024);

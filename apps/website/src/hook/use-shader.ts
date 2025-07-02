@@ -34,6 +34,7 @@ export function useShader<
     };
 
     return p;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [parameters.vertexShader, parameters.fragmentShader]);
 
   return program;
@@ -59,6 +60,7 @@ export function useRawShader<
     }) as RawShaderProgram<U>;
 
     return p;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [parameters.vertexShader, parameters.fragmentShader]);
 
   return program;

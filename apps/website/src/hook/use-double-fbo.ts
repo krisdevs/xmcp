@@ -18,6 +18,7 @@ class DoubleFBO<
   }
 
   get textures(): TTexture {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return this.read.textures as any as TTexture;
   }
 
@@ -47,6 +48,7 @@ export function useDoubleFBO<
 ): DoubleFBO<TTexture> {
   const fbo = useMemo(
     () => new DoubleFBO<TTexture>(width, height, options),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 
