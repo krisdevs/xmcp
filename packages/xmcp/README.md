@@ -236,3 +236,11 @@ export default async function add({ a, b }: InferSchema<typeof schema>) {
 ---
 
 From the [basement.studio](https://basement.studio)
+
+# Authors
+
+- **[Matias Gonzalez](https://github.com/matiasngf)**
+
+- **[Valentina Bearzotti](https://github.com/valebearzotti)**
+
+> Created at the [basement.studio](https://basement.studio)
