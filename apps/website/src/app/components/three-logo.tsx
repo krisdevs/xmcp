@@ -32,13 +32,9 @@ function ThreeLogo({
   rotation = [0, 0, 0],
 }: ThreeLogoProps) {
   const groupRef = useRef<THREE.Group>(null);
-  const { scene, nodes } = useGLTF("/xmcp.glb") as any as GLTFResult;
+  const { nodes } = useGLTF("/xmcp.glb") as any as GLTFResult;
 
-  // console.log();
-  const [matcap, url] = useMatcapTexture(
-    "3B3C3F_DAD9D5_929290_ABACA8", // index of the matcap texture https://github.com/emmelleppi/matcaps/blob/master/matcap-list.json
-    1024 // size of the texture ( 64, 128, 256, 512, 1024 )
-  );
+  const [matcap] = useMatcapTexture("3B3C3F_DAD9D5_929290_ABACA8", 1024);
 
   return (
     <group ref={groupRef} scale={scale} position={position} rotation={rotation}>
