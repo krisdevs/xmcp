@@ -7,7 +7,7 @@ import express, {
   RequestHandler,
 } from "express";
 import http, { IncomingMessage, ServerResponse } from "http";
-import { randomUUID } from "crypto";
+import { randomUUID } from "node:crypto";
 import getRawBody from "raw-body";
 import contentType from "content-type";
 import {
@@ -18,6 +18,7 @@ import {
 import homeTemplate from "../../templates/home";
 import { httpContextProvider } from "./http-context";
 import chalk from "chalk";
+import { createOAuthProxy, type OAuthProxyConfig } from "../../../auth/oauth";
 
 const greenCheck = chalk.bold.green("✔");
 
@@ -29,6 +30,22 @@ type CorsOptions = {
   credentials?: boolean;
   maxAge?: number;
 };
+
+/* function generateUUID(): string {
+  try {
+    return randomUUID();
+  } catch (error) {
+    // Fallback to a simple UUID v4 implementation if crypto.randomUUID is not available
+    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+      /[xy]/g,
+      function (c) {
+        const r = (Math.random() * 16) | 0;
+        const v = c === "x" ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      }
+    );
+  }
+} */
 
 // no session management, POST only
 class StatelessHttpServerTransport extends BaseHttpServerTransport {
@@ -276,12 +293,14 @@ export class StatelessStreamableHTTPTransport {
   private createServerFn: () => Promise<McpServer>;
   private corsOptions: CorsOptions;
   private middleware: RequestHandler | undefined;
+  private oauthProxy: any;
 
   constructor(
     createServerFn: () => Promise<McpServer>,
     options: HttpTransportOptions = {},
     corsOptions: CorsOptions = {},
-    middleware: RequestHandler | undefined
+    middleware: RequestHandler | undefined,
+    oauthConfig?: OAuthProxyConfig | null
   ) {
     this.options = {
       bindToLocalhost: true,
@@ -295,6 +314,15 @@ export class StatelessStreamableHTTPTransport {
     this.createServerFn = createServerFn;
     this.corsOptions = corsOptions;
     this.middleware = middleware;
+
+    // setup oauth proxy if configuration is provided
+    if (oauthConfig) {
+      const completeOAuthConfig = {
+        ...oauthConfig,
+        baseUrl: oauthConfig.baseUrl || `http://127.0.0.1:${this.port}`,
+      };
+      this.oauthProxy = createOAuthProxy(completeOAuthConfig);
+    }
 
     this.setupMiddleware(options.bodySizeLimit || "10mb");
 
@@ -375,9 +403,13 @@ export class StatelessStreamableHTTPTransport {
       res.send(homeTemplate(this.endpoint));
     });
 
+    if (this.oauthProxy) {
+      this.app.use(this.oauthProxy.router);
+    }
+
     // isolate requests context
     this.app.use((req: Request, res: Response, next: NextFunction) => {
-      const id = crypto.randomUUID();
+      const id = randomUUID();
       httpContextProvider({ id, headers: req.headers }, () => {
         next();
       });
@@ -388,9 +420,20 @@ export class StatelessStreamableHTTPTransport {
       this.app.use(this.middleware);
     }
 
-    this.app.use(this.endpoint, async (req: Request, res: Response) => {
-      await this.handleStatelessRequest(req, res);
-    });
+    if (this.oauthProxy) {
+      // protect main endpoint
+      this.app.use(
+        this.endpoint,
+        this.oauthProxy.middleware,
+        async (req: Request, res: Response) => {
+          await this.handleStatelessRequest(req, res);
+        }
+      );
+    } else {
+      this.app.use(this.endpoint, async (req: Request, res: Response) => {
+        await this.handleStatelessRequest(req, res);
+      });
+    }
   }
 
   private async handleStatelessRequest(
@@ -436,6 +479,21 @@ export class StatelessStreamableHTTPTransport {
       console.log(
         `${greenCheck} MCP Server running on http://${host}:${this.port}${this.endpoint}`
       );
+
+      if (this.oauthProxy && this.debug) {
+        console.log(`🔐 OAuth endpoints available:`);
+        console.log(
+          `   Discovery: http://${host}:${this.port}/.well-known/oauth-authorization-server`
+        );
+        console.log(
+          `   Authorize: http://${host}:${this.port}/oauth2/authorize`
+        );
+        console.log(`   Token: http://${host}:${this.port}/oauth2/token`);
+        console.log(`   Revoke: http://${host}:${this.port}/oauth2/revoke`);
+        console.log(
+          `   Introspect: http://${host}:${this.port}/oauth2/introspect`
+        );
+      }
 
       this.setupShutdownHandlers();
     });

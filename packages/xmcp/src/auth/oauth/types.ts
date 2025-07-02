@@ -106,3 +106,40 @@ export interface RevokeParams {
   client_id?: string;
   client_secret?: string;
 }
+
+export interface OAuthConfigOptions {
+  endpoints: {
+    authorizationUrl: string;
+    tokenUrl: string;
+    revocationUrl?: string;
+    userInfoUrl?: string;
+    registerUrl: string;
+  };
+  issuerUrl: string;
+  baseUrl?: string;
+  serviceDocumentationUrl?: string;
+  pathPrefix?: string;
+  defaultScopes?: string[];
+}
+
+export interface OAuthProxyConfig {
+  // External OAuth provider endpoints - to do probably extend from MCP SDK config
+  endpoints: OAuthEndpoints;
+
+  // base config
+  issuerUrl: string;
+  baseUrl: string;
+  serviceDocumentationUrl?: string;
+  pathPrefix?: string;
+
+  // Storage configuration (optional, defaults to memory)
+  // redis storage to do
+  storage?: OAuthStorage;
+
+  // custom verification functions (optional, in case we need to override the default, otherwise default to the provider)
+  verifyAccessToken?: (token: string) => Promise<any>;
+  // getClient removed - all clients must be registered through DCR
+
+  // default scopes
+  defaultScopes?: string[];
+}

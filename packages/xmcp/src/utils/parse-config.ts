@@ -20,6 +20,31 @@ const corsConfigSchema = z.object({
   maxAge: z.number().optional(),
 });
 
+// oauth endpoints schema
+const oauthEndpointsSchema = z.object({
+  authorizationUrl: z.string(),
+  tokenUrl: z.string(),
+  revocationUrl: z.string().optional(),
+  userInfoUrl: z.string().optional(),
+  registerUrl: z.string(),
+});
+
+// oauth config schema
+const oauthConfigSchema = z.object({
+  endpoints: oauthEndpointsSchema,
+  issuerUrl: z.string(),
+  baseUrl: z.string().optional(), // auto detect if not provided
+  serviceDocumentationUrl: z.string().optional(),
+  pathPrefix: z.string().default("/oauth2"),
+  defaultScopes: z.array(z.string()).default(["openid", "profile", "email"]),
+});
+
+// experimental features schema
+const experimentalConfigSchema = z.object({
+  oauth: oauthConfigSchema.optional(),
+});
+
+// TO DO extract all this config and schemas to a separate file
 const configSchema = z.object({
   stdio: z.boolean().optional(),
   http: z
@@ -34,6 +59,7 @@ const configSchema = z.object({
       }),
     ])
     .optional(),
+  experimental: experimentalConfigSchema.optional(),
   webpack: z.function().args(z.any()).returns(z.any()).optional(),
 });
 

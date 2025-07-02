@@ -5,31 +5,8 @@ import { MemoryOAuthStorage } from "./storage/memory-storage";
 import {
   ProxyOAuthProviderConfig,
   OAuthRouterConfig,
-  OAuthStorage,
-  OAuthEndpoints,
+  OAuthProxyConfig,
 } from "./types";
-
-export interface OAuthProxyConfig {
-  // External OAuth provider endpoints - to do probably extend from MCP SDK config
-  endpoints: OAuthEndpoints;
-
-  // base config
-  issuerUrl: string;
-  baseUrl: string;
-  serviceDocumentationUrl?: string;
-  pathPrefix?: string;
-
-  // Storage configuration (optional, defaults to memory)
-  // redis storage to do
-  storage?: OAuthStorage;
-
-  // custom verification functions (optional, in case we need to override the default, otherwise default to the provider)
-  verifyAccessToken?: (token: string) => Promise<any>;
-  // getClient removed - all clients must be registered through DCR
-
-  // default scopes
-  defaultScopes?: string[];
-}
 
 /**
  * Creates an OAuth proxy setup

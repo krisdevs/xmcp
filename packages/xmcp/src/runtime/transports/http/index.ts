@@ -1,6 +1,8 @@
 import { RequestHandler } from "express";
 import { createServer } from "../../utils/server";
 import { StatelessStreamableHTTPTransport } from "./stateless-streamable-http";
+import { getOAuthConfig } from "../../../auth/oauth/config";
+import { OAuthConfigOptions } from "../../../auth/oauth/types";
 
 // @ts-expect-error: injected by compiler
 const port = HTTP_PORT as number;
@@ -32,6 +34,10 @@ const corsExposedHeaders = HTTP_CORS_EXPOSED_HEADERS as string;
 const corsCredentials = HTTP_CORS_CREDENTIALS as boolean;
 // @ts-expect-error: injected by compiler
 const corsMaxAge = HTTP_CORS_MAX_AGE as number;
+
+// oauth config
+// @ts-expect-error: injected by compiler
+const oauthConfigObj = OAUTH_CONFIG as OAuthConfigOptions | undefined;
 
 async function main() {
   const options = {
@@ -67,12 +73,15 @@ async function main() {
       );
     }
   }
+  const oauthConfig = getOAuthConfig(oauthConfigObj, port);
+
   // should validate for stateless but it is currently the only option supported
   const transport = new StatelessStreamableHTTPTransport(
     createServer,
     options,
     corsOptions,
-    middlewareFn
+    middlewareFn,
+    oauthConfig
   );
   transport.start();
 }
