@@ -38,6 +38,7 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
+    "dev": "tsc --watch",
     "start": "node index.js"
   },
   "dependencies": {
