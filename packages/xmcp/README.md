@@ -2,7 +2,7 @@
 
 **The MCP Framework**
 
-xmcp is framework for building and shipping MCP applications. Designed with DX in mind, it streamlines development and lowers the barrier to entry for anyone looking to create and deploy powerful tools on top of the MCP ecosystem.
+Xmcp is framework for building and shipping MCP applications. Designed with DX in mind, it streamlines development and lowers the barrier to entry for anyone looking to create and deploy powerful tools on top of the MCP ecosystem.
 
 The framework handles complex tasks like transports, building and authentication, so developers can focus on what matters most: coding the tools, resources, or clients they want to bring to life.
 
@@ -49,7 +49,7 @@ my-project/
 
 ## Creating Tools
 
-xmcp detects files under `src/tools/` directory and registers them as tools.
+Xmcp detects files under `src/tools/` directory and registers them as tools.
 
 The tool file should export three elements:
 
