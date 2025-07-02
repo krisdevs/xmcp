@@ -244,10 +244,9 @@ export const CavasLogo = ({ matcap }: { matcap: string }) => {
   return (
     <Canvas
       gl={{ antialias: true, alpha: false }}
-      className={cn("w-[180px] h-[180px]", {
+      className={cn("absolute inset-0 w-full h-full", {
         "opacity-0": !isLoaded,
       })}
-      style={{ width: "180px", height: "180px" }}
     >
       <Suspense fallback={null}>
         <ThreeLogo matcap={matcap} />
