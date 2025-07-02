@@ -3,7 +3,6 @@
 import {
   MeshDiscardMaterial,
   PerspectiveCamera,
-  useCursor,
   useGLTF,
   useMatcapTexture,
 } from "@react-three/drei";
