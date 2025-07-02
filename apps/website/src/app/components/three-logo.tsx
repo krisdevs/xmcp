@@ -12,12 +12,6 @@ import * as THREE from "three";
 import { useShader } from "@/hook/use-shader";
 import { animate, useMotionValue, useMotionValueEvent } from "framer-motion";
 
-interface ThreeLogoProps {
-  scale?: number;
-  position?: [number, number, number];
-  rotation?: [number, number, number];
-}
-
 type GLTFResult = GLTF & {
   nodes: {
     Xmcp_1: THREE.Mesh;
@@ -28,11 +22,7 @@ type GLTFResult = GLTF & {
   };
 };
 
-function ThreeLogo({
-  scale = 1,
-  position = [0, 0, 0],
-  rotation = [0, 0, 0],
-}: ThreeLogoProps) {
+function ThreeLogo() {
   const groupRef = useRef<THREE.Group>(null);
   const { nodes } = useGLTF("/xmcp.glb") as any as GLTFResult;
 
@@ -109,7 +99,7 @@ function ThreeLogo({
 
         s -= uReveal;
 
-        s = smoothstep(0.02, 0.0, s);
+        s = step(s, 0.02);
 
         return s;
       }
@@ -157,13 +147,7 @@ function ThreeLogo({
   });
 
   return (
-    <group
-      ref={groupRef}
-      scale={scale}
-      scale-z={2}
-      position={position}
-      rotation={rotation}
-    >
+    <group ref={groupRef} scale-z={2} rotation-y={-Math.PI * 0.2}>
       <primitive object={nodes.Xmcp_1} material={matcapMaterial}></primitive>
       <primitive object={nodes.Xmcp_2} material={matcapMaterial}></primitive>
     </group>
