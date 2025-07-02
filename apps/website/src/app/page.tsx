@@ -1,6 +1,5 @@
-import Image from "next/image";
 import { Terminal } from "./components/terminal";
-import Logo from "@public/xmcp-logo.svg";
+import { CavasLogo } from "./components/three-logo";
 
 export default function Home() {
   return (
@@ -10,13 +9,7 @@ export default function Home() {
         style={{ gap: "calc(var(--spacing) * 12)" }}
       >
         <h1 className="text-lg">xmcp_</h1>
-        <Image
-          width={110}
-          height={110}
-          className="mx-auto"
-          src={Logo}
-          alt="XMCP Logo"
-        />
+        <CavasLogo />
         <Terminal />
         <h2 className="max-w-[30rem] mx-auto text-2xl">
           The framework for building & shipping MCP applications.
