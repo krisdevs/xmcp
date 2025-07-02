@@ -41,3 +41,9 @@ export const SidebarTreeFragment = fragmentOn("SidebarTree", {
     ...SidebarTreeComponentFragment,
   },
 });
+
+export const AssetsFragment = fragmentOn("Assets", {
+  glLogoMatcap: {
+    url: true,
+  },
+});

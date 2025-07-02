@@ -98,6 +98,19 @@ export interface Articles {
     __typename: 'Articles'
 }
 
+export interface Assets {
+    _analyticsKey: Scalars['String']
+    _dashboardUrl: Scalars['String']
+    _id: Scalars['String']
+    _idPath: Scalars['String']
+    _slug: Scalars['String']
+    _slugPath: Scalars['String']
+    _sys: BlockDocumentSys
+    _title: Scalars['String']
+    glLogoMatcap: BlockImage
+    __typename: 'Assets'
+}
+
 export interface BaseRichTextJson {
     blocks: Scalars['String']
     content: Scalars['BSHBRichTextContentSchema']
@@ -135,7 +148,7 @@ export interface BlockColor {
     __typename: 'BlockColor'
 }
 
-export type BlockDocument = (ArticleComponent | Articles | Collection | Documentation | SidebarTree | SidebarTreeComponent | _AgentSTART | articleComponent_AsList | sidebarTreeComponent_AsList) & { __isUnion?: true }
+export type BlockDocument = (ArticleComponent | Articles | Assets | Collection | Documentation | SidebarTree | SidebarTreeComponent | _AgentSTART | articleComponent_AsList | sidebarTreeComponent_AsList) & { __isUnion?: true }
 
 export interface BlockDocumentSys {
     apiNamePath: Scalars['String']
@@ -329,6 +342,7 @@ export interface Query {
     /** The structure of the repository. Used by START. */
     _structure: Scalars['JSON']
     _sys: RepoSys
+    assets: Assets
     documentation: Documentation
     __typename: 'Query'
 }
@@ -591,6 +605,25 @@ export interface ArticlesGenqlSelection{
     __typename?: boolean | number
 }
 
+export interface AssetsGenqlSelection{
+    _analyticsKey?: { __args: {
+    /**
+     * The scope of the analytics key. Use `send` for just ingesting data. Use `query` if you need to show an analytics data in your website.
+     * 
+     * Have in mind, if you expose your `query` analytics key in the frontend, you'll be exposing all of this block's analytics data to the public. This is generally safe, but it might not be in your case.
+     */
+    scope?: (AnalyticsKeyScope | null)} } | boolean | number
+    _dashboardUrl?: boolean | number
+    _id?: boolean | number
+    _idPath?: boolean | number
+    _slug?: boolean | number
+    _slugPath?: boolean | number
+    _sys?: BlockDocumentSysGenqlSelection
+    _title?: boolean | number
+    glLogoMatcap?: BlockImageGenqlSelection
+    __typename?: boolean | number
+}
+
 export interface BaseRichTextJsonGenqlSelection{
     blocks?: boolean | number
     content?: boolean | number
@@ -647,6 +680,7 @@ export interface BlockDocumentGenqlSelection{
     _title?: boolean | number
     on_ArticleComponent?: ArticleComponentGenqlSelection
     on_Articles?: ArticlesGenqlSelection
+    on_Assets?: AssetsGenqlSelection
     on_Collection?: CollectionGenqlSelection
     on_Documentation?: DocumentationGenqlSelection
     on_SidebarTree?: SidebarTreeGenqlSelection
@@ -983,6 +1017,7 @@ export interface QueryGenqlSelection{
     /** Whether to include type options in the structure. */
     withTypeOptions?: (Scalars['Boolean'] | null)} } | boolean | number
     _sys?: RepoSysGenqlSelection
+    assets?: AssetsGenqlSelection
     documentation?: DocumentationGenqlSelection
     __typename?: boolean | number
 }
@@ -1270,6 +1305,10 @@ export interface FragmentsMap {
   Articles: {
     root: Articles,
     selection: ArticlesGenqlSelection,
+}
+  Assets: {
+    root: Assets,
+    selection: AssetsGenqlSelection,
 }
   BaseRichTextJson: {
     root: BaseRichTextJson,
