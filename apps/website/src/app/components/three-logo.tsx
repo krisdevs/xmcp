@@ -5,12 +5,13 @@ import {
   useGLTF,
   useMatcapTexture,
 } from "@react-three/drei";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { useEffect, useRef } from "react";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { useEffect, useRef, useState } from "react";
 import { GLTF } from "three/examples/jsm/Addons.js";
 import * as THREE from "three";
 import { useShader } from "@/hook/use-shader";
 import { animate, useMotionValue, useMotionValueEvent } from "framer-motion";
+import { cn } from "@/utils/cn";
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -27,6 +28,10 @@ function ThreeLogo() {
   const { nodes } = useGLTF("/xmcp.glb") as any as GLTFResult;
 
   const [matcap] = useMatcapTexture("3B3C3F_DAD9D5_929290_ABACA8", 1024);
+
+  const gl = useThree((state) => state.gl);
+
+  gl.setClearColor(0x000000, 1);
 
   // const revealTarget = useFBO(1024, 1024, { type: THREE.FloatType });
 
@@ -95,7 +100,7 @@ function ThreeLogo() {
       ${noise}
 
       float revealSdf() {
-        float s = length(vWorldPosition.xy) + noise(vWorldPosition * 10.) * 0.3;
+        float s = vWorldPosition.y * 0.4 + 0.5 + noise(vWorldPosition * 10.) * 0.1;
 
         s -= uReveal;
 
@@ -158,10 +163,26 @@ function ThreeLogo() {
 useGLTF.preload("/xmcp.glb");
 
 export const CavasLogo = () => {
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setIsLoaded(true);
+    }, 100);
+
+    return () => clearTimeout(timeout);
+  }, []);
+
   return (
-    <Canvas className="absolute inset-0 w-full h-full">
+    <Canvas
+      gl={{ antialias: true, alpha: true }}
+      className={cn("absolute inset-0 w-full h-full", {
+        "opacity-0": !isLoaded,
+      })}
+    >
       <ThreeLogo />
       <PerspectiveCamera makeDefault position={[0, 0, 3]} fov={30} />
+      <color attach="background" args={["#000000"]} />
     </Canvas>
   );
 };
