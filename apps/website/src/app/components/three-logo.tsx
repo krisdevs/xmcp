@@ -6,7 +6,7 @@ import {
   useMatcapTexture,
 } from "@react-three/drei";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { GLTF } from "three/examples/jsm/Addons.js";
 import * as THREE from "three";
 import { useShader } from "@/hook/use-shader";
@@ -103,6 +103,12 @@ function ThreeLogo() {
     }
   );
 
+  const isDragging = useRef(false);
+  const previousMouseX = useRef(0);
+  const velocity = useRef(0);
+  const damping = 0.95;
+  const autoRotationSpeed = 1;
+
   const reveal = useMotionValue(0);
 
   useMotionValueEvent(reveal, "change", (value) => {
@@ -119,9 +125,15 @@ function ThreeLogo() {
   const startedRef = useRef(false);
 
   useFrame((_, delta) => {
-    if (groupRef.current) {
-      groupRef.current.rotation.y += delta * 1;
-    }
+    if (!groupRef.current) return;
+
+    velocity.current = THREE.MathUtils.lerp(
+      velocity.current,
+      autoRotationSpeed,
+      Math.min(delta * damping, 1)
+    );
+
+    groupRef.current.rotation.y += delta * velocity.current;
 
     if (!startedRef.current) {
       startedRef.current = true;
@@ -130,10 +142,16 @@ function ThreeLogo() {
   });
 
   return (
-    <group ref={groupRef} scale-z={2} rotation-y={-Math.PI * 0.2}>
-      <primitive object={nodes.Xmcp_1} material={matcapMaterial}></primitive>
-      <primitive object={nodes.Xmcp_2} material={matcapMaterial}></primitive>
-    </group>
+    <>
+      <mesh>
+        <planeGeometry args={[1, 1]} />
+        <meshBasicMaterial color="red" />
+      </mesh>
+      <group ref={groupRef} scale-z={2} rotation-y={-Math.PI * 0.2}>
+        <primitive object={nodes.Xmcp_1} material={matcapMaterial}></primitive>
+        <primitive object={nodes.Xmcp_2} material={matcapMaterial}></primitive>
+      </group>
+    </>
   );
 }
 
