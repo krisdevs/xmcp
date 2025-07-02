@@ -5,6 +5,25 @@ export interface JWTAuthMiddlewareConfig extends VerifyOptions {
   secret: string;
 }
 
+/**
+ * Middleware to authenticate requests using a JWT.
+ * @param config - Configuration object containing the JWT secret and verify options.
+ * @returns Express middleware function.
+ *
+ * @example
+ * ```ts
+ * const middleware = jwtAuthMiddleware({
+ *   secret: process.env.JWT_SECRET!,
+ *   algorithms: ["HS256"],
+ *   issuer: "https://example.com",
+ *   audience: "https://example.com",
+ *   subject: "user-id",
+ *   expiresIn: "1h",
+ *   notBefore: "1h",
+ *   clockTolerance: 30,
+ * });
+ * ```
+ */
 export function jwtAuthMiddleware(
   config: JWTAuthMiddlewareConfig
 ): RequestHandler {
