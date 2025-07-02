@@ -34,6 +34,27 @@ type ApiKeyAuthMiddlewareConfig = z.infer<
 
 const errorMessage = "Unauthorized: Missing or invalid API key";
 
+/**
+ * Middleware to authenticate requests using an API key.
+ * @param config - Configuration object containing either a static API key or a function to validate the API key.
+ * @returns Express middleware function.
+ *
+ * @example
+ * ```ts
+ * const middleware = apiKeyAuthMiddleware({
+ *   apiKey: process.env.API_KEY!,
+ * });
+ * ```
+ *
+ * @example
+ * ```ts
+ * const middleware = apiKeyAuthMiddleware({
+ *   validateApiKey: async (key) => {
+ *     return key === process.env.API_KEY!;
+ *   },
+ * });
+ * ```
+ */
 export function apiKeyAuthMiddleware(
   config: ApiKeyAuthMiddlewareConfig
 ): RequestHandler {
