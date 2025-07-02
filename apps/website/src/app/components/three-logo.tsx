@@ -107,6 +107,7 @@ function ThreeLogo() {
     }
   );
 
+  const [hovered, setHovered] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const isDraggingRef = useRef(false);
   const previousMouseX = useRef(0);
@@ -128,6 +129,22 @@ function ThreeLogo() {
   }, [reveal]);
 
   const startedRef = useRef(false);
+
+  // Global mouse event handlers for cursor
+  useEffect(() => {
+    const handleGlobalMouseUp = () => {
+      isDraggingRef.current = false;
+      setIsDragging(false);
+    };
+
+    document.addEventListener("mouseup", handleGlobalMouseUp);
+    document.addEventListener("mouseleave", handleGlobalMouseUp);
+
+    return () => {
+      document.removeEventListener("mouseup", handleGlobalMouseUp);
+      document.removeEventListener("mouseleave", handleGlobalMouseUp);
+    };
+  }, []);
 
   const handlePointerDown = useCallback((event: ThreeEvent<PointerEvent>) => {
     isDraggingRef.current = true;
@@ -160,13 +177,26 @@ function ThreeLogo() {
     event.stopPropagation();
   }, []);
 
-  const handlePointerUp = useCallback(() => {
+  const handlePointerUp = useCallback((event?: ThreeEvent<PointerEvent>) => {
     isDraggingRef.current = false;
     setIsDragging(false);
+    if (event) event.stopPropagation();
   }, []);
 
-  const [hovered, setHovered] = useState(false);
-  useCursor(hovered, isDragging ? "grabbing" : "grab");
+  // Enhanced cursor handling with manual CSS cursor
+  useEffect(() => {
+    if (isDragging) {
+      document.body.style.cursor = "grabbing";
+    } else if (hovered) {
+      document.body.style.cursor = "grab";
+    } else {
+      document.body.style.cursor = "default";
+    }
+
+    return () => {
+      document.body.style.cursor = "default";
+    };
+  }, [isDragging, hovered]);
 
   useFrame((_, delta) => {
     if (!groupRef.current) return;
