@@ -28,19 +28,48 @@ const apiKeyAuthMiddlewareConfigSchema = z
     }
   );
 
-type ApiKeyAuthMiddlewareConfig = z.infer<
-  typeof apiKeyAuthMiddlewareConfigSchema
->;
-
 const errorMessage = "Unauthorized: Missing or invalid API key";
 
+type StaticApiKeyConfig = {
+  /** The static API key to validate against */
+  apiKey: string;
+  /** Optional header name to read the API key from. Defaults to 'x-api-key' */
+  headerName?: string;
+};
+
+type CustomValidationConfig = {
+  /** Optional header name to read the API key from. Defaults to 'x-api-key' */
+  headerName?: string;
+  /** Custom validation function that receives the API key and returns a Promise<boolean> */
+  validateApiKey: (key: string) => Promise<boolean>;
+};
+
 export function apiKeyAuthMiddleware(
-  config: ApiKeyAuthMiddlewareConfig
+  config: StaticApiKeyConfig
+): RequestHandler;
+
+export function apiKeyAuthMiddleware(
+  config: CustomValidationConfig
+): RequestHandler;
+
+export function apiKeyAuthMiddleware(
+  config: StaticApiKeyConfig | CustomValidationConfig
 ): RequestHandler {
   // To do, we can maybe work on better error handling here, like typing the error messages etc
   const { success, error } = apiKeyAuthMiddlewareConfigSchema.safeParse(config);
   if (!success) {
-    throw new Error(error.message);
+    const hasApiKey = "apiKey" in config;
+    const hasValidateApiKey = "validateApiKey" in config;
+
+    if (hasApiKey && hasValidateApiKey) {
+      throw new Error(
+        "'apiKey' and 'validateApiKey' are mutually exclusive - provide only one"
+      );
+    } else if (!hasApiKey && !hasValidateApiKey) {
+      throw new Error("Either 'apiKey' or 'validateApiKey' must be provided");
+    } else {
+      throw new Error(`Invalid configuration: ${error.message}`);
+    }
   }
 
   const headerName = config.headerName ?? "x-api-key";
