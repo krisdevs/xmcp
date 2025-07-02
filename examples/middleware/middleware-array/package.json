@@ -1,6 +1,6 @@
 {
-  "name": "auth-jwt",
-  "description": "An MCP server with JWT authentication",
+  "name": "middleware-array",
+  "description": "An MCP server with custom middleware",
   "scripts": {
     "build": "xmcp build --vercel",
     "dev": "xmcp dev",

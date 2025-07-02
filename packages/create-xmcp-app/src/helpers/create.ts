@@ -5,6 +5,7 @@ import { copyTemplate } from "./copy-template.js";
 import { renameFiles } from "./rename.js";
 import { updatePackageJson } from "./update-package.js";
 import { install } from "./install.js";
+import { generateConfig } from "./generate-config.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -13,6 +14,7 @@ interface ProjectOptions {
   projectPath: string;
   projectName: string;
   packageManager: string;
+  transports: string[];
   useLocalXmcp?: boolean;
   deployToVercel?: boolean;
   skipInstall?: boolean;
@@ -35,6 +37,7 @@ export function createProject(options: ProjectOptions): void {
     projectPath,
     projectName,
     packageManager,
+    transports,
     useLocalXmcp,
     deployToVercel,
     skipInstall,
@@ -51,6 +54,9 @@ export function createProject(options: ProjectOptions): void {
 
   // Rename special files (e.g., _gitignore to .gitignore)
   renameFiles(projectPath);
+
+  // Generate xmcp.config.ts based on selected transports
+  generateConfig(projectPath, transports);
 
   // Update package.json with project configuration
   updatePackageJson(projectPath, projectName, useLocalXmcp);
