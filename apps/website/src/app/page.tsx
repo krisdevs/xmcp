@@ -1,7 +1,10 @@
 import { Terminal } from "../components/terminal/terminal";
 import { CavasLogo } from "../components/terminal/three-logo";
+import { fetchAssets } from "@/basehub/actions";
 
-export default function Home() {
+export default async function Home() {
+  const assets = await fetchAssets();
+
   return (
     <div className="font-mono min-h-[calc(100vh-8rem)] flex items-center justify-center">
       <div
@@ -10,7 +13,7 @@ export default function Home() {
       >
         <h1 className="text-lg">xmcp_</h1>
         <div className="relative w-full h-[150px]">
-          <CavasLogo />
+          <CavasLogo matcap={assets.glLogoMatcap.url} />
         </div>
         <Terminal />
         <h2 className="max-w-[30rem] mx-auto text-2xl">
