@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import AnimatedLink from "./components/AnimatedLink";
+import AnimatedLink from "./components/animated-link";
 import { Analytics } from "@vercel/analytics/next";
 
 const geistSans = Geist({
