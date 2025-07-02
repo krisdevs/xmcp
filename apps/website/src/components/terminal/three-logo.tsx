@@ -4,13 +4,13 @@ import {
   MeshDiscardMaterial,
   PerspectiveCamera,
   useGLTF,
-  useMatcapTexture,
+  useTexture,
 } from "@react-three/drei";
 import { Canvas, useFrame, useThree, ThreeEvent } from "@react-three/fiber";
-import { useEffect, useRef, useCallback, useState } from "react";
+import { useEffect, useRef, useCallback, useState, Suspense } from "react";
 import { GLTF } from "three/examples/jsm/Addons.js";
 import * as THREE from "three";
-import { useShader } from "@/hook/use-shader";
+import { useShader } from "@/hooks/use-shader";
 import { animate, useMotionValue, useMotionValueEvent } from "framer-motion";
 import { cn } from "@/utils/cn";
 import { create } from "zustand";
@@ -34,12 +34,13 @@ const useGL = create<{
   setIsLoaded: (isLoaded) => set({ isLoaded }),
 }));
 
-function ThreeLogo() {
+function ThreeLogo({ matcap }: { matcap: string }) {
   const groupRef = useRef<THREE.Group>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { nodes } = useGLTF("/xmcp.glb") as any as GLTFResult;
 
-  const [matcap] = useMatcapTexture("3B3C3F_DAD9D5_929290_ABACA8", 1024);
+  // const [matcap] = useMatcapTexture("3B3C3F_DAD9D5_929290_ABACA8", 1024);
+  const matcapTexture = useTexture(matcap);
 
   const gl = useThree((state) => state.gl);
 
@@ -102,7 +103,7 @@ function ThreeLogo() {
     },
     {
       uReveal: { value: 0 },
-      uMatcap: { value: matcap },
+      uMatcap: { value: matcapTexture },
     }
   );
 
@@ -237,19 +238,21 @@ function ThreeLogo() {
 // Preload the model for better performance
 useGLTF.preload("/xmcp.glb");
 
-export const CavasLogo = () => {
+export const CavasLogo = ({ matcap }: { matcap: string }) => {
   const { isLoaded } = useGL();
 
   return (
     <Canvas
-      gl={{ antialias: true, alpha: true }}
-      className={cn("absolute inset-0 w-full h-full", {
+      gl={{ antialias: true, alpha: false }}
+      className={cn("absolute inset-0 w-full h-full bg-red-500", {
         "opacity-0": !isLoaded,
       })}
     >
-      <ThreeLogo />
-      <PerspectiveCamera makeDefault position={[0, 0, 3]} fov={30} />
-      <color attach="background" args={["#000000"]} />
+      <Suspense fallback={null}>
+        <ThreeLogo matcap={matcap} />
+        <PerspectiveCamera makeDefault position={[0, 0, 3]} fov={30} />
+        <color attach="background" args={["#000000"]} />
+      </Suspense>
     </Canvas>
   );
 };
