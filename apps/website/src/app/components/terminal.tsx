@@ -1,6 +1,6 @@
 import { cn } from "@/utils/cn";
 import styles from "./terminal.module.css";
-import TypingEffect from "./TypingEffect";
+import TypingEffect from "./typing-effect";
 
 function TerminalContainer({ children }: { children: React.ReactNode }) {
   return (
