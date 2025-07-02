@@ -1,5 +1,10 @@
 import { client } from "./client";
-import { Article, ArticleFragment, SidebarTreeFragment } from "./fragments";
+import {
+  Article,
+  ArticleFragment,
+  AssetsFragment,
+  SidebarTreeFragment,
+} from "./fragments";
 
 export const fetchArticle = async (slug: string): Promise<Article | null> => {
   const res = await client().query({
@@ -29,4 +34,14 @@ export const fetchSidebar = async () => {
   });
 
   return res.documentation.sidebarTree.items;
+};
+
+export const fetchAssets = async () => {
+  const res = await client().query({
+    assets: {
+      ...AssetsFragment,
+    },
+  });
+
+  return res.assets;
 };
