@@ -1,24 +1,48 @@
 import { Request, Response, NextFunction, RequestHandler } from "express";
+import { z } from "zod";
 
-interface StaticApiKeyAuthMiddlewareConfig {
-  //** HTTP header name to look for the API key in */
-  headerName?: string;
-  //** The API key to validate */
-  apiKey: string;
-}
+const apiKeyAuthMiddlewareConfigSchema = z
+  .object({
+    apiKey: z.string().optional(),
+    headerName: z.string().optional(),
+    validateApiKey: z
+      .function()
+      .args(z.string())
+      .returns(z.promise(z.boolean()))
+      .optional(),
+  })
+  .strict()
+  .refine(
+    (config) =>
+      config.apiKey !== undefined || config.validateApiKey !== undefined,
+    {
+      message: "Either 'apiKey' or 'validateApiKey' must be provided",
+    }
+  )
+  .refine(
+    (config) =>
+      !(config.apiKey !== undefined && config.validateApiKey !== undefined),
+    {
+      message:
+        "'apiKey' and 'validateApiKey' are mutually exclusive - provide only one",
+    }
+  );
 
-interface DynamicApiKeyAuthMiddlewareConfig {
-  //** HTTP header name to look for the API key in */
-  headerName?: string;
-  //** A function to validate the API key */
-  validateApiKey: (key: string) => Promise<boolean>;
-}
+type ApiKeyAuthMiddlewareConfig = z.infer<
+  typeof apiKeyAuthMiddlewareConfigSchema
+>;
 
 const errorMessage = "Unauthorized: Missing or invalid API key";
 
 export function apiKeyAuthMiddleware(
-  config: StaticApiKeyAuthMiddlewareConfig | DynamicApiKeyAuthMiddlewareConfig
+  config: ApiKeyAuthMiddlewareConfig
 ): RequestHandler {
+  // To do, we can maybe work on better error handling here, like typing the error messages etc
+  const { success, error } = apiKeyAuthMiddlewareConfigSchema.safeParse(config);
+  if (!success) {
+    throw new Error(error.message);
+  }
+
   const headerName = config.headerName ?? "x-api-key";
   const apiKey = "apiKey" in config ? config.apiKey : undefined;
   const validateApiKey =
