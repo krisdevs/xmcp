@@ -79,8 +79,9 @@ export default function TypingEffect() {
 
   return (
     <div className="text-left flex items-center py-4">
+      <span className="text-white mr-2 select-none">⊹</span>
       <TypewriterText
-        text="⊹ npx create-xmcp-app"
+        text="npx create-xmcp-app"
         className="text-white"
         speed={80}
         onComplete={() => setIsComplete(true)}
