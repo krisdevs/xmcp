@@ -5,7 +5,7 @@ export interface JWTAuthMiddlewareConfig extends VerifyOptions {
   secret: string;
 }
 
-export function JWTAuthMiddleware(
+export function jwtAuthMiddleware(
   config: JWTAuthMiddlewareConfig
 ): RequestHandler {
   return (req: Request, res: Response, next: NextFunction) => {
