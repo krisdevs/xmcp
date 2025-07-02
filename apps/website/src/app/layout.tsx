@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import AnimatedLink from "./components/animated-link";
 import { Analytics } from "@vercel/analytics/next";
+import { Toolbar } from "basehub/next-toolbar";
+import AnimatedLink from "@/components/terminal/animated-link";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -78,6 +79,7 @@ export default function RootLayout({
             </AnimatedLink>
           </div>
         </footer>
+        <Toolbar />
         <Analytics />
       </body>
     </html>

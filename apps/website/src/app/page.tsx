@@ -1,5 +1,5 @@
-import { Terminal } from "./components/terminal";
-import { CavasLogo } from "./components/three-logo";
+import { Terminal } from "../components/terminal/terminal";
+import { CavasLogo } from "../components/terminal/three-logo";
 
 export default function Home() {
   return (

@@ -11,7 +11,7 @@ import { Canvas, useFrame, useThree, ThreeEvent } from "@react-three/fiber";
 import { useEffect, useRef, useCallback, useState } from "react";
 import { GLTF } from "three/examples/jsm/Addons.js";
 import * as THREE from "three";
-import { useShader } from "@/hook/use-shader";
+import { useShader } from "@/hooks/use-shader";
 import { animate, useMotionValue, useMotionValueEvent } from "framer-motion";
 import { cn } from "@/utils/cn";
 import { create } from "zustand";
