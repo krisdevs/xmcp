@@ -81,6 +81,7 @@ const program = new Command()
     let useLocalXmcp = options.local;
     let deployToVercel = options.vercel;
     let skipInstall = options.skipInstall;
+    let transports = ["http"];
 
     if (!options.yes) {
       if (options.useYarn) packageManager = "yarn";
@@ -103,7 +104,35 @@ const program = new Command()
         packageManager = pmAnswers.packageManager;
       }
 
-      if (!options.vercel) {
+      // Transport selection
+      const transportAnswers = await inquirer.prompt([
+        {
+          type: "checkbox",
+          name: "transports",
+          message: "Select the transports you want to use:",
+          choices: [
+            {
+              name: "HTTP (runs on a server)",
+              value: "http",
+              checked: true,
+            },
+            {
+              name: "STDIO (runs on the user's machine)",
+              value: "stdio",
+              checked: false,
+            },
+          ],
+          validate: (input) => {
+            if (input.length === 0) {
+              return "You must select at least one transport.";
+            }
+            return true;
+          },
+        },
+      ]);
+      transports = transportAnswers.transports;
+
+      if (!options.vercel && transports.includes("http")) {
         const vercelAnswers = await inquirer.prompt([
           {
             type: "confirm",
@@ -122,6 +151,7 @@ const program = new Command()
       console.log();
       console.log("Options:");
       console.log(`  - ${chalk.cyan("Package Manager")}: ${packageManager}`);
+      console.log(`  - ${chalk.cyan("Transports")}: ${transports.join(", ")}`);
       if (useLocalXmcp) {
         console.log(`  - ${chalk.cyan("Use Local XMCP")}: Yes`);
       }
@@ -147,6 +177,16 @@ const program = new Command()
       // Use command-line options when --yes is provided
       if (options.useYarn) packageManager = "yarn";
       if (options.usePnpm) packageManager = "pnpm";
+
+      createProject({
+        projectPath: resolvedProjectPath,
+        projectName,
+        packageManager,
+        transports: transports,
+        useLocalXmcp,
+        deployToVercel,
+        skipInstall,
+      });
     }
 
     const spinner = ora("Creating your XMCP app...").start();
@@ -155,6 +195,7 @@ const program = new Command()
         projectPath: resolvedProjectPath,
         projectName,
         packageManager,
+        transports: transports,
         useLocalXmcp,
         deployToVercel,
         skipInstall,

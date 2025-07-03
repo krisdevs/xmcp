@@ -1,6 +1,6 @@
 # create-xmcp-app
 
-Create Next-MCP applications with one command.
+Create xmcp applications with one command.
 
 ## Usage
 

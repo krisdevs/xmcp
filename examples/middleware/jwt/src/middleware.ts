@@ -1,6 +1,6 @@
-import { JWTAuthMiddleware } from "xmcp";
+import { jwtAuthMiddleware } from "xmcp";
 
-export default JWTAuthMiddleware({
+export default jwtAuthMiddleware({
   secret: process.env.JWT_SECRET!,
   algorithms: ["HS256"],
 });

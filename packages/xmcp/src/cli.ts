@@ -6,7 +6,7 @@ import chalk from "chalk";
 
 const program = new Command();
 
-const xmcpLogo = chalk.bold.bgBlue(" XMCP ");
+const xmcpLogo = chalk.bold.black.bgWhite(" XMCP ");
 
 program.name("xmcp").description("The MCP framework CLI").version("0.0.1");
 

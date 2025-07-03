@@ -8,17 +8,23 @@
   },
   "contributors": [
     {
-      "name": "Valentina Bearzotti",
-      "email": "valebearzotti1@gmail.com",
-      "url": "https://github.com/valebearzotti"
-    },
-    {
       "name": "Matias Gonzalez Fernandez",
       "email": "matiasngf@hotmail.com",
       "url": "https://github.com/matiasngf"
+    },
+    {
+      "name": "Valentina Bearzotti",
+      "email": "valebearzotti1@gmail.com",
+      "url": "https://github.com/valebearzotti"
     }
   ],
   "license": "MIT",
+  "keywords": [
+    "mcp",
+    "modelcontextprotocol",
+    "http",
+    "stdio"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/basementstudio/xmcp"
@@ -32,6 +38,7 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
+    "dev": "tsc --watch",
     "start": "node index.js"
   },
   "dependencies": {

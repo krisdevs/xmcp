@@ -2,6 +2,7 @@ import { RequestHandler } from "express";
 import { createServer } from "../../utils/server";
 import { StatelessStreamableHTTPTransport } from "./stateless-streamable-http";
 import { OAuthConfigOptions } from "../../../auth/oauth/types";
+import { Middleware } from "../../../types/middleware";
 
 // @ts-expect-error: injected by compiler
 const port = HTTP_PORT as number;
@@ -16,7 +17,7 @@ const stateless = HTTP_STATELESS as boolean;
 // @ts-expect-error: injected by compiler
 const middleware = INJECTED_MIDDLEWARE as () =>
   | Promise<{
-      default: RequestHandler;
+      default: Middleware;
     }>
   | undefined;
 
@@ -56,20 +57,28 @@ async function main() {
     maxAge: corsMaxAge,
   };
 
-  let middlewareFn = undefined;
+  let middlewareFn: RequestHandler[] | undefined = undefined;
 
   if (middleware) {
     const middlewareModule = await middleware();
-    if (
-      middlewareModule &&
-      middlewareModule.default &&
-      typeof middlewareModule.default === "function"
-    ) {
-      middlewareFn = middlewareModule.default;
+    if (middlewareModule && middlewareModule.default) {
+      const defaultExport = middlewareModule.default;
+
+      if (Array.isArray(defaultExport)) {
+        // Handle array of middlewares
+        middlewareFn = defaultExport.filter(
+          (mw): mw is RequestHandler => typeof mw === "function"
+        );
+      } else if (typeof defaultExport === "function") {
+        // Handle single middleware
+        middlewareFn = [defaultExport];
+      } else {
+        throw new Error(
+          "Middleware module does not export a valid RequestHandler or array of RequestHandlers"
+        );
+      }
     } else {
-      throw new Error(
-        "Middleware module does not export a default RequestHandler"
-      );
+      throw new Error("Middleware module does not export a default middleware");
     }
   }
 

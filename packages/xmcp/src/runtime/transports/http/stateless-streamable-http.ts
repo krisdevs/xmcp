@@ -277,15 +277,15 @@ export class StatelessStreamableHTTPTransport {
   private options: HttpTransportOptions;
   private createServerFn: () => Promise<McpServer>;
   private corsOptions: CorsOptions;
-  private middleware: RequestHandler | undefined;
   private oauthProxy: OAuthProxy | undefined;
+  private middlewares: RequestHandler[] | undefined;
 
   constructor(
     createServerFn: () => Promise<McpServer>,
     options: HttpTransportOptions = {},
     corsOptions: CorsOptions = {},
-    middleware: RequestHandler | undefined,
     oauthConfig?: OAuthProxyConfig | null
+    middlewares: RequestHandler[] | undefined
   ) {
     this.options = {
       bindToLocalhost: true,
@@ -298,7 +298,7 @@ export class StatelessStreamableHTTPTransport {
     this.debug = options.debug ?? false;
     this.createServerFn = createServerFn;
     this.corsOptions = corsOptions;
-    this.middleware = middleware;
+    this.middlewares = middlewares;
 
     // setup oauth proxy if configuration is provided
     if (oauthConfig) {
@@ -397,8 +397,8 @@ export class StatelessStreamableHTTPTransport {
     });
 
     // routes beyond this point get intercepted by the middleware
-    if (this.middleware) {
-      this.app.use(this.middleware);
+    if (this.middlewares && this.middlewares.length > 0) {
+      this.app.use(this.middlewares);
     }
 
     if (this.oauthProxy) {
