@@ -21,7 +21,7 @@ import chalk from "chalk";
 
 const greenCheck = chalk.bold.green("✔");
 
-type CorsOptions = {
+export type CorsOptions = {
   origin?: string | string[] | boolean;
   methods?: string | string[];
   allowedHeaders?: string | string[];
@@ -31,7 +31,7 @@ type CorsOptions = {
 };
 
 // no session management, POST only
-class StatelessHttpServerTransport extends BaseHttpServerTransport {
+export class StatelessHttpServerTransport extends BaseHttpServerTransport {
   debug: boolean;
   bodySizeLimit: string;
   private _started: boolean = false;
