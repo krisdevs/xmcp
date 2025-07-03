@@ -15,6 +15,7 @@ import { watchdog } from "./utils/spawn-process";
 import { type ChildProcess, spawn } from "child_process";
 import { generateEnvCode } from "./utils/generate-env-code";
 import { createContext } from "./utils/context";
+import { Watcher } from "./utils/file-watcher";
 dotenv.config();
 
 interface CompilerContext {
@@ -101,53 +102,39 @@ export async function compile({ onBuild }: CompileOptions = {}) {
     ignoreInitial: false,
   });
 
-  toolsWatcher
-    .on("add", (path) => {
+  const watcher = new Watcher();
+
+  watcher.watch("./src/tools/**/*.ts", {
+    onAdd: (path) => {
       pathList.push(path);
       if (compilerStarted) {
         generateCode(pathList, hasMiddleware);
       }
-    })
-    .on("unlink", (path) => {
+    },
+    onUnlink: (path) => {
       pathList = pathList.filter((p) => p !== path);
       if (compilerStarted) {
         generateCode(pathList, hasMiddleware);
       }
-    });
+    },
+  });
 
-  middlewareWatcher
-    .on("add", (path) => {
+  watcher.watch("./src/middleware.ts", {
+    onAdd: () => {
       hasMiddleware = true;
       if (compilerStarted) {
         generateCode(pathList, hasMiddleware);
       }
-    })
-    .on("unlink", (path) => {
+    },
+    onUnlink: () => {
       hasMiddleware = false;
       if (compilerStarted) {
         generateCode(pathList, hasMiddleware);
       }
-    });
-
-  // Wait for both watchers to be ready
-  let toolsReady = false;
-  let middlewareReady = false;
-
-  toolsWatcher.on("ready", () => {
-    toolsReady = true;
-    checkBothReady();
+    },
   });
 
-  middlewareWatcher.on("ready", () => {
-    middlewareReady = true;
-    checkBothReady();
-  });
-
-  function checkBothReady() {
-    if (!toolsReady || !middlewareReady) {
-      return;
-    }
-
+  watcher.onReady(() => {
     let firstBuild = true;
     compilerStarted = true;
 
@@ -194,7 +181,7 @@ export async function compile({ onBuild }: CompileOptions = {}) {
         }
       }
     });
-  }
+  });
 }
 
 function generateCode(pathlist: string[], hasMiddleware: boolean) {
