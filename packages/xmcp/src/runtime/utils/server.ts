@@ -1,4 +1,5 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp";
+import { Implementation } from "@modelcontextprotocol/sdk/types";
 
 type ToolFile = {
   metadata: any;
@@ -9,7 +10,7 @@ type ToolFile = {
 // @ts-expect-error: injected by compiler
 const tools = INJECTED_TOOLS as Record<string, () => Promise<ToolFile>>;
 
-const INJECTED_CONFIG = {
+const INJECTED_CONFIG: Implementation = {
   // get from project config
   name: "MCP Server",
   version: "0.0.1",
