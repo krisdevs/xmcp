@@ -406,19 +406,12 @@ export class StatelessStreamableHTTPTransport {
     }
 
     if (this.oauthProxy) {
-      // protect main endpoint
-      this.app.use(
-        this.endpoint,
-        this.oauthProxy.middleware,
-        async (req: Request, res: Response) => {
-          await this.handleStatelessRequest(req, res);
-        }
-      );
-    } else {
-      this.app.use(this.endpoint, async (req: Request, res: Response) => {
-        await this.handleStatelessRequest(req, res);
-      });
+      this.app.use(this.oauthProxy.middleware);
     }
+
+    this.app.use(this.endpoint, async (req: Request, res: Response) => {
+      await this.handleStatelessRequest(req, res);
+    });
   }
 
   private async handleStatelessRequest(
