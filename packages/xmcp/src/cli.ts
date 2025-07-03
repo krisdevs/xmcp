@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 import { Command } from "commander";
-import { compile, compilerContext } from "./compiler";
+import { compile } from "./compiler";
 import { buildVercelOutput } from "./platforms/build-vercel-output";
 import chalk from "chalk";
 import { xmcpLogo } from "./utils/cli-icons";
+import { compilerContextProvider } from "./compiler/compiler-context";
 
 const program = new Command();
 
@@ -14,7 +15,7 @@ program
   .description("Start development mode")
   .action(() => {
     console.log(`${xmcpLogo} Starting development mode...`);
-    compilerContext.provider(
+    compilerContextProvider(
       {
         mode: "development",
         // Ignore platforms on dev mode
@@ -32,7 +33,7 @@ program
   .option("--vercel", "Build for Vercel deployment")
   .action(async (options) => {
     console.log(`${xmcpLogo} Building for production...`);
-    compilerContext.provider(
+    compilerContextProvider(
       {
         mode: "production",
         platforms: {

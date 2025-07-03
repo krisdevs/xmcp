@@ -5,32 +5,20 @@ import { getConfig } from "./parse-xmcp-config";
 import chokidar from "chokidar";
 import { generateImportCode } from "./generate-import-code";
 import fs from "fs";
-import { rootFolder, runtimeFolderPath } from "../utils/constants";
-import { createFolder } from "../utils/fs-utils";
+import { rootFolder, runtimeFolderPath } from "@/utils/constants";
+import { createFolder } from "@/utils/fs-utils";
 import path from "path";
 import { deleteSync } from "del";
 import dotenv from "dotenv";
-export { type Middleware } from "../types/middleware";
-import { watchdog } from "../utils/spawn-process";
+export { type Middleware } from "@/types/middleware";
+import { watchdog } from "@/utils/spawn-process";
 import { type ChildProcess, spawn } from "child_process";
 import { generateEnvCode } from "./generate-env-code";
-import { createContext } from "../utils/context";
-import { Watcher } from "../utils/file-watcher";
+import { Watcher } from "@/utils/file-watcher";
 import { onFirstBuild } from "./on-first-build";
-import { greenCheck, yellowArrow } from "../utils/cli-icons";
+import { greenCheck, yellowArrow } from "@/utils/cli-icons";
+import { compilerContext } from "./compiler-context";
 dotenv.config();
-
-interface CompilerContext {
-  mode: CompilerMode;
-  adapter?: boolean;
-  platforms: {
-    vercel?: boolean;
-  };
-}
-
-export const compilerContext = createContext<CompilerContext>({
-  name: "xmcp-compiler",
-});
 
 let httpServerProcess: ChildProcess | null = null;
 
@@ -72,7 +60,7 @@ export interface CompileOptions {
 }
 
 export async function compile({ onBuild }: CompileOptions = {}) {
-  const { mode } = compilerContext.getContext();
+  const { mode, toolPaths } = compilerContext.getContext();
   const startTime = Date.now();
   let compilerStarted = false;
 
@@ -82,10 +70,6 @@ export async function compile({ onBuild }: CompileOptions = {}) {
   if (xmpcConfig.webpack) {
     config = xmpcConfig.webpack(config);
   }
-
-  let pathList: string[] = [];
-  // For now, we only support one middleware file
-  let hasMiddleware = false;
 
   // Watcher for tools
   const toolsWatcher = chokidar.watch("./src/tools/**/*.ts", {
@@ -103,36 +87,48 @@ export async function compile({ onBuild }: CompileOptions = {}) {
 
   const watcher = new Watcher();
 
+  // TODO add hability to customize tools path
+  // handle tools
   watcher.watch("./src/tools/**/*.ts", {
     onAdd: (path) => {
-      pathList.push(path);
+      toolPaths.add(path);
       if (compilerStarted) {
-        generateCode(pathList, hasMiddleware);
+        generateCode();
       }
     },
     onUnlink: (path) => {
-      pathList = pathList.filter((p) => p !== path);
+      toolPaths.delete(path);
       if (compilerStarted) {
-        generateCode(pathList, hasMiddleware);
+        generateCode();
       }
     },
   });
 
-  watcher.watch("./src/middleware.ts", {
-    onAdd: () => {
-      hasMiddleware = true;
-      if (compilerStarted) {
-        generateCode(pathList, hasMiddleware);
-      }
-    },
-    onUnlink: () => {
-      hasMiddleware = false;
-      if (compilerStarted) {
-        generateCode(pathList, hasMiddleware);
-      }
-    },
-  });
+  // if adapter is not enabled, handle middleware
+  if (!xmpcConfig.experimental?.adapter) {
+    // handle middleware
+    watcher.watch("./src/middleware.ts", {
+      onAdd: () => {
+        compilerContext.setContext({
+          ...compilerContext.getContext(),
+          hasMiddleware: true,
+        });
+        if (compilerStarted) {
+          generateCode();
+        }
+      },
+      onUnlink: () => {
+        compilerContext.setContext({
+          hasMiddleware: false,
+        });
+        if (compilerStarted) {
+          generateCode();
+        }
+      },
+    });
+  }
 
+  // start compiler
   watcher.onReady(() => {
     let firstBuild = true;
     compilerStarted = true;
@@ -146,7 +142,7 @@ export async function compile({ onBuild }: CompileOptions = {}) {
       middlewareWatcher.close();
     }
 
-    generateCode(pathList, hasMiddleware);
+    generateCode();
 
     webpack(config, (err, stats) => {
       if (err) {
@@ -183,8 +179,8 @@ export async function compile({ onBuild }: CompileOptions = {}) {
   });
 }
 
-function generateCode(pathlist: string[], hasMiddleware: boolean) {
-  const fileContent = generateImportCode(pathlist, hasMiddleware);
+function generateCode() {
+  const fileContent = generateImportCode();
   fs.writeFileSync(path.join(runtimeFolderPath, "import-map.js"), fileContent);
 
   // Generate runtime exports for global access

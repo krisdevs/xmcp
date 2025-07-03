@@ -11,7 +11,11 @@
     "declarationMap": false,
     "outDir": "./dist",
     "typeRoots": ["../node_modules/@types", "./node_modules/@types", "./types"],
-    "types": ["node"]
+    "types": ["node"],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
   },
   "include": [
     "src/types/declarations.d.ts",
