@@ -17,11 +17,9 @@ import {
 } from "./base-streamable-http";
 import homeTemplate from "../../templates/home";
 import { httpContextProvider } from "./http-context";
-import chalk from "chalk";
 import { createOAuthProxy, type OAuthProxyConfig } from "../../../auth/oauth";
 import { OAuthProxy } from "../../../auth/oauth/factory";
-
-const greenCheck = chalk.bold.green("✔");
+import { greenCheck } from "../../../utils/cli-icons";
 
 export type CorsOptions = {
   origin?: string | string[] | boolean;

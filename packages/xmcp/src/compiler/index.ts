@@ -1,7 +1,7 @@
 import { webpack } from "webpack";
 import { getWebpackConfig } from "./get-webpack-config";
 import chalk from "chalk";
-import { getConfig, XmcpInputConfig } from "./parse-xmcp-config";
+import { getConfig } from "./parse-xmcp-config";
 import chokidar from "chokidar";
 import { generateImportCode } from "./generate-import-code";
 import fs from "fs";
@@ -16,10 +16,13 @@ import { type ChildProcess, spawn } from "child_process";
 import { generateEnvCode } from "./generate-env-code";
 import { createContext } from "../utils/context";
 import { Watcher } from "../utils/file-watcher";
+import { onFirstBuild } from "./on-first-build";
+import { greenCheck, yellowArrow } from "../utils/cli-icons";
 dotenv.config();
 
 interface CompilerContext {
   mode: CompilerMode;
+  adapter?: boolean;
   platforms: {
     vercel?: boolean;
   };
@@ -30,8 +33,6 @@ export const compilerContext = createContext<CompilerContext>({
 });
 
 let httpServerProcess: ChildProcess | null = null;
-
-const greenCheck = chalk.bold.green("✔");
 
 function spawnHttpServer() {
   const process = spawn("node", ["dist/http.js"], {
@@ -50,8 +51,6 @@ async function killProcess(process: ChildProcess) {
     process.on("exit", resolve);
   });
 }
-
-const yellowArrow = chalk.bold.yellow("❯");
 
 async function startHttpServer() {
   if (!httpServerProcess) {
@@ -198,61 +197,4 @@ function generateCode(pathlist: string[], hasMiddleware: boolean) {
   }
 
   fs.writeFileSync(envFilePath, runtimeExportsCode);
-}
-
-function onFirstBuild(mode: CompilerMode, xmcpConfig: XmcpInputConfig) {
-  if (mode === "development") {
-    console.log("🔍 Starting inspector...");
-
-    const inspectorArgs = ["@modelcontextprotocol/inspector@latest"];
-
-    if (xmcpConfig.stdio) {
-      inspectorArgs.push("node", "dist/stdio.js");
-    }
-
-    const inspectorProcess = spawn("npx", inspectorArgs, {
-      stdio: ["inherit", "pipe", "pipe"],
-      shell: true,
-    });
-
-    watchdog(inspectorProcess);
-
-    // Prefix inspector output with [Inspector]
-    inspectorProcess.stdout?.on("data", (data: Buffer) => {
-      const lines = data.toString().split("\n");
-      lines.forEach((line) => {
-        if (line.trim()) {
-          if (line.includes("?MCP_PROXY_AUTH_TOKEN")) {
-            console.log(`🔍 Inspector started at ${line}`);
-          }
-        }
-      });
-    });
-
-    inspectorProcess.stderr?.on("data", (data: Buffer) => {
-      const lines = data.toString().split("\n");
-      lines.forEach((line) => {
-        if (line.trim()) {
-          console.error(`[Inspector] ${line}`);
-        }
-      });
-    });
-
-    inspectorProcess.on("error", (err: Error) => {
-      console.error("[Inspector] Failed to start inspector:", err);
-    });
-  }
-
-  const builtResults = [];
-
-  if (xmcpConfig.stdio) {
-    builtResults.push(`${greenCheck} Built STDIO server`);
-  }
-  if (xmcpConfig["http"]) {
-    builtResults.push(`${greenCheck} Built HTTP server`);
-  }
-
-  builtResults.forEach((result) => {
-    console.log(result);
-  });
 }

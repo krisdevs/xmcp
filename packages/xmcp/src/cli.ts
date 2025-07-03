@@ -3,10 +3,9 @@ import { Command } from "commander";
 import { compile, compilerContext } from "./compiler";
 import { buildVercelOutput } from "./platforms/build-vercel-output";
 import chalk from "chalk";
+import { xmcpLogo } from "./utils/cli-icons";
 
 const program = new Command();
-
-const xmcpLogo = chalk.bold.black.bgWhite(" XMCP ");
 
 program.name("xmcp").description("The MCP framework CLI").version("0.0.1");
 
