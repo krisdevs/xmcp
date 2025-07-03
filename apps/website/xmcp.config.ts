@@ -1,7 +1,11 @@
 import { XmcpConfig } from "xmcp";
 
 const config: XmcpConfig = {
-  experimental: {},
+  experimental: {
+    adapter: {
+      toolsPath: "/src/tools",
+    },
+  },
 };
 
 export default config;

@@ -108,6 +108,8 @@ export interface Assets {
     _sys: BlockDocumentSys
     _title: Scalars['String']
     glLogoMatcap: BlockImage
+    repoLogoDark: BlockImage
+    repoLogoLight: BlockImage
     __typename: 'Assets'
 }
 
@@ -621,6 +623,8 @@ export interface AssetsGenqlSelection{
     _sys?: BlockDocumentSysGenqlSelection
     _title?: boolean | number
     glLogoMatcap?: BlockImageGenqlSelection
+    repoLogoDark?: BlockImageGenqlSelection
+    repoLogoLight?: BlockImageGenqlSelection
     __typename?: boolean | number
 }
 

@@ -9,7 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "xmcp": "workspace:*",
     "@radix-ui/react-collapsible": "^1.1.11",
     "@radix-ui/react-dialog": "^1.1.14",
     "@radix-ui/react-separator": "^1.1.7",
@@ -28,6 +27,8 @@
     "react-dom": "^19.0.0",
     "tailwind-merge": "^3.3.1",
     "three": "^0.178.0",
+    "xmcp": "workspace:*",
+    "zod": "^3.25.71",
     "zustand": "^5.0.6"
   },
   "devDependencies": {
