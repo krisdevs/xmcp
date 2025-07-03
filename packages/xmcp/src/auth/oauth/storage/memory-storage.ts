@@ -1,13 +1,5 @@
 import { OAuthStorage, TokenStorage, AccessToken } from "../types";
 
-/**
- * Memory storage for OAuth tokens only
- *
- * This is a simple in-memory storage implementation for OAuth tokens. Used for development and testing.
- * It is not suitable for production environments. Should be warned against using it in production when building or deploying the app.
- * Specially since deploying in Vercel is a serverless environment and the memory storage won't persist.
- */
-
 // Module-level storage map that persists across instances (SINGLETON PATTERN)
 const tokensMap = new Map<string, AccessToken>();
 

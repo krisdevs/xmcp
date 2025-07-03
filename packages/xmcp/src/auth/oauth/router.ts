@@ -5,7 +5,6 @@ import {
   TokenParams,
   RevokeParams,
   OAuthError,
-  ProxyOAuthServerProvider,
 } from "./types";
 
 export function createOAuthRouter(config: OAuthRouterConfig): Router {
@@ -18,8 +17,6 @@ export function createOAuthRouter(config: OAuthRouterConfig): Router {
     pathPrefix = "/oauth2",
   } = config;
 
-  // to do this actually should be done in the middleware, not the router
-  // for testing purposes only
   router.use((req: Request, res: Response, next: NextFunction) => {
     // to do check: cors config from ts file is overriding and failing to add headers
     res.setHeader("Access-Control-Allow-Origin", "*");
@@ -148,7 +145,7 @@ export function createOAuthRouter(config: OAuthRouterConfig): Router {
         return;
       }
 
-      // Let Auth0 handle client validation - just build the authorization URL
+      // let the provider handle the authorization
       const authUrl = await provider.authorize(params);
 
       res.redirect(authUrl);
@@ -259,17 +256,15 @@ export function createOAuthRouter(config: OAuthRouterConfig): Router {
     }
   );
 
-  // dynamic client registration endpoint - check for existing client first, then register if needed
-  // dynamic client registration endpoint - simple proxy to Auth0
   router.all(`${pathPrefix}/register`, async (req: Request, res: Response) => {
     try {
       if (req.method === "GET") {
-        // For GET requests, redirect to the external provider's registration page
+        // redirect to the external provider's registration page
         res.redirect(provider.endpoints.registerUrl);
         return;
       }
 
-      // For POST requests, proxy to Auth0 (no local storage needed)
+      // proxy to the external provider's registration page
       const response = await fetch(provider.endpoints.registerUrl, {
         method: req.method,
         headers: {

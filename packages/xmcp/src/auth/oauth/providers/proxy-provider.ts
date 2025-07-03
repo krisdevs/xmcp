@@ -31,19 +31,6 @@ export class ProxyOAuthServerProvider implements IProxyOAuthServerProvider {
   }
 
   async verifyAccessToken(token: string): Promise<AccessToken> {
-    // Use custom verifyAccessToken function if provided
-
-    /* custom verifyAccessToken example:
-    
-        verifyAccessToken: async (token) => {
-            return {
-                token,
-                clientId: "123",
-                scopes: ["openid", "email", "profile"],
-            }
-        }
-    */
-
     if (this.config.verifyAccessToken) {
       return await this.config.verifyAccessToken(token);
     }
