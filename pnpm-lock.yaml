@@ -74,6 +74,9 @@ importers:
       three:
         specifier: ^0.178.0
         version: 0.178.0
+      xmcp:
+        specifier: workspace:*
+        version: link:../../packages/xmcp
       zustand:
         specifier: ^5.0.6
         version: 5.0.6(@types/react@19.1.8)(react@19.1.0)(use-sync-external-store@1.5.0(react@19.1.0))

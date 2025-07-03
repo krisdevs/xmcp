@@ -3,12 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "basehub dev & next dev --turbopack",
-    "build": "basehub && next build",
+    "dev": "xmcp dev & basehub dev & next dev --turbopack",
+    "build": "xmcp build & basehub && next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
+    "xmcp": "workspace:*",
     "@radix-ui/react-collapsible": "^1.1.11",
     "@radix-ui/react-dialog": "^1.1.14",
     "@radix-ui/react-separator": "^1.1.7",
