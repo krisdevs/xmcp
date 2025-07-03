@@ -3,7 +3,7 @@ import path from "path";
 import { z } from "zod";
 import { webpack, type Configuration } from "webpack";
 import { createFsFromVolume, Volume } from "memfs";
-import { compilerContext } from "../compile";
+import { compilerContext } from ".";
 
 export const DEFAULT_HTTP_PORT = 3002;
 export const DEFAULT_HTTP_BODY_SIZE_LIMIT = 1024 * 1024 * 10; // 10MB

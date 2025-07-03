@@ -1,21 +1,21 @@
 import { webpack } from "webpack";
-import { getWebpackConfig } from "./utils/get-webpack-config";
+import { getWebpackConfig } from "./get-webpack-config";
 import chalk from "chalk";
-import { getConfig, XmcpInputConfig } from "./utils/parse-xmcp-config";
+import { getConfig, XmcpInputConfig } from "./parse-xmcp-config";
 import chokidar from "chokidar";
-import { generateImportCode } from "./utils/generate-import-code";
+import { generateImportCode } from "./generate-import-code";
 import fs from "fs";
-import { rootFolder, runtimeFolderPath } from "./utils/constants";
-import { createFolder } from "./utils/fs-utils";
+import { rootFolder, runtimeFolderPath } from "../utils/constants";
+import { createFolder } from "../utils/fs-utils";
 import path from "path";
 import { deleteSync } from "del";
 import dotenv from "dotenv";
-export { type Middleware } from "./types/middleware";
-import { watchdog } from "./utils/spawn-process";
+export { type Middleware } from "../types/middleware";
+import { watchdog } from "../utils/spawn-process";
 import { type ChildProcess, spawn } from "child_process";
-import { generateEnvCode } from "./utils/generate-env-code";
-import { createContext } from "./utils/context";
-import { Watcher } from "./utils/file-watcher";
+import { generateEnvCode } from "./generate-env-code";
+import { createContext } from "../utils/context";
+import { Watcher } from "../utils/file-watcher";
 dotenv.config();
 
 interface CompilerContext {

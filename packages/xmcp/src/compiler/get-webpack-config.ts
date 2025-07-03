@@ -1,9 +1,9 @@
 import { Compiler, Configuration, DefinePlugin, ProvidePlugin } from "webpack";
 import path from "path";
-import { outputPath, runtimeFolderPath } from "./constants";
+import { outputPath, runtimeFolderPath } from "../utils/constants";
 import fs from "fs-extra";
 import { builtinModules } from "module";
-import { compilerContext } from "../compile";
+import { compilerContext } from ".";
 import {
   DEFAULT_HTTP_PORT,
   DEFAULT_HTTP_BODY_SIZE_LIMIT,
