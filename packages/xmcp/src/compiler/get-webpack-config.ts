@@ -3,7 +3,7 @@ import path from "path";
 import { outputPath, runtimeFolderPath } from "../utils/constants";
 import fs from "fs-extra";
 import { builtinModules } from "module";
-import { compilerContext } from ".";
+import { compilerContext } from "./compiler-context";
 import {
   DEFAULT_HTTP_PORT,
   DEFAULT_HTTP_BODY_SIZE_LIMIT,

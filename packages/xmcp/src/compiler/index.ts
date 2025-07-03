@@ -2,7 +2,6 @@ import { webpack } from "webpack";
 import { getWebpackConfig } from "./get-webpack-config";
 import chalk from "chalk";
 import { getConfig } from "./parse-xmcp-config";
-import chokidar from "chokidar";
 import { generateImportCode } from "./generate-import-code";
 import fs from "fs";
 import { rootFolder, runtimeFolderPath } from "@/utils/constants";
@@ -11,47 +10,13 @@ import path from "path";
 import { deleteSync } from "del";
 import dotenv from "dotenv";
 export { type Middleware } from "@/types/middleware";
-import { watchdog } from "@/utils/spawn-process";
-import { type ChildProcess, spawn } from "child_process";
 import { generateEnvCode } from "./generate-env-code";
 import { Watcher } from "@/utils/file-watcher";
 import { onFirstBuild } from "./on-first-build";
-import { greenCheck, yellowArrow } from "@/utils/cli-icons";
+import { greenCheck } from "@/utils/cli-icons";
 import { compilerContext } from "./compiler-context";
+import { startHttpServer } from "./start-http-server";
 dotenv.config();
-
-let httpServerProcess: ChildProcess | null = null;
-
-function spawnHttpServer() {
-  const process = spawn("node", ["dist/http.js"], {
-    stdio: "inherit",
-    shell: true,
-  });
-
-  watchdog(process);
-
-  return process;
-}
-
-async function killProcess(process: ChildProcess) {
-  process.kill("SIGKILL");
-  await new Promise((resolve) => {
-    process.on("exit", resolve);
-  });
-}
-
-async function startHttpServer() {
-  if (!httpServerProcess) {
-    console.log(`${yellowArrow} Starting http server`);
-    // first time starting the server
-    httpServerProcess = spawnHttpServer();
-  } else {
-    console.log(`${yellowArrow} Restarting http server`);
-    // restart the server
-    await killProcess(httpServerProcess);
-    httpServerProcess = spawnHttpServer();
-  }
-}
 
 export type CompilerMode = "development" | "production";
 
@@ -65,27 +30,18 @@ export async function compile({ onBuild }: CompileOptions = {}) {
   let compilerStarted = false;
 
   const xmpcConfig = await getConfig();
-  let config = getWebpackConfig(xmpcConfig);
+  let webpackConfig = getWebpackConfig(xmpcConfig);
 
   if (xmpcConfig.webpack) {
-    config = xmpcConfig.webpack(config);
+    webpackConfig = xmpcConfig.webpack(webpackConfig);
   }
 
-  // Watcher for tools
-  const toolsWatcher = chokidar.watch("./src/tools/**/*.ts", {
-    ignored: /(^|[\/\\])\../,
+  const watcher = new Watcher({
+    // keep the watcher running on dev mode after "onReady"
     persistent: mode === "development",
+    ignored: /(^|[\/\\])\../,
     ignoreInitial: false,
   });
-
-  // Watcher for middleware
-  const middlewareWatcher = chokidar.watch("./src/middleware.ts", {
-    ignored: /(^|[\/\\])\../,
-    persistent: mode === "development",
-    ignoreInitial: false,
-  });
-
-  const watcher = new Watcher();
 
   // TODO add hability to customize tools path
   // handle tools
@@ -137,14 +93,9 @@ export async function compile({ onBuild }: CompileOptions = {}) {
     deleteSync(runtimeFolderPath);
     createFolder(runtimeFolderPath);
 
-    if (mode === "production") {
-      toolsWatcher.close();
-      middlewareWatcher.close();
-    }
-
     generateCode();
 
-    webpack(config, (err, stats) => {
+    webpack(webpackConfig, (err, stats) => {
       if (err) {
         console.error(err);
       }
