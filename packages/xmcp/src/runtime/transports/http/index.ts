@@ -87,8 +87,8 @@ async function main() {
     createServer,
     options,
     corsOptions,
-    middlewareFn,
-    oauthConfig
+    oauthConfig,
+    middlewareFn
   );
   transport.start();
 }

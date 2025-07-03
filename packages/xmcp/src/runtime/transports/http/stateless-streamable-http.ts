@@ -284,8 +284,8 @@ export class StatelessStreamableHTTPTransport {
     createServerFn: () => Promise<McpServer>,
     options: HttpTransportOptions = {},
     corsOptions: CorsOptions = {},
-    oauthConfig?: OAuthProxyConfig | null
-    middlewares: RequestHandler[] | undefined
+    oauthConfig?: OAuthProxyConfig | null,
+    middlewares?: RequestHandler[]
   ) {
     this.options = {
       bindToLocalhost: true,
