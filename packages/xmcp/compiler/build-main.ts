@@ -31,6 +31,7 @@ function getConfig() {
     "webpack-node-externals",
     "ts-loader",
     "fork-ts-checker-webpack-plugin",
+    "zod",
   ];
 
   const __filename = fileURLToPath(import.meta.url);
