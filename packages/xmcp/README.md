@@ -1,6 +1,7 @@
 <div align="center">
   <a href="https://xmcp.dev">
     <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://assets.basehub.com/bf7c3bb1/00bc035af33e78f6ebf4d1978071e248/favicon.png">
       <img alt="XMCP logo" src="https://assets.basehub.com/bf7c3bb1/00bc035af33e78f6ebf4d1978071e248/favicon.png" height="128">
     </picture>
   </a>
