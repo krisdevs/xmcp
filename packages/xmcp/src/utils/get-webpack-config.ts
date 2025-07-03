@@ -137,6 +137,11 @@ export function getWebpackConfig(xmcpConfig: XmcpParsedConfig): Configuration {
       typeof cors.credentials === "boolean" ? cors.credentials : false;
     definedVariables.HTTP_CORS_MAX_AGE =
       typeof cors.maxAge === "number" ? cors.maxAge : 0;
+
+    // inject oauth config
+    definedVariables.OAUTH_CONFIG = JSON.stringify(
+      xmcpConfig.experimental?.oauth || null
+    );
   }
   config.entry = entry;
 

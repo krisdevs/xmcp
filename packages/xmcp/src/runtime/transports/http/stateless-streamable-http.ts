@@ -7,7 +7,7 @@ import express, {
   RequestHandler,
 } from "express";
 import http, { IncomingMessage, ServerResponse } from "http";
-import { randomUUID } from "crypto";
+import { randomUUID } from "node:crypto";
 import getRawBody from "raw-body";
 import contentType from "content-type";
 import {
@@ -18,6 +18,8 @@ import {
 import homeTemplate from "../../templates/home";
 import { httpContextProvider } from "./http-context";
 import chalk from "chalk";
+import { createOAuthProxy, type OAuthProxyConfig } from "../../../auth/oauth";
+import { OAuthProxy } from "../../../auth/oauth/factory";
 
 const greenCheck = chalk.bold.green("✔");
 
@@ -275,13 +277,15 @@ export class StatelessStreamableHTTPTransport {
   private options: HttpTransportOptions;
   private createServerFn: () => Promise<McpServer>;
   private corsOptions: CorsOptions;
+  private oauthProxy: OAuthProxy | undefined;
   private middlewares: RequestHandler[] | undefined;
 
   constructor(
     createServerFn: () => Promise<McpServer>,
     options: HttpTransportOptions = {},
     corsOptions: CorsOptions = {},
-    middlewares: RequestHandler[] | undefined
+    oauthConfig?: OAuthProxyConfig | null,
+    middlewares?: RequestHandler[]
   ) {
     this.options = {
       bindToLocalhost: true,
@@ -295,6 +299,11 @@ export class StatelessStreamableHTTPTransport {
     this.createServerFn = createServerFn;
     this.corsOptions = corsOptions;
     this.middlewares = middlewares;
+
+    // setup oauth proxy if configuration is provided
+    if (oauthConfig) {
+      this.oauthProxy = createOAuthProxy(oauthConfig);
+    }
 
     this.setupMiddleware(options.bodySizeLimit || "10mb");
 
@@ -375,9 +384,13 @@ export class StatelessStreamableHTTPTransport {
       res.send(homeTemplate(this.endpoint));
     });
 
+    if (this.oauthProxy) {
+      this.app.use(this.oauthProxy.router);
+    }
+
     // isolate requests context
     this.app.use((req: Request, res: Response, next: NextFunction) => {
-      const id = crypto.randomUUID();
+      const id = randomUUID();
       httpContextProvider({ id, headers: req.headers }, () => {
         next();
       });
@@ -386,6 +399,10 @@ export class StatelessStreamableHTTPTransport {
     // routes beyond this point get intercepted by the middleware
     if (this.middlewares && this.middlewares.length > 0) {
       this.app.use(this.middlewares);
+    }
+
+    if (this.oauthProxy) {
+      this.app.use(this.oauthProxy.middleware);
     }
 
     this.app.use(this.endpoint, async (req: Request, res: Response) => {
@@ -436,6 +453,21 @@ export class StatelessStreamableHTTPTransport {
       console.log(
         `${greenCheck} MCP Server running on http://${host}:${this.port}${this.endpoint}`
       );
+
+      if (this.oauthProxy && this.debug) {
+        console.log(`🔐 OAuth endpoints available:`);
+        console.log(
+          `   Discovery: http://${host}:${this.port}/.well-known/oauth-authorization-server`
+        );
+        console.log(
+          `   Authorize: http://${host}:${this.port}/oauth2/authorize`
+        );
+        console.log(`   Token: http://${host}:${this.port}/oauth2/token`);
+        console.log(`   Revoke: http://${host}:${this.port}/oauth2/revoke`);
+        console.log(
+          `   Introspect: http://${host}:${this.port}/oauth2/introspect`
+        );
+      }
 
       this.setupShutdownHandlers();
     });

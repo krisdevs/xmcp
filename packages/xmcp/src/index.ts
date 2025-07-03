@@ -10,4 +10,5 @@ export type InferSchema<T extends Record<string, z.ZodType>> = {
 export type { XmcpInputConfig as XmcpConfig } from "./utils/parse-config";
 export { apiKeyAuthMiddleware } from "./auth/api-key";
 export { jwtAuthMiddleware } from "./auth/jwt";
+export type { OAuthConfigOptions } from "./auth/oauth";
 import "./declarations.ts";
