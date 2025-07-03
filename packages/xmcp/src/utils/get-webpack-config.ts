@@ -10,7 +10,7 @@ import {
   DEFAULT_HTTP_ENDPOINT,
   DEFAULT_HTTP_STATELESS,
   XmcpParsedConfig,
-} from "./parse-config";
+} from "./parse-xmcp-config";
 
 // Add this type for local use
 type CorsConfig = {

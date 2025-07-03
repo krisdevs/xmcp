@@ -49,7 +49,7 @@ importers:
         version: 1.5.0(next@15.3.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)
       basehub:
         specifier: ^9.0.19
-        version: 9.0.19(@babel/runtime@7.27.6)(@types/react@19.1.8)(react@19.1.0)(typescript@5.8.3)(zod@3.25.67)
+        version: 9.0.19(@babel/runtime@7.27.6)(@types/react@19.1.8)(react@19.1.0)(typescript@5.8.3)(zod@3.25.71)
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -77,6 +77,9 @@ importers:
       xmcp:
         specifier: workspace:*
         version: link:../../packages/xmcp
+      zod:
+        specifier: ^3.25.71
+        version: 3.25.71
       zustand:
         specifier: ^5.0.6
         version: 5.0.6(@types/react@19.1.8)(react@19.1.0)(use-sync-external-store@1.5.0(react@19.1.0))
@@ -5455,6 +5458,9 @@ packages:
   zod@3.25.67:
     resolution: {integrity: sha512-idA2YXwpCdqUSKRCACDE6ItZD9TZzy3OZMtpfLoh6oPR47lipysRrJfjzMqFxQ3uJuUPyUeWe1r9vLH33xO/Qw==}
 
+  zod@3.25.71:
+    resolution: {integrity: sha512-BsBc/NPk7h8WsUWYWYL+BajcJPY8YhjelaWu2NMLuzgraKAz4Lb4/6K11g9jpuDetjMiqhZ6YaexFLOC0Ogi3Q==}
+
   zustand@4.5.7:
     resolution: {integrity: sha512-CHOUy7mu3lbD6o6LJLfllpjkzhHXSBlX8B9+qPddUsIfeF5S/UZ5q0kmCsnRqT1UHFQZchNFDDzMbQsuesHWlw==}
     engines: {node: '>=12.7.0'}
@@ -5510,9 +5516,9 @@ snapshots:
 
   '@babel/runtime@7.27.6': {}
 
-  '@basehub/mutation-api-helpers@2.1.2(zod@3.25.67)':
+  '@basehub/mutation-api-helpers@2.1.2(zod@3.25.71)':
     dependencies:
-      zod: 3.25.67
+      zod: 3.25.71
 
   '@chevrotain/cst-dts-gen@10.5.0':
     dependencies:
@@ -7847,9 +7853,9 @@ snapshots:
 
   base64-js@1.5.1: {}
 
-  basehub@9.0.19(@babel/runtime@7.27.6)(@types/react@19.1.8)(react@19.1.0)(typescript@5.8.3)(zod@3.25.67):
+  basehub@9.0.19(@babel/runtime@7.27.6)(@types/react@19.1.8)(react@19.1.0)(typescript@5.8.3)(zod@3.25.71):
     dependencies:
-      '@basehub/mutation-api-helpers': 2.1.2(zod@3.25.67)
+      '@basehub/mutation-api-helpers': 2.1.2(zod@3.25.71)
       '@radix-ui/react-slot': 1.2.3(@types/react@19.1.8)(react@19.1.0)
       '@shikijs/transformers': 1.17.7
       '@xmldom/xmldom': 0.9.8
@@ -11804,6 +11810,8 @@ snapshots:
       zod: 3.25.67
 
   zod@3.25.67: {}
+
+  zod@3.25.71: {}
 
   zustand@4.5.7(@types/react@19.1.8)(react@19.1.0):
     dependencies:

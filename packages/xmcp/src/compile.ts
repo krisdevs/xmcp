@@ -1,7 +1,7 @@
 import { webpack } from "webpack";
 import { getWebpackConfig } from "./utils/get-webpack-config";
 import chalk from "chalk";
-import { getConfig, XmcpInputConfig } from "./utils/parse-config";
+import { getConfig, XmcpInputConfig } from "./utils/parse-xmcp-config";
 import chokidar from "chokidar";
 import { generateImportCode } from "./utils/generate-import-code";
 import fs from "fs";

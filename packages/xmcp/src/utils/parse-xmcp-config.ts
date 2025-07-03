@@ -39,9 +39,15 @@ const oauthConfigSchema = z.object({
   defaultScopes: z.array(z.string()).default(["openid", "profile", "email"]),
 });
 
+// adapter config schema
+const adapterConfigSchema = z.object({
+  toolsPath: z.string(),
+});
+
 // experimental features schema
 const experimentalConfigSchema = z.object({
   oauth: oauthConfigSchema.optional(),
+  adapter: z.union([adapterConfigSchema.optional(), z.boolean()]).optional(),
 });
 
 // TO DO extract all this config and schemas to a separate file
