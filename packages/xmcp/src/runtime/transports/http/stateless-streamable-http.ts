@@ -19,6 +19,7 @@ import homeTemplate from "../../templates/home";
 import { httpContextProvider } from "./http-context";
 import chalk from "chalk";
 import { createOAuthProxy, type OAuthProxyConfig } from "../../../auth/oauth";
+import { OAuthProxy } from "../../../auth/oauth/factory";
 
 const greenCheck = chalk.bold.green("✔");
 
@@ -277,7 +278,7 @@ export class StatelessStreamableHTTPTransport {
   private createServerFn: () => Promise<McpServer>;
   private corsOptions: CorsOptions;
   private middleware: RequestHandler | undefined;
-  private oauthProxy: any;
+  private oauthProxy: OAuthProxy | undefined;
 
   constructor(
     createServerFn: () => Promise<McpServer>,

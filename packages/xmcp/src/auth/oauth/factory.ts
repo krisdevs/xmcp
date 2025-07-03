@@ -8,10 +8,16 @@ import {
   OAuthProxyConfig,
 } from "./types";
 
+export interface OAuthProxy {
+  provider: ProxyOAuthServerProvider;
+  router: RequestHandler;
+  middleware: RequestHandler;
+}
+
 /**
  * Creates an OAuth proxy setup
  */
-export function createOAuthProxy(config: OAuthProxyConfig) {
+export function createOAuthProxy(config: OAuthProxyConfig): OAuthProxy {
   // Create provider with configuration
   const providerConfig: ProxyOAuthProviderConfig = {
     endpoints: config.endpoints,
@@ -40,13 +46,5 @@ export function createOAuthProxy(config: OAuthProxyConfig) {
     provider,
     router,
     middleware,
-
-    // helper methods
-    setupWithApp: (app: any) => {
-      app.use(router);
-      return {
-        protect: middleware,
-      };
-    },
   };
 }
