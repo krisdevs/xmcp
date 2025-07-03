@@ -3,6 +3,7 @@
 :root {
   --background: #000000;
   --foreground: #ffffff;
+  --spacing: 0.25rem;
 }
 
 @theme inline {
@@ -16,8 +17,26 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-mono);
-  box-shadow:
-    inset 0 0 0 1px #666666,
-    inset 0 0 0 3px #000000,
-    inset 0 0 0 4px #999999;
+}
+
+/* Text selection styling */
+::selection {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+::-moz-selection {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+/* Remove focus outline */
+*:focus {
+  outline: 1px solid white;
+  outline-offset: 2px;
+}
+
+*:focus-visible {
+  outline: 1px solid white;
+  outline-offset: 2px;
 }

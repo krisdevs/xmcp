@@ -1,5 +1,6 @@
 import { cn } from "@/utils/cn";
 import styles from "./terminal.module.css";
+import TypingEffect from "./typing-effect";
 
 function TerminalContainer({ children }: { children: React.ReactNode }) {
   return (
@@ -19,15 +20,7 @@ export function Terminal() {
   return (
     <TerminalContainer>
       <div className="aspect-[16/8]">
-        <div className="text-left flex gap-2 items-center leading-none">
-          <code>⊹ npx create-xmcp-app</code>
-          <div
-            className={cn(
-              styles.cursor,
-              "bg-white h-4 w-1.5 top-[1px] relative"
-            )}
-          />
-        </div>
+        <TypingEffect />
       </div>
     </TerminalContainer>
   );

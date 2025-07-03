@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Link from "next/link";
+import { Analytics } from "@vercel/analytics/next";
+import { Toolbar } from "basehub/next-toolbar";
+import AnimatedLink from "@/components/terminal/animated-link";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,13 +16,31 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "xmcp",
+  title: "xmcp | The MCP framework",
   description: "The framework for building & shipping MCP applications.",
   icons: {
-    icon: "/favicon.ico",
+    icon: [
+      { url: "/favicon.ico" },
+      { url: "/favicon-96x96.png", sizes: "96x96", type: "image/png" },
+      { url: "/favicon.svg", type: "image/svg+xml" },
+    ],
+    shortcut: "/favicon.ico",
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
   },
   openGraph: {
+    siteName: "xmcp",
     images: "/og-image.png",
+    url: "https://xmcp.dev",
+    type: "website",
+    locale: "en_US",
+    title: "xmcp | The MCP framework",
+    description: "The framework for building & shipping MCP applications.",
+  },
+  manifest: "/site.webmanifest",
+  appleWebApp: {
+    title: "xmcp",
   },
 };
 
@@ -35,32 +55,32 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-[100svh] flex flex-col`}
       >
         <div className="grow relative">{children}</div>
-        <footer className="text-center text-sm text-white flex flex-col lg:flex-row uppercase p-8 font-mono [&_a:hover]:underline gap-4">
+        <footer className="text-center text-sm text-white flex flex-col lg:flex-row uppercase p-8 font-mono gap-4">
           <div className="flex-1 justify-center flex gap-4">
-            <Link target="_blank" href="https://github.com/basementstudio/xmcp">
+            <AnimatedLink href="https://github.com/basementstudio/xmcp">
               GitHub
-            </Link>
-            <Link target="_blank" href="https://npmjs.com/package/xmcp">
+            </AnimatedLink>
+            <AnimatedLink href="https://npmjs.com/package/xmcp">
               NPM
-            </Link>
+            </AnimatedLink>
           </div>
           <div className="flex-1 justify-center flex">
             <span className="block">
               © 2025{" "}
-              <Link target="_blank" href="https://basement.studio">
+              <AnimatedLink href="https://basement.studio">
                 BASEMENT.STUDIO
-              </Link>
+              </AnimatedLink>
             </span>
           </div>
           <div className="flex-1 justify-center flex gap-4">
-            <Link target="_blank" href="https://x.com/xmcp_dev">
-              X
-            </Link>
-            <Link target="_blank" href="https://discord.gg/FPRuDAhPX9">
+            <AnimatedLink href="https://x.com/xmcp_dev">X</AnimatedLink>
+            <AnimatedLink href="https://discord.gg/FPRuDAhPX9">
               Discord
-            </Link>
+            </AnimatedLink>
           </div>
         </footer>
+        <Toolbar />
+        <Analytics />
       </body>
     </html>
   );

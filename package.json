@@ -8,15 +8,21 @@
   },
   "contributors": [
     {
-      "name": "Valentina Bearzotti",
-      "email": "valebearzotti1@gmail.com",
-      "url": "https://github.com/valebearzotti"
-    },
-    {
       "name": "Matias Gonzalez Fernandez",
       "email": "matiasngf@hotmail.com",
       "url": "https://github.com/matiasngf"
+    },
+    {
+      "name": "Valentina Bearzotti",
+      "email": "valebearzotti1@gmail.com",
+      "url": "https://github.com/valebearzotti"
     }
+  ],
+  "keywords": [
+    "mcp",
+    "modelcontextprotocol",
+    "http",
+    "stdio"
   ],
   "license": "MIT",
   "repository": {
