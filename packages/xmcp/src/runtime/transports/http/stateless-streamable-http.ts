@@ -302,11 +302,7 @@ export class StatelessStreamableHTTPTransport {
 
     // setup oauth proxy if configuration is provided
     if (oauthConfig) {
-      const completeOAuthConfig = {
-        ...oauthConfig,
-        baseUrl: oauthConfig.baseUrl || `http://127.0.0.1:${this.port}`,
-      };
-      this.oauthProxy = createOAuthProxy(completeOAuthConfig);
+      this.oauthProxy = createOAuthProxy(oauthConfig);
     }
 
     this.setupMiddleware(options.bodySizeLimit || "10mb");

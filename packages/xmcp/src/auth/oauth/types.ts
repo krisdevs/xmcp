@@ -137,6 +137,7 @@ export interface OAuthProxyConfig {
   storage?: OAuthStorage;
 
   // custom verification functions (optional, in case we need to override the default, otherwise default to the provider)
+  // unused for now
   verifyAccessToken?: (token: string) => Promise<any>;
   // getClient removed - all clients must be registered through DCR
 
