@@ -17,7 +17,10 @@ export function SidebarClient({
 }) {
   const router = useRouter();
   const pathname = usePathname();
-  const [openAccordions, setOpenAccordions] = useState<string[]>([]);
+  const parentSlugs = sidebar
+    .filter((item) => item.children && item.children.length > 0)
+    .map((item) => item.slug);
+  const [openAccordions, setOpenAccordions] = useState<string[]>(parentSlugs);
 
   const pathParts = pathname.replace("/docs/", "").split("/").filter(Boolean);
   const [parentSlug, childSlug] = pathParts;
@@ -56,8 +59,8 @@ export function SidebarClient({
   }, [router, sidebar]);
 
   return (
-    <div className="absolute left-0 top-8 hidden h-full lg:block lg:w-[280px]">
-      <nav className="sticky left-8 top-8 z-10 flex h-auto min-h-[600px] flex-col px-8 lg:h-[calc(100dvh-64px)]">
+    <div className="absolute left-0 top-0 hidden h-full lg:block lg:w-[280px]">
+      <nav className="sticky left-8 top-0 z-10 flex h-auto min-h-[600px] flex-col px-8 lg:h-[calc(100dvh-64px)]">
         <div className="flex justify-center">
           <div className="relative w-[150px] h-[150px] flex items-center justify-center mx-auto">
             <XmcpLogo matcap={matcap} />
