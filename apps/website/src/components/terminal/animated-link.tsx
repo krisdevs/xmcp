@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { cn } from "@/utils/cn";
 
-interface AnimatedLinkProps {
+interface AnimatedLinkProps
+  extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   href: string;
   children: React.ReactNode;
   className?: string;
@@ -13,12 +14,13 @@ export const AnimatedLink = ({
   href,
   children,
   className = "",
+  ...props
 }: AnimatedLinkProps) => {
   return (
     <Link
       href={href}
-      target="_blank"
-      className={cn("relative group uppercase", className)}
+      {...props}
+      className={cn("relative group uppercase font-mono", className)}
     >
       {children}
       <div

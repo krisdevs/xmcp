@@ -1,0 +1,33 @@
+import { AnimatedLink } from "@/components/terminal/animated-link";
+
+export const Header = () => {
+  return (
+    <header className="sticky top-0 right-0 left-0 max-w-[1200px] mx-auto bg-transparent z-50 flex justify-center items-center">
+      <div
+        className="
+          pointer-events-none
+          absolute left-1/2 top-0 -translate-x-1/2
+          w-[800px] h-full
+          [mask-image:linear-gradient(to_bottom,rgba(0,0,0,0.6),rgba(0,0,0,0.05)_60%,rgba(0,0,0,0))]
+          backdrop-blur-md
+        "
+        aria-hidden="true"
+      />
+      <div className="relative max-w-[800px] w-full flex justify-center items-center px-4 py-8 text-center text-md text-white uppercase font-mono gap-8">
+        <AnimatedLink href="/">Home</AnimatedLink>
+        <span
+          className="bg-clip-text text-transparent [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]"
+          style={{
+            background:
+              "linear-gradient(to top, #CFCFCF 29.21%, #868686 69.52%)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+          }}
+        >
+          xmcp_
+        </span>
+        <AnimatedLink href="/docs">Docs</AnimatedLink>
+      </div>
+    </header>
+  );
+};

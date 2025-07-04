@@ -4,6 +4,7 @@ import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
 import { Toolbar } from "basehub/next-toolbar";
 import { Footer } from "@/components/layout/footer";
+import { Header } from "@/components/layout/header";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -52,8 +53,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-[100svh] flex flex-col max-w-[1200px] mx-auto`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-[100dvh] flex flex-col max-w-[1200px] mx-auto`}
       >
+        <Header />
         <div className="grow relative">{children}</div>
         <Footer />
         <Toolbar />
