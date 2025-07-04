@@ -64,6 +64,16 @@ function Code({
   return <code dangerouslySetInnerHTML={{ __html: codeHTML }} {...props} />;
 }
 
+function Pre({ children }: { children: React.ReactNode }) {
+  return (
+    <pre className="terminal-container relative w-auto">
+      <div className="p-4 bg-black border border-gray-400 overflow-x-auto">
+        {children}
+      </div>
+    </pre>
+  );
+}
+
 function slugify(str: string) {
   return str
     .toString()
@@ -110,6 +120,7 @@ const components = {
   Image: RoundedImage,
   a: CustomLink,
   code: Code,
+  pre: Pre,
   Table,
 };
 

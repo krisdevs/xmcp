@@ -4,6 +4,16 @@
   --background: #000000;
   --foreground: #ffffff;
   --spacing: 0.25rem;
+
+  --sh-class: #a7a7a7;
+  --sh-identifier: #e1e4e8;
+  --sh-sign: #e1e4e8;
+  --sh-string: #a7a7a7;
+  --sh-keyword: #a7a7a7;
+  --sh-comment: #a19595;
+  --sh-jsxliterals: #a7a7a7;
+  --sh-property: #a7a7a7;
+  --sh-entity: #a7a7a7;
 }
 
 @theme inline {
@@ -50,17 +60,18 @@ body {
   }
 
   .prose pre {
-    @apply bg-neutral-50 dark:bg-neutral-900 rounded-lg overflow-x-auto border border-neutral-200 dark:border-neutral-900 py-2 px-3 text-sm;
+    @apply bg-neutral-50 dark:bg-neutral-900 overflow-x-auto py-2 px-2 text-sm;
   }
 
   .prose code {
-    @apply px-1 py-0.5 rounded-lg;
+    @apply px-2 py-0.5;
   }
 
   .prose pre code {
     @apply p-0;
     border: initial;
-    line-height: 1.5;
+    line-height: 1;
+    font-size: 0.8rem;
   }
 
   .prose code span {
@@ -117,6 +128,7 @@ body {
   pre {
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
+    font-size: 0.8rem;
   }
 
   /* Remove Safari input shadow on mobile */
@@ -136,6 +148,28 @@ body {
 
   .title {
     text-wrap: balance;
+  }
+
+  .terminal-container {
+    border: 0.516px solid #929292;
+    background:
+      radial-gradient(
+        88.13% 114.4% at 100% 44.44%,
+        rgba(255, 255, 255, 0) 43.51%,
+        rgba(255, 255, 255, 0.4) 70.35%
+      ),
+      linear-gradient(
+        214deg,
+        rgba(234, 234, 234, 0.7) 19.77%,
+        rgba(234, 234, 234, 0.95) 22.28%,
+        rgba(237, 237, 237, 0) 100%
+      );
+    box-shadow:
+      -2.582px -1.549px 11.878px 0px rgba(0, 0, 0, 0.04) inset,
+      -1.033px -0.516px 0px 0px #fff inset,
+      -1.033px -1.549px 1.446px 0px rgba(255, 255, 255, 0.55) inset,
+      -1.033px 0.516px 0px 0px #fff inset,
+      0px 1.033px 1.239px 0px rgba(0, 0, 0, 0.15);
   }
 }
 
