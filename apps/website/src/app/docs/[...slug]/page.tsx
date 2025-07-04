@@ -2,6 +2,7 @@ import { fetchArticle, fetchSidebar } from "@/basehub/actions";
 import { findNavigationItems } from "@/utils/find-navigation-items";
 import { notFound } from "next/navigation";
 import { ArticleNavigation } from "@/components/layout/navigation";
+import { ArticleContent } from "@/components/article/content";
 
 export default async function Page({
   params,
@@ -21,9 +22,8 @@ export default async function Page({
 
   return (
     <div className="flex gap-8 w-full flex-col">
-      <div className="flex-1 px-4 py-8">content</div>
-      <div className="w-52 shrink-0 py-8 sticky top-0 h-fit">
-        <h1>{article._title}</h1>
+      <div className="flex-1 py-8">
+        <ArticleContent article={article} />
         <ArticleNavigation prev={prev} next={next} />
       </div>
     </div>
