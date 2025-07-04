@@ -18,8 +18,8 @@ import {
 import { cn } from "@/utils/cn";
 import { useRouter, usePathname } from "next/navigation";
 import { useEffect } from "react";
+import { XmcpLogo } from "@/components/terminal/logo/client";
 
-// Define the type based on your BaseHub data structure
 type SidebarData = {
   _title: string;
   _slug: string;
@@ -39,24 +39,25 @@ type SidebarData = {
   };
 }[];
 
-export function SidebarClient({ sidebar }: { sidebar: SidebarData }) {
+export function SidebarClient({
+  sidebar,
+  matcap,
+}: {
+  sidebar: SidebarData;
+  matcap: string;
+}) {
   const router = useRouter();
   const pathname = usePathname();
 
-  // Extract the active slug from pathname
-  // Remove '/docs/' prefix and split by '/' to get the slug parts
   const pathParts = pathname.replace("/docs/", "").split("/").filter(Boolean);
   const [parentSlug, childSlug] = pathParts;
 
-  // Route prefetching - adapt to BaseHub structure with nested routes
   useEffect(() => {
     sidebar.forEach((item) => {
-      // Prefetch the parent item if it has a target
       if (item.target?._slug) {
         router.prefetch(`/docs/${item.target._slug}`);
       }
 
-      // Prefetch all collection items with nested routes
       item.collection?.items?.forEach((collectionItem) => {
         const nestedRoute = item.target
           ? `${item.target._slug}/${collectionItem.target._slug}`
@@ -69,6 +70,13 @@ export function SidebarClient({ sidebar }: { sidebar: SidebarData }) {
   return (
     <div className="sticky top-8">
       <Sidebar>
+        {/* Logo Section */}
+        <div className="flex justify-center py-6 px-4">
+          <div className="relative w-[150px] h-[150px] flex items-center justify-center mx-auto">
+            <XmcpLogo matcap={matcap} />
+          </div>
+        </div>
+
         <SidebarHeader>Documentation</SidebarHeader>
         <SidebarMenu>
           {sidebar.map((item) => {

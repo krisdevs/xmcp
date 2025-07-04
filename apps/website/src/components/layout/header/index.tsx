@@ -8,9 +8,13 @@ export const Header = () => {
           pointer-events-none
           absolute left-1/2 top-0 -translate-x-1/2
           w-[800px] h-full
-          [mask-image:linear-gradient(to_bottom,rgba(0,0,0,0.6),rgba(0,0,0,0.05)_60%,rgba(0,0,0,0))]
-          backdrop-blur-md
         "
+        style={{
+          background: "rgba(0, 0, 0, 0.25)",
+          backdropFilter: "blur(8px)",
+          maskImage:
+            "linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0.7) 80%, rgba(0,0,0,0) 100%)",
+        }}
         aria-hidden="true"
       />
       <div className="relative max-w-[800px] w-full flex justify-center items-center px-4 py-8 text-center text-md text-white uppercase font-mono gap-8">

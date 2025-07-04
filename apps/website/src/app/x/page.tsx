@@ -1,11 +1,9 @@
-import { fetchAssets } from "@/basehub/actions";
-import { CavasLogo } from "@/components/terminal/three-logo";
+import { XmcpLogo } from "@/components/terminal/logo";
 
 export default async function Page() {
-  const assets = await fetchAssets();
   return (
     <div className="absolute inset-0 w-full h-full">
-      <CavasLogo matcap={assets.glLogoMatcap.url} />
+      <XmcpLogo />
     </div>
   );
 }
