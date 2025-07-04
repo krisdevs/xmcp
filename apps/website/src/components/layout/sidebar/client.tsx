@@ -103,7 +103,7 @@ export function SidebarClient({
                         className={cn(
                           "flex w-full items-center justify-between rounded-lg p-3 leading-[114%] transition-colors duration-150",
                           isParentActive
-                            ? "text-white bg-[rgba(255,255,255,0.1)]"
+                            ? "text-white"
                             : "text-[rgba(153,153,153,1)] hover:text-white hover:bg-[rgba(255,255,255,0.05)]"
                         )}
                       >
@@ -139,7 +139,7 @@ export function SidebarClient({
                         </Accordion.Trigger>
                       </div>
                       <Accordion.Content className="overflow-hidden data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down">
-                        <div className="pb-2 mt-3 ml-3 border-l border-[rgba(153,153,153,0.3)]">
+                        <div className="pb-2 mt-3 ml-3 border-l border-gray-600">
                           <div className="flex flex-col gap-1">
                             {item.collection.items.map((collectionItem) => {
                               const nestedRoute = item.target
@@ -176,7 +176,7 @@ export function SidebarClient({
                       className={cn(
                         "w-full rounded-lg p-3 leading-[114%] transition-colors duration-150 font-mono uppercase font-medium",
                         isParentActive
-                          ? "text-white bg-[rgba(255,255,255,0.1)]"
+                          ? "text-white"
                           : "text-[rgba(153,153,153,1)] hover:text-white hover:bg-[rgba(255,255,255,0.05)]"
                       )}
                     >
