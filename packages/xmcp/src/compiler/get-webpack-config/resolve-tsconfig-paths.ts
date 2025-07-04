@@ -1,7 +1,7 @@
 // Based on https://gist.github.com/nerdyman/2f97b24ab826623bff9202750013f99e
 
 import path, { resolve } from "path";
-import { readFileSync } from "fs";
+import { readFileSync, existsSync } from "fs";
 
 /**
  * Resolve tsconfig.json paths to Webpack aliases
@@ -12,8 +12,20 @@ import { readFileSync } from "fs";
 export function resolveTsconfigPathsToAlias({
   tsconfigPath = "./tsconfig.json",
 } = {}) {
+  if (!existsSync(tsconfigPath)) {
+    return {};
+  }
   const tsconfigContent = readFileSync(tsconfigPath, "utf-8");
-  const { paths } = JSON.parse(tsconfigContent).compilerOptions;
+  const parsedTsconfig = JSON.parse(tsconfigContent);
+
+  if (
+    !parsedTsconfig.compilerOptions ||
+    !parsedTsconfig.compilerOptions.paths
+  ) {
+    return {};
+  }
+
+  const paths = parsedTsconfig.compilerOptions.paths;
 
   const aliases: Record<string, string> = {};
 
