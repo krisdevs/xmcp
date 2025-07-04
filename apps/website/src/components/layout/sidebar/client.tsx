@@ -83,7 +83,7 @@ export function SidebarClient({
                           "flex w-full items-center justify-between rounded-lg p-3 leading-[114%] transition-colors duration-150",
                           isParentActive
                             ? "text-white"
-                            : "text-[rgba(153,153,153,1)] hover:text-white hover:bg-[rgba(255,255,255,0.05)]"
+                            : "text-[rgba(153,153,153,1)] hover:text-white"
                         )}
                       >
                         <Link
