@@ -1,6 +1,5 @@
 {
   "http": {
-    "port": 3002,
-    "stateless": true
+    "port": 3002
   }
 }

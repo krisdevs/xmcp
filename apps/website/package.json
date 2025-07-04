@@ -3,14 +3,15 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "basehub dev & next dev --turbopack",
-    "build": "basehub && next build",
+    "dev": "basehub dev & xmcp dev & next dev --turbopack",
+    "build": "basehub && xmcp build && next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.0",
     "@mdx-js/react": "^3.1.0",
+    "@modelcontextprotocol/sdk": "^1.11.4",
     "@next/mdx": "^15.3.5",
     "@radix-ui/react-accordion": "^1.2.11",
     "@radix-ui/react-collapsible": "^1.1.11",
@@ -24,6 +25,7 @@
     "@types/mdx": "^2.0.13",
     "@types/three": "^0.178.0",
     "@vercel/analytics": "^1.5.0",
+    "@vercel/mcp-adapter": "^0.11.1",
     "basehub": "^9.0.19",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -36,6 +38,8 @@
     "sugar-high": "^0.9.3",
     "tailwind-merge": "^3.3.1",
     "three": "^0.178.0",
+    "xmcp": "0.0.17-alpha-001",
+    "zod": "^3.25.71",
     "zustand": "^5.0.6"
   },
   "devDependencies": {
@@ -51,6 +55,7 @@
     "glslify-loader": "^2.0.0",
     "prettier-plugin-glsl": "^0.2.0",
     "raw-loader": "^4.0.2",
+    "swc-loader": "^0.2.6",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

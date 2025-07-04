@@ -32,6 +32,9 @@ importers:
       '@radix-ui/react-accordion':
         specifier: ^1.2.11
         version: 1.2.11(@types/react-dom@19.1.6(@types/react@19.1.8))(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.11.4
+        version: 1.13.2
       '@radix-ui/react-collapsible':
         specifier: ^1.1.11
         version: 1.1.11(@types/react-dom@19.1.6(@types/react@19.1.8))(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -65,9 +68,12 @@ importers:
       '@vercel/analytics':
         specifier: ^1.5.0
         version: 1.5.0(next@15.3.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)
+      '@vercel/mcp-adapter':
+        specifier: ^0.11.1
+        version: 0.11.1(@modelcontextprotocol/sdk@1.13.2)(next@15.3.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0))
       basehub:
         specifier: ^9.0.19
-        version: 9.0.19(@babel/runtime@7.27.6)(@types/react@19.1.8)(react@19.1.0)(typescript@5.8.3)(zod@3.25.67)
+        version: 9.0.19(@babel/runtime@7.27.6)(@types/react@19.1.8)(react@19.1.0)(typescript@5.8.3)(zod@3.25.71)
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -101,6 +107,12 @@ importers:
       three:
         specifier: ^0.178.0
         version: 0.178.0
+      xmcp:
+        specifier: 0.0.17-alpha-001
+        version: 0.0.17-alpha-001(@types/node@20.19.2)(@types/react-dom@19.1.6(@types/react@19.1.8))(@types/react@19.1.8)(next@15.3.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(swc-loader@0.2.6(@swc/core@1.12.7)(webpack@5.99.9(@swc/core@1.12.7)))(tailwindcss@4.1.11)(typescript@5.8.3)(zod@3.25.71)
+      zod:
+        specifier: ^3.25.71
+        version: 3.25.71
       zustand:
         specifier: ^5.0.6
         version: 5.0.6(@types/react@19.1.8)(react@19.1.0)(use-sync-external-store@1.5.0(react@19.1.0))
@@ -140,13 +152,50 @@ importers:
         version: 0.2.2(prettier@3.6.2)
       raw-loader:
         specifier: ^4.0.2
-        version: 4.0.2(webpack@5.99.9)
+        version: 4.0.2(webpack@5.99.9(@swc/core@1.12.7))
+      swc-loader:
+        specifier: ^0.2.6
+        version: 0.2.6(@swc/core@1.12.7)(webpack@5.99.9(@swc/core@1.12.7))
       tailwindcss:
         specifier: ^4
         version: 4.1.11
       typescript:
         specifier: ^5
         version: 5.8.3
+
+  examples/express:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.11.4
+        version: 1.13.2
+      '@vercel/mcp-adapter':
+        specifier: ^0.11.1
+        version: 0.11.1(@modelcontextprotocol/sdk@1.13.2)(next@15.3.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0))
+      express:
+        specifier: ^4.18.2
+        version: 4.21.2
+      zod:
+        specifier: ^3.25.71
+        version: 3.25.71
+    devDependencies:
+      '@types/express':
+        specifier: ^4.17.21
+        version: 4.17.23
+      '@types/node':
+        specifier: ^20.10.0
+        version: 20.19.2
+      swc-loader:
+        specifier: ^0.2.6
+        version: 0.2.6(@swc/core@1.12.7)(webpack@5.99.9(@swc/core@1.12.7))
+      tsx:
+        specifier: ^4.6.0
+        version: 4.20.3
+      typescript:
+        specifier: ^5.3.0
+        version: 5.8.3
+      xmcp:
+        specifier: workspace:*
+        version: link:../../packages/xmcp
 
   examples/middleware/api-key:
     dependencies:
@@ -385,6 +434,9 @@ importers:
       '@types/webpack-node-externals':
         specifier: ^3.0.4
         version: 3.0.4(@swc/core@1.12.7)
+      '@vercel/mcp-adapter':
+        specifier: ^0.11.1
+        version: 0.11.1(@modelcontextprotocol/sdk@1.13.2)(next@15.3.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       chalk:
         specifier: ^5.2.0
         version: 5.4.1
@@ -2113,8 +2165,14 @@ packages:
   '@types/estree@1.0.8':
     resolution: {integrity: sha512-dWHzHa2WqEXI/O1E9OjrocMTKJl2mSrEolh1Iomrv6U+JuNwaHXsXx9bLu5gG7BUWFIN0skIQJQ/L1rIex4X6w==}
 
+  '@types/express-serve-static-core@4.19.6':
+    resolution: {integrity: sha512-N4LZ2xG7DatVqhCZzOGb1Yi5lMbXSZcmdLDe9EzSndPV2HpWYWzRbaerl2n27irrm94EPpprqa8KpskPT085+A==}
+
   '@types/express-serve-static-core@5.0.6':
     resolution: {integrity: sha512-3xhRnjJPkULekpSzgtoNYYcTWgEZkp4myc+Saevii5JPnHNvHMRlBSHDbs7Bh1iPPoVTERHEZXyhyLbMEsExsA==}
+
+  '@types/express@4.17.23':
+    resolution: {integrity: sha512-Crp6WY9aTYP3qPi2wGDo9iUe/rceX01UMhnF1jmwDcKCFM6cx7YhGP/Mpr3y9AASpfHixIG0E6azCcL5OcDHsQ==}
 
   '@types/express@5.0.3':
     resolution: {integrity: sha512-wGA0NX93b19/dZC1J18tKWVIYWyyF2ZjT9vin/NRu0qzzvfVzWjs04iq2rQ3H65vCTQYlRqs3YHfY7zjdV+9Kw==}
@@ -6059,6 +6117,9 @@ packages:
   zod@3.25.67:
     resolution: {integrity: sha512-idA2YXwpCdqUSKRCACDE6ItZD9TZzy3OZMtpfLoh6oPR47lipysRrJfjzMqFxQ3uJuUPyUeWe1r9vLH33xO/Qw==}
 
+  zod@3.25.71:
+    resolution: {integrity: sha512-BsBc/NPk7h8WsUWYWYL+BajcJPY8YhjelaWu2NMLuzgraKAz4Lb4/6K11g9jpuDetjMiqhZ6YaexFLOC0Ogi3Q==}
+
   zustand@4.5.7:
     resolution: {integrity: sha512-CHOUy7mu3lbD6o6LJLfllpjkzhHXSBlX8B9+qPddUsIfeF5S/UZ5q0kmCsnRqT1UHFQZchNFDDzMbQsuesHWlw==}
     engines: {node: '>=12.7.0'}
@@ -6114,9 +6175,9 @@ snapshots:
 
   '@babel/runtime@7.27.6': {}
 
-  '@basehub/mutation-api-helpers@2.1.2(zod@3.25.67)':
+  '@basehub/mutation-api-helpers@2.1.2(zod@3.25.71)':
     dependencies:
-      zod: 3.25.67
+      zod: 3.25.71
 
   '@chevrotain/cst-dts-gen@10.5.0':
     dependencies:
@@ -6548,8 +6609,8 @@ snapshots:
       react-simple-code-editor: 0.14.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       serve-handler: 6.1.6
       tailwind-merge: 2.6.0
-      tailwindcss-animate: 1.0.7
-      zod: 3.25.67
+      tailwindcss-animate: 1.0.7(tailwindcss@4.1.11)
+      zod: 3.25.71
     transitivePeerDependencies:
       - '@types/react'
       - '@types/react-dom'
@@ -6581,8 +6642,8 @@ snapshots:
       react-simple-code-editor: 0.14.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       serve-handler: 6.1.6
       tailwind-merge: 2.6.0
-      tailwindcss-animate: 1.0.7
-      zod: 3.25.67
+      tailwindcss-animate: 1.0.7(tailwindcss@4.1.11)
+      zod: 3.25.71
     transitivePeerDependencies:
       - '@types/react'
       - '@types/react-dom'
@@ -6614,8 +6675,41 @@ snapshots:
       react-simple-code-editor: 0.14.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       serve-handler: 6.1.6
       tailwind-merge: 2.6.0
-      tailwindcss-animate: 1.0.7
-      zod: 3.25.67
+      tailwindcss-animate: 1.0.7(tailwindcss@4.1.11)
+      zod: 3.25.71
+    transitivePeerDependencies:
+      - '@types/react'
+      - '@types/react-dom'
+      - supports-color
+      - tailwindcss
+
+  '@modelcontextprotocol/inspector-client@0.14.3(@types/react-dom@19.1.6(@types/react@19.1.8))(@types/react@19.1.8)(tailwindcss@4.1.11)':
+    dependencies:
+      '@modelcontextprotocol/sdk': 1.13.2
+      '@radix-ui/react-checkbox': 1.3.2(@types/react-dom@19.1.6(@types/react@19.1.8))(@types/react@19.1.8)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@radix-ui/react-dialog': 1.1.14(@types/react-dom@19.1.6(@types/react@19.1.8))(@types/react@19.1.8)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@radix-ui/react-icons': 1.3.2(react@18.3.1)
+      '@radix-ui/react-label': 2.1.7(@types/react-dom@19.1.6(@types/react@19.1.8))(@types/react@19.1.8)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@radix-ui/react-popover': 1.1.14(@types/react-dom@19.1.6(@types/react@19.1.8))(@types/react@19.1.8)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@radix-ui/react-select': 2.2.5(@types/react-dom@19.1.6(@types/react@19.1.8))(@types/react@19.1.8)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@radix-ui/react-slot': 1.2.3(@types/react@19.1.8)(react@18.3.1)
+      '@radix-ui/react-tabs': 1.1.12(@types/react-dom@19.1.6(@types/react@19.1.8))(@types/react@19.1.8)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@radix-ui/react-toast': 1.2.14(@types/react-dom@19.1.6(@types/react@19.1.8))(@types/react@19.1.8)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@radix-ui/react-tooltip': 1.2.7(@types/react-dom@19.1.6(@types/react@19.1.8))(@types/react@19.1.8)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      ajv: 6.12.6
+      class-variance-authority: 0.7.1
+      clsx: 2.1.1
+      cmdk: 1.1.1(@types/react-dom@19.1.6(@types/react@19.1.8))(@types/react@19.1.8)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      lucide-react: 0.447.0(react@18.3.1)
+      pkce-challenge: 4.1.0
+      prismjs: 1.30.0
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+      react-simple-code-editor: 0.14.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      serve-handler: 6.1.6
+      tailwind-merge: 2.6.0
+      tailwindcss-animate: 1.0.7(tailwindcss@4.1.11)
+      zod: 3.25.71
     transitivePeerDependencies:
       - '@types/react'
       - '@types/react-dom'
@@ -6628,7 +6722,7 @@ snapshots:
       cors: 2.8.5
       express: 5.1.0
       ws: 8.18.3
-      zod: 3.25.67
+      zod: 3.25.71
     transitivePeerDependencies:
       - bufferutil
       - supports-color
@@ -6640,7 +6734,7 @@ snapshots:
       cors: 2.8.5
       express: 5.1.0
       ws: 8.18.3
-      zod: 3.25.67
+      zod: 3.25.71
     transitivePeerDependencies:
       - bufferutil
       - supports-color
@@ -6656,7 +6750,31 @@ snapshots:
       shell-quote: 1.8.3
       spawn-rx: 5.1.2
       ts-node: 10.9.2(@swc/core@1.12.7)(@types/node@22.15.34)(typescript@5.8.3)
-      zod: 3.25.67
+      zod: 3.25.71
+    transitivePeerDependencies:
+      - '@swc/core'
+      - '@swc/wasm'
+      - '@types/node'
+      - '@types/react'
+      - '@types/react-dom'
+      - bufferutil
+      - supports-color
+      - tailwindcss
+      - typescript
+      - utf-8-validate
+
+  '@modelcontextprotocol/inspector@0.14.3(@swc/core@1.12.7)(@types/node@20.19.2)(@types/react-dom@19.1.6(@types/react@19.1.8))(@types/react@19.1.8)(tailwindcss@4.1.11)(typescript@5.8.3)':
+    dependencies:
+      '@modelcontextprotocol/inspector-cli': 0.14.3
+      '@modelcontextprotocol/inspector-client': 0.14.3(@types/react-dom@19.1.6(@types/react@19.1.8))(@types/react@19.1.8)(tailwindcss@4.1.11)
+      '@modelcontextprotocol/inspector-server': 0.14.3
+      '@modelcontextprotocol/sdk': 1.13.2
+      concurrently: 9.2.0
+      open: 10.1.2
+      shell-quote: 1.8.3
+      spawn-rx: 5.1.2
+      ts-node: 10.9.2(@swc/core@1.12.7)(@types/node@20.19.2)(typescript@5.8.3)
+      zod: 3.25.71
     transitivePeerDependencies:
       - '@swc/core'
       - '@swc/wasm'
@@ -6680,7 +6798,7 @@ snapshots:
       shell-quote: 1.8.3
       spawn-rx: 5.1.2
       ts-node: 10.9.2(@swc/core@1.12.7)(@types/node@22.15.34)(typescript@5.8.3)
-      zod: 3.25.67
+      zod: 3.25.71
     transitivePeerDependencies:
       - '@swc/core'
       - '@swc/wasm'
@@ -6704,7 +6822,7 @@ snapshots:
       shell-quote: 1.8.3
       spawn-rx: 5.1.2
       ts-node: 10.9.2(@swc/core@1.12.7)(@types/node@22.15.34)(typescript@5.8.3)
-      zod: 3.25.67
+      zod: 3.25.71
     transitivePeerDependencies:
       - '@swc/core'
       - '@swc/wasm'
@@ -6728,8 +6846,8 @@ snapshots:
       express-rate-limit: 7.5.1(express@5.1.0)
       pkce-challenge: 5.0.0
       raw-body: 3.0.0
-      zod: 3.25.67
-      zod-to-json-schema: 3.24.6(zod@3.25.67)
+      zod: 3.25.71
+      zod-to-json-schema: 3.24.6(zod@3.25.71)
     transitivePeerDependencies:
       - supports-color
 
@@ -8482,12 +8600,26 @@ snapshots:
 
   '@types/estree@1.0.8': {}
 
+  '@types/express-serve-static-core@4.19.6':
+    dependencies:
+      '@types/node': 20.19.2
+      '@types/qs': 6.14.0
+      '@types/range-parser': 1.2.7
+      '@types/send': 0.17.5
+
   '@types/express-serve-static-core@5.0.6':
     dependencies:
       '@types/node': 20.19.2
       '@types/qs': 6.14.0
       '@types/range-parser': 1.2.7
       '@types/send': 0.17.5
+
+  '@types/express@4.17.23':
+    dependencies:
+      '@types/body-parser': 1.19.6
+      '@types/express-serve-static-core': 4.19.6
+      '@types/qs': 6.14.0
+      '@types/serve-static': 1.15.8
 
   '@types/express@5.0.3':
     dependencies:
@@ -8776,6 +8908,15 @@ snapshots:
     optionalDependencies:
       next: 15.3.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       react: 19.1.0
+
+  '@vercel/mcp-adapter@0.11.1(@modelcontextprotocol/sdk@1.13.2)(next@15.3.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1))':
+    dependencies:
+      '@modelcontextprotocol/sdk': 1.13.2
+      chalk: 5.4.1
+      commander: 11.1.0
+      redis: 4.7.1
+    optionalDependencies:
+      next: 15.3.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
 
   '@vercel/mcp-adapter@0.11.1(@modelcontextprotocol/sdk@1.13.2)(next@15.3.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0))':
     dependencies:
@@ -9068,9 +9209,9 @@ snapshots:
 
   base64-js@1.5.1: {}
 
-  basehub@9.0.19(@babel/runtime@7.27.6)(@types/react@19.1.8)(react@19.1.0)(typescript@5.8.3)(zod@3.25.67):
+  basehub@9.0.19(@babel/runtime@7.27.6)(@types/react@19.1.8)(react@19.1.0)(typescript@5.8.3)(zod@3.25.71):
     dependencies:
-      '@basehub/mutation-api-helpers': 2.1.2(zod@3.25.67)
+      '@basehub/mutation-api-helpers': 2.1.2(zod@3.25.71)
       '@radix-ui/react-slot': 1.2.3(@types/react@19.1.8)(react@19.1.0)
       '@shikijs/transformers': 1.17.7
       '@xmldom/xmldom': 0.9.8
@@ -11565,6 +11706,31 @@ snapshots:
       - '@types/react'
       - acorn
       - supports-color
+  next@15.3.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+    dependencies:
+      '@next/env': 15.3.4
+      '@swc/counter': 0.1.3
+      '@swc/helpers': 0.5.15
+      busboy: 1.6.0
+      caniuse-lite: 1.0.30001726
+      postcss: 8.4.31
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+      styled-jsx: 5.1.6(react@18.3.1)
+    optionalDependencies:
+      '@next/swc-darwin-arm64': 15.3.4
+      '@next/swc-darwin-x64': 15.3.4
+      '@next/swc-linux-arm64-gnu': 15.3.4
+      '@next/swc-linux-arm64-musl': 15.3.4
+      '@next/swc-linux-x64-gnu': 15.3.4
+      '@next/swc-linux-x64-musl': 15.3.4
+      '@next/swc-win32-arm64-msvc': 15.3.4
+      '@next/swc-win32-x64-msvc': 15.3.4
+      sharp: 0.34.2
+    transitivePeerDependencies:
+      - '@babel/core'
+      - babel-plugin-macros
+    optional: true
 
   next@15.3.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
     dependencies:
@@ -11968,11 +12134,11 @@ snapshots:
       iconv-lite: 0.6.3
       unpipe: 1.0.0
 
-  raw-loader@4.0.2(webpack@5.99.9):
+  raw-loader@4.0.2(webpack@5.99.9(@swc/core@1.12.7)):
     dependencies:
       loader-utils: 2.0.4
       schema-utils: 3.3.0
-      webpack: 5.99.9
+      webpack: 5.99.9(@swc/core@1.12.7)
 
   react-dom@18.3.1(react@18.3.1):
     dependencies:
@@ -12665,6 +12831,12 @@ snapshots:
     dependencies:
       inline-style-parser: 0.2.4
 
+  styled-jsx@5.1.6(react@18.3.1):
+    dependencies:
+      client-only: 0.0.1
+      react: 18.3.1
+    optional: true
+
   styled-jsx@5.1.6(react@19.1.0):
     dependencies:
       client-only: 0.0.1
@@ -12700,7 +12872,9 @@ snapshots:
 
   tailwind-merge@3.3.1: {}
 
-  tailwindcss-animate@1.0.7: {}
+  tailwindcss-animate@1.0.7(tailwindcss@4.1.11):
+    dependencies:
+      tailwindcss: 4.1.11
 
   tailwindcss@4.1.11: {}
 
@@ -12725,15 +12899,6 @@ snapshots:
       webpack: 5.99.9(@swc/core@1.12.7)
     optionalDependencies:
       '@swc/core': 1.12.7
-
-  terser-webpack-plugin@5.3.14(webpack@5.99.9):
-    dependencies:
-      '@jridgewell/trace-mapping': 0.3.26
-      jest-worker: 27.5.1
-      schema-utils: 4.3.2
-      serialize-javascript: 6.0.2
-      terser: 5.43.1
-      webpack: 5.99.9
 
   terser@5.43.1:
     dependencies:
@@ -12819,6 +12984,26 @@ snapshots:
       source-map: 0.7.4
       typescript: 5.8.3
       webpack: 5.99.9(@swc/core@1.12.7)
+
+  ts-node@10.9.2(@swc/core@1.12.7)(@types/node@20.19.2)(typescript@5.8.3):
+    dependencies:
+      '@cspotcode/source-map-support': 0.8.1
+      '@tsconfig/node10': 1.0.11
+      '@tsconfig/node12': 1.0.11
+      '@tsconfig/node14': 1.0.3
+      '@tsconfig/node16': 1.0.4
+      '@types/node': 20.19.2
+      acorn: 8.15.0
+      acorn-walk: 8.3.4
+      arg: 4.1.3
+      create-require: 1.1.1
+      diff: 4.0.2
+      make-error: 1.3.6
+      typescript: 5.8.3
+      v8-compile-cache-lib: 3.0.1
+      yn: 3.1.1
+    optionalDependencies:
+      '@swc/core': 1.12.7
 
   ts-node@10.9.2(@swc/core@1.12.7)(@types/node@22.15.34)(typescript@5.8.3):
     dependencies:
@@ -13147,37 +13332,6 @@ snapshots:
 
   webpack-virtual-modules@0.5.0: {}
 
-  webpack@5.99.9:
-    dependencies:
-      '@types/eslint-scope': 3.7.7
-      '@types/estree': 1.0.8
-      '@types/json-schema': 7.0.15
-      '@webassemblyjs/ast': 1.14.1
-      '@webassemblyjs/wasm-edit': 1.14.1
-      '@webassemblyjs/wasm-parser': 1.14.1
-      acorn: 8.15.0
-      browserslist: 4.25.1
-      chrome-trace-event: 1.0.4
-      enhanced-resolve: 5.18.2
-      es-module-lexer: 1.7.0
-      eslint-scope: 5.1.1
-      events: 3.3.0
-      glob-to-regexp: 0.4.1
-      graceful-fs: 4.2.11
-      json-parse-even-better-errors: 2.3.1
-      loader-runner: 4.3.0
-      mime-types: 2.1.35
-      neo-async: 2.6.2
-      schema-utils: 4.3.2
-      tapable: 2.2.2
-      terser-webpack-plugin: 5.3.14(webpack@5.99.9)
-      watchpack: 2.4.4
-      webpack-sources: 3.3.3
-    transitivePeerDependencies:
-      - '@swc/core'
-      - esbuild
-      - uglify-js
-
   webpack@5.99.9(@swc/core@1.12.7):
     dependencies:
       '@types/eslint-scope': 3.7.7
@@ -13285,6 +13439,53 @@ snapshots:
   wrappy@1.0.2: {}
 
   ws@8.18.3: {}
+
+  xmcp@0.0.17-alpha-001(@types/node@20.19.2)(@types/react-dom@19.1.6(@types/react@19.1.8))(@types/react@19.1.8)(next@15.3.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(swc-loader@0.2.6(@swc/core@1.12.7)(webpack@5.99.9(@swc/core@1.12.7)))(tailwindcss@4.1.11)(typescript@5.8.3)(zod@3.25.71):
+    dependencies:
+      '@modelcontextprotocol/inspector': 0.14.3(@swc/core@1.12.7)(@types/node@20.19.2)(@types/react-dom@19.1.6(@types/react@19.1.8))(@types/react@19.1.8)(tailwindcss@4.1.11)(typescript@5.8.3)
+      '@modelcontextprotocol/sdk': 1.13.2
+      '@swc/core': 1.12.7
+      '@types/express': 5.0.3
+      '@types/webpack-node-externals': 3.0.4(@swc/core@1.12.7)
+      '@vercel/mcp-adapter': 0.11.1(@modelcontextprotocol/sdk@1.13.2)(next@15.3.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0))
+      chalk: 5.4.1
+      chokidar: 3.6.0
+      clean-webpack-plugin: 4.0.0(webpack@5.99.9(@swc/core@1.12.7))
+      commander: 10.0.1
+      content-type: 1.0.5
+      cross-env: 7.0.3
+      del: 7.1.0
+      dotenv: 16.6.1
+      execa: 9.6.0
+      express: 4.21.2
+      fork-ts-checker-webpack-plugin: 8.0.0(typescript@5.8.3)(webpack@5.99.9(@swc/core@1.12.7))
+      fs-extra: 11.3.0
+      glob: 11.0.3
+      handlebars: 4.7.8
+      jsonwebtoken: 9.0.2
+      memfs: 4.17.2
+      raw-body: 3.0.0
+      swc-loader: 0.2.6(@swc/core@1.12.7)(webpack@5.99.9(@swc/core@1.12.7))
+      tsx: 4.20.3
+      webpack: 5.99.9(@swc/core@1.12.7)
+      webpack-node-externals: 3.0.0
+      webpack-virtual-modules: 0.5.0
+      zod: 3.25.71
+    transitivePeerDependencies:
+      - '@swc/helpers'
+      - '@swc/wasm'
+      - '@types/node'
+      - '@types/react'
+      - '@types/react-dom'
+      - bufferutil
+      - esbuild
+      - next
+      - supports-color
+      - tailwindcss
+      - typescript
+      - uglify-js
+      - utf-8-validate
+      - webpack-cli
 
   xmcp@0.0.17-alpha-001(next@15.3.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(swc-loader@0.2.6(@swc/core@1.12.7)(webpack@5.99.9(@swc/core@1.12.7)))(typescript@5.8.3)(zod@3.25.67):
     dependencies:
@@ -13405,11 +13606,13 @@ snapshots:
 
   yoctocolors@2.1.1: {}
 
-  zod-to-json-schema@3.24.6(zod@3.25.67):
+  zod-to-json-schema@3.24.6(zod@3.25.71):
     dependencies:
-      zod: 3.25.67
+      zod: 3.25.71
 
   zod@3.25.67: {}
+
+  zod@3.25.71: {}
 
   zustand@4.5.7(@types/react@19.1.8)(react@19.1.0):
     dependencies:

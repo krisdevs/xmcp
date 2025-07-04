@@ -3,7 +3,7 @@ import path from "path";
 import { z } from "zod";
 import { webpack, type Configuration } from "webpack";
 import { createFsFromVolume, Volume } from "memfs";
-import { compilerContext } from "../compile";
+import { compilerContext } from "./compiler-context";
 
 export const DEFAULT_HTTP_PORT = 3002;
 export const DEFAULT_HTTP_BODY_SIZE_LIMIT = 1024 * 1024 * 10; // 10MB
@@ -39,12 +39,16 @@ const oauthConfigSchema = z.object({
   defaultScopes: z.array(z.string()).default(["openid", "profile", "email"]),
 });
 
+// adapter config schema
+const adapterConfigSchema = z.enum(["express", "nextjs"]);
+
 // experimental features schema
 const experimentalConfigSchema = z.object({
   oauth: oauthConfigSchema.optional(),
+  adapter: adapterConfigSchema.optional(),
 });
 
-// TO DO extract all this config and schemas to a separate file
+// TODO extract all this config and schemas to a separate file
 const configSchema = z.object({
   stdio: z.boolean().optional(),
   http: z
@@ -123,12 +127,7 @@ export async function readConfig(): Promise<XmcpParsedConfig> {
     try {
       return await compileConfig();
     } catch (error) {
-      console.error("Failed to compile TypeScript config:", error);
-      // Fallback to default config if compilation fails
-      return {
-        stdio: true,
-        http: true,
-      } satisfies XmcpInputConfig;
+      throw new Error(`Failed to compile xmcp.config.ts:\n${error}`);
     }
   }
 
