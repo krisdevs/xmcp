@@ -108,21 +108,7 @@ export function getWebpackConfig(xmcpConfig: XmcpParsedConfig): Configuration {
   // thsi will inject definitions for the following variables when bundling the code
   const definedVariables: Record<string, string | number | boolean> = {};
 
-  // add entry points based on config
-  const entry: Configuration["entry"] = {};
-  if (xmcpConfig.stdio) {
-    // setup entry point
-    entry.stdio = path.join(runtimeFolderPath, "stdio.js");
-  }
-  if (xmcpConfig["http"] || xmcpConfig.experimental?.adapter) {
-    // setup entry point
-    if (xmcpConfig.experimental?.adapter) {
-      // build the adapter runtime
-      entry["adapter"] = path.join(runtimeFolderPath, "adapter.js");
-    } else {
-      // build the http server runtime
-      entry["http"] = path.join(runtimeFolderPath, "http.js");
-    }
+  if (xmcpConfig["http"]) {
     // define variables
     definedVariables.HTTP_DEBUG = mode === "development";
     let cors: CorsConfig = {};
@@ -165,7 +151,9 @@ export function getWebpackConfig(xmcpConfig: XmcpParsedConfig): Configuration {
       xmcpConfig.experimental?.oauth || null
     );
   }
-  config.entry = entry;
+
+  // add entry points based on config
+  config.entry = getEntries(xmcpConfig);
 
   // add injected variables to config
   config.plugins!.push(new ProvidePlugin(providedPackages));
@@ -194,4 +182,26 @@ class InjectRuntimePlugin {
       }
     );
   }
+}
+
+function getEntries(xmcpConfig: XmcpParsedConfig): Record<string, string> {
+  const entries: Record<string, string> = {};
+  if (xmcpConfig.stdio) {
+    entries.stdio = path.join(runtimeFolderPath, "stdio.js");
+  }
+  if (xmcpConfig["http"]) {
+    // non adapter mode
+    if (!xmcpConfig.experimental?.adapter) {
+      entries["http"] = path.join(runtimeFolderPath, "http.js");
+    }
+
+    // adapter mode enabled
+    if (xmcpConfig.experimental?.adapter === "express") {
+      entries["adapter"] = path.join(runtimeFolderPath, "adapter-express.js");
+    }
+    if (xmcpConfig.experimental?.adapter === "nextjs") {
+      entries["adapter"] = path.join(runtimeFolderPath, "adapter-nextjs.js");
+    }
+  }
+  return entries;
 }

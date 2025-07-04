@@ -40,17 +40,15 @@ const oauthConfigSchema = z.object({
 });
 
 // adapter config schema
-const adapterConfigSchema = z.object({
-  toolsPath: z.string(),
-});
+const adapterConfigSchema = z.enum(["express", "nextjs"]);
 
 // experimental features schema
 const experimentalConfigSchema = z.object({
   oauth: oauthConfigSchema.optional(),
-  adapter: z.union([adapterConfigSchema.optional(), z.boolean()]).optional(),
+  adapter: adapterConfigSchema.optional(),
 });
 
-// TO DO extract all this config and schemas to a separate file
+// TODO extract all this config and schemas to a separate file
 const configSchema = z.object({
   stdio: z.boolean().optional(),
   http: z

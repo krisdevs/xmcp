@@ -34,7 +34,8 @@ const runtimeRoots: RuntimeRoot[] = [
   { name: "headers", path: "headers" },
   { name: "stdio", path: "transports/stdio" },
   { name: "http", path: "transports/http" },
-  { name: "adapter", path: "adapter" },
+  { name: "adapter-express", path: "adapters/express" },
+  { name: "adapter-nextjs", path: "adapters/nextjs" },
 ];
 const entry: EntryObject = {};
 
