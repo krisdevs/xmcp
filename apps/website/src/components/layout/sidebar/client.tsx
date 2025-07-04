@@ -6,31 +6,13 @@ import { useEffect, useState, useCallback } from "react";
 import { XmcpLogo } from "@/components/terminal/logo/client";
 import * as Accordion from "@radix-ui/react-accordion";
 import Link from "next/link";
-
-type SidebarData = {
-  _title: string;
-  _slug: string;
-  target?: {
-    _title: string;
-    _slug: string;
-  };
-  collection: {
-    items: {
-      _title: string;
-      _slug: string;
-      target: {
-        _title: string;
-        _slug: string;
-      };
-    }[];
-  };
-}[];
+import { SidebarItem } from "@/utils/markdown";
 
 export function SidebarClient({
   sidebar,
   matcap,
 }: {
-  sidebar: SidebarData;
+  sidebar: SidebarItem[];
   matcap: string;
 }) {
   const router = useRouter();
@@ -63,15 +45,12 @@ export function SidebarClient({
 
   useEffect(() => {
     sidebar.forEach((item) => {
-      if (item.target?._slug) {
-        router.prefetch(`/docs/${item.target._slug}`);
+      if (item.slug) {
+        router.prefetch(`/docs/${item.slug}`);
       }
 
-      item.collection?.items?.forEach((collectionItem) => {
-        const nestedRoute = item.target
-          ? `${item.target._slug}/${collectionItem.target._slug}`
-          : collectionItem.target._slug;
-        router.prefetch(`/docs/${nestedRoute}`);
+      item.children?.forEach((child) => {
+        router.prefetch(`/docs/${child.slug}`);
       });
     });
   }, [router, sidebar]);
@@ -93,12 +72,12 @@ export function SidebarClient({
             onValueChange={setOpenAccordions}
           >
             {sidebar.map((item) => {
-              const isParentActive = item.target?._slug === parentSlug;
+              const isParentActive = item.slug === parentSlug;
 
               return (
-                <div key={item._slug} className="flex relative flex-col">
-                  {item.target && item.collection?.items ? (
-                    <Accordion.Item value={item._slug} className="group">
+                <div key={item.slug} className="flex relative flex-col">
+                  {item.children && item.children.length > 0 ? (
+                    <Accordion.Item value={item.slug} className="group">
                       <div
                         className={cn(
                           "flex w-full items-center justify-between rounded-lg p-3 leading-[114%] transition-colors duration-150",
@@ -108,17 +87,17 @@ export function SidebarClient({
                         )}
                       >
                         <Link
-                          href={`/docs/${item.target._slug}`}
-                          onClick={handleLinkClickWithAccordion(item._slug)}
+                          href={`/docs/${item.slug}`}
+                          onClick={handleLinkClickWithAccordion(item.slug)}
                           className="flex-1 text-left font-mono uppercase font-medium"
                         >
-                          {item._title}
+                          {item.title}
                         </Link>
                         <Accordion.Trigger asChild>
                           <button
                             type="button"
                             className="p-1 ml-2 transition-colors text-[rgba(153,153,153,1)] hover:text-white opacity-50 hover:opacity-100"
-                            aria-label={`Toggle ${item._title} section`}
+                            aria-label={`Toggle ${item.title} section`}
                           >
                             <svg
                               className={cn(
@@ -141,18 +120,14 @@ export function SidebarClient({
                       <Accordion.Content className="overflow-hidden data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down">
                         <div className="pb-2 mt-3 ml-3 border-l border-gray-600">
                           <div className="flex flex-col gap-1">
-                            {item.collection.items.map((collectionItem) => {
-                              const nestedRoute = item.target
-                                ? `${item.target._slug}/${collectionItem.target._slug}`
-                                : collectionItem.target._slug;
+                            {item.children.map((child) => {
                               const isChildActive =
-                                childSlug === collectionItem.target._slug &&
-                                parentSlug === item.target?._slug;
+                                child.slug === `${parentSlug}/${childSlug}`;
 
                               return (
                                 <Link
-                                  key={collectionItem._slug}
-                                  href={`/docs/${nestedRoute}`}
+                                  key={child.slug}
+                                  href={`/docs/${child.slug}`}
                                   onClick={handleLinkClick}
                                   className={cn(
                                     "rounded-lg p-3 leading-[114%] transition-colors duration-150 font-mono uppercase",
@@ -161,7 +136,7 @@ export function SidebarClient({
                                       : "text-[rgba(153,153,153,1)] hover:text-white"
                                   )}
                                 >
-                                  {collectionItem.target._title}
+                                  {child.title}
                                 </Link>
                               );
                             })}
@@ -169,9 +144,9 @@ export function SidebarClient({
                         </div>
                       </Accordion.Content>
                     </Accordion.Item>
-                  ) : item.target ? (
+                  ) : (
                     <Link
-                      href={`/docs/${item.target._slug}`}
+                      href={`/docs/${item.slug}`}
                       onClick={handleLinkClick}
                       className={cn(
                         "w-full rounded-lg p-3 leading-[114%] transition-colors duration-150 font-mono uppercase font-medium",
@@ -180,12 +155,8 @@ export function SidebarClient({
                           : "text-[rgba(153,153,153,1)] hover:text-white hover:bg-[rgba(255,255,255,0.05)]"
                       )}
                     >
-                      {item._title}
+                      {item.title}
                     </Link>
-                  ) : (
-                    <div className="w-full rounded-lg p-3 leading-[114%] font-mono uppercase font-medium text-[rgba(153,153,153,1)]">
-                      {item._title}
-                    </div>
                   )}
                 </div>
               );

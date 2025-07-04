@@ -1,8 +1,8 @@
-import { fetchSidebar, fetchAssets } from "@/basehub/actions";
+import { generateSidebarTree } from "@/utils/markdown";
 import { SidebarClient } from "./client";
 
 export const Sidebar = async () => {
-  const [sidebar, assets] = await Promise.all([fetchSidebar(), fetchAssets()]);
+  const sidebar = generateSidebarTree();
 
-  return <SidebarClient sidebar={sidebar} matcap={assets.glLogoMatcap.url} />;
+  return <SidebarClient sidebar={sidebar} matcap="" />;
 };
