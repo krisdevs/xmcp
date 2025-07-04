@@ -6,3 +6,4 @@ export const rootFolder = path.join(process.cwd());
 
 export const processFolder = process.cwd();
 export const outputPath = path.join(processFolder, "dist");
+export const adapterOutputPath = path.join(runtimeFolderPath, "adapter");

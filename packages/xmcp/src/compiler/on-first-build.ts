@@ -5,7 +5,8 @@ import { watchdog } from "../utils/spawn-process";
 import { greenCheck } from "../utils/cli-icons";
 
 export function onFirstBuild(mode: CompilerMode, xmcpConfig: XmcpInputConfig) {
-  if (mode === "development") {
+  if (mode === "development" && false) {
+    // disable inspector for now
     console.log("🔍 Starting inspector...");
 
     const inspectorArgs = ["@modelcontextprotocol/inspector@latest"];
@@ -53,7 +54,11 @@ export function onFirstBuild(mode: CompilerMode, xmcpConfig: XmcpInputConfig) {
     builtResults.push(`${greenCheck} Built STDIO server`);
   }
   if (xmcpConfig["http"]) {
-    builtResults.push(`${greenCheck} Built HTTP server`);
+    if (xmcpConfig.experimental?.adapter) {
+      builtResults.push(`${greenCheck} Built Adapter`);
+    } else {
+      builtResults.push(`${greenCheck} Built HTTP server`);
+    }
   }
 
   builtResults.forEach((result) => {

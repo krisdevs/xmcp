@@ -1,6 +1,10 @@
 import { Compiler, Configuration, DefinePlugin, ProvidePlugin } from "webpack";
 import path from "path";
-import { outputPath, runtimeFolderPath } from "../utils/constants";
+import {
+  outputPath,
+  runtimeFolderPath,
+  adapterOutputPath,
+} from "../utils/constants";
 import fs from "fs-extra";
 import { builtinModules } from "module";
 import { compilerContext } from "./compiler-context";
@@ -25,12 +29,17 @@ type CorsConfig = {
 export function getWebpackConfig(xmcpConfig: XmcpParsedConfig): Configuration {
   const processFolder = process.cwd();
   const { mode } = compilerContext.getContext();
+
+  const selectedOutput = xmcpConfig.experimental?.adapter
+    ? adapterOutputPath
+    : outputPath;
+
   const config: Configuration = {
     mode,
     watch: mode === "development",
     output: {
       filename: "[name].js",
-      path: outputPath,
+      path: selectedOutput,
       libraryTarget: "commonjs2",
     },
     target: "node",
@@ -98,9 +107,15 @@ export function getWebpackConfig(xmcpConfig: XmcpParsedConfig): Configuration {
     // setup entry point
     entry.stdio = path.join(runtimeFolderPath, "stdio.js");
   }
-  if (xmcpConfig["http"]) {
+  if (xmcpConfig["http"] || xmcpConfig.experimental?.adapter) {
     // setup entry point
-    entry["http"] = path.join(runtimeFolderPath, "http.js");
+    if (xmcpConfig.experimental?.adapter) {
+      // build the adapter runtime
+      entry["adapter"] = path.join(runtimeFolderPath, "adapter.js");
+    } else {
+      // build the http server runtime
+      entry["http"] = path.join(runtimeFolderPath, "http.js");
+    }
     // define variables
     definedVariables.HTTP_DEBUG = mode === "development";
     let cors: CorsConfig = {};

@@ -36,8 +36,10 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    ".next/types/**/*.ts"
-  , "basehub.d.ts", "basehub.config.ts"],
+    ".next/types/**/*.ts",
+    "basehub.d.ts",
+    "basehub.config.ts"
+  ],
   "exclude": [
     "node_modules"
   ]

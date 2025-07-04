@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "xmcp dev & basehub dev & next dev --turbopack",
-    "build": "xmcp build & basehub && next build",
+    "build": "xmcp build && basehub && next build",
     "start": "next start",
     "lint": "next lint"
   },

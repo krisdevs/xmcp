@@ -121,7 +121,11 @@ export async function compile({ onBuild }: CompileOptions = {}) {
         onBuild?.();
       } else {
         // on dev mode, webpack will recompile the code, so we need to start the http server after the first one
-        if (mode === "development" && xmpcConfig["http"]) {
+        if (
+          mode === "development" &&
+          xmpcConfig["http"] &&
+          !xmpcConfig.experimental?.adapter
+        ) {
           startHttpServer();
         }
       }

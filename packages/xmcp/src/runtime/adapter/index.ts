@@ -26,51 +26,55 @@ const bodySizeLimit = HTTP_BODY_SIZE_LIMIT as string;
 
 function createMcpHandler() {
   return async (req: Request, res: Response) => {
-    const id = randomUUID();
-    httpContextProvider({ id, headers: req.headers }, async () => {
-      try {
-        setResponseCorsHeaders(
-          {
-            origin: corsOrigin,
-            methods: corsMethods,
-            allowedHeaders: corsAllowedHeaders,
-            exposedHeaders: corsExposedHeaders,
-            credentials: corsCredentials,
-            maxAge: corsMaxAge,
-          },
-          res
-        );
-
-        const server = await createServer();
-        const transport = new StatelessHttpServerTransport(
-          debug,
-          bodySizeLimit || "10mb"
-        );
-
-        // cleanup when request/connection closes
-        res.on("close", () => {
-          transport.close();
-          server.close();
-        });
-
-        await server.connect(transport);
-
-        await transport.handleRequest(req, res, req.body);
-      } catch (error) {
-        console.error("[HTTP-server] Error handling MCP request:", error);
-        if (!res.headersSent) {
-          res.status(500).json({
-            jsonrpc: "2.0",
-            error: {
-              code: -32603,
-              message: "Internal server error",
+    return new Promise((resolve, reject) => {
+      const id = randomUUID();
+      httpContextProvider({ id, headers: req.headers }, async () => {
+        try {
+          setResponseCorsHeaders(
+            {
+              origin: corsOrigin,
+              methods: corsMethods,
+              allowedHeaders: corsAllowedHeaders,
+              exposedHeaders: corsExposedHeaders,
+              credentials: corsCredentials,
+              maxAge: corsMaxAge,
             },
-            id: null,
+            res
+          );
+
+          const server = await createServer();
+          const transport = new StatelessHttpServerTransport(
+            debug,
+            bodySizeLimit || "10mb"
+          );
+
+          // cleanup when request/connection closes
+          res.on("close", () => {
+            transport.close();
+            server.close();
           });
+
+          await server.connect(transport);
+
+          await transport.handleRequest(req, res, req.body).then(() => {
+            resolve(res);
+          });
+        } catch (error) {
+          console.error("[HTTP-server] Error handling MCP request:", error);
+          if (!res.headersSent) {
+            res.status(500).json({
+              jsonrpc: "2.0",
+              error: {
+                code: -32603,
+                message: "Internal server error",
+              },
+              id: null,
+            });
+          }
         }
-      }
+      });
     });
   };
 }
 
-export const mcpHandler = createMcpHandler();
+export default createMcpHandler();
