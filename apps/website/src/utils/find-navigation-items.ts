@@ -21,7 +21,7 @@ export function findNavigationItems(
       }
 
       if (item.collection?.items?.length > 0) {
-        const parentSlug = item._slug;
+        const parentSlug = item.target?._slug;
         item.collection.items.forEach((collectionItem) => {
           if (collectionItem.target) {
             const hierarchicalSlug = parentSlug
