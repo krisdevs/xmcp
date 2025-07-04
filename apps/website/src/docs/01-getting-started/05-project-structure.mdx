@@ -1,0 +1,35 @@
+# Project Structure
+
+Understanding how xmcp projects are organized helps you build applications efficiently. This guide covers the essential file structure and conventions for organizing your MCP tools and configuration.
+
+## Directory Overview
+
+An xmcp project follows a conventional structure with a `src/` directory containing your source code, particularly the `src/tools/` directory where MCP tools are automatically discovered. The project root contains configuration files like `package.json` for dependencies and scripts, `tsconfig.json` for TypeScript settings, and optional `xmcp.config.json` or `xmcp.config.ts` for application configuration.
+
+Generated directories include `dist/` for compiled output, `.xmcp/` for build cache, and `.vercel/` for Vercel deployment structure. These directories are created automatically during the build process and should not be committed to version control.
+
+## Tool Discovery
+
+All files in the `src/tools/` directory are automatically discovered and registered as MCP tools. Each tool file must export three things: a `schema` object defining parameter validation, a `metadata` object with tool information, and a default function that implements the tool logic. You can organize tools in subdirectories for better organization, such as `src/tools/database/` for database operations or `src/tools/api/` for external API integrations.
+
+## Configuration Files
+
+The `package.json` file defines your project dependencies and includes scripts for development (`xmcp dev`), building (`xmcp build`), and Vercel deployment (`xmcp build --vercel`). The TypeScript configuration is handled by `tsconfig.json`, which comes pre-configured for xmcp development with appropriate compiler options.
+
+For application configuration, you can choose between `xmcp.config.json` for simple JSON-based configuration or `xmcp.config.ts` for more advanced TypeScript-based configuration. The configuration file allows you to customize HTTP and STDIO transports, set CORS policies, define custom webpack configurations, and control various aspects of your application's behavior.
+
+## Tool Structure
+
+Each tool file follows a consistent pattern with three required exports. The schema uses Zod for type-safe parameter validation, with each parameter having a type, optional validation rules, and a description. The metadata object provides the tool name, description, and annotations that give hints about the tool's behavior, such as whether it's read-only, destructive, or idempotent.
+
+The default export is an async function that receives the validated parameters and returns content in MCP format. This function can perform any necessary operations, from simple calculations to complex API calls or database queries, and should handle errors appropriately while returning results in the expected format.
+
+## Environment Variables
+
+Environment variables are managed through a `.env` file in your project root and can be accessed via `process.env` in your tools. These variables are automatically loaded when your application starts and are useful for storing API keys, database URLs, and other configuration values that shouldn't be hardcoded.
+
+## Best Practices
+
+Organize related tools in subdirectories within `src/tools/` to maintain a clean structure as your project grows. Extract common functionality into utility modules in a `src/utils/` directory, and define shared types and interfaces in a `src/types/` directory. Use consistent naming conventions with kebab-case for file names and descriptive tool names in metadata.
+
+_Great! Continue to [Writing Your First Tool](./first-tool) to start building custom functionality._
