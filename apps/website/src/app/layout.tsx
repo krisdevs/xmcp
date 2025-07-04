@@ -3,7 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
 import { Toolbar } from "basehub/next-toolbar";
-import AnimatedLink from "@/components/terminal/animated-link";
+import { Footer } from "@/components/layout/footer";
+import { Header } from "@/components/layout/header";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -52,33 +53,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-[100svh] flex flex-col`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-[100dvh] flex flex-col max-w-[1200px] mx-auto font-mono`}
       >
-        <div className="grow relative">{children}</div>
-        <footer className="text-center text-sm text-white flex flex-col lg:flex-row uppercase p-8 font-mono gap-4">
-          <div className="flex-1 justify-center flex gap-4">
-            <AnimatedLink href="https://github.com/basementstudio/xmcp">
-              GitHub
-            </AnimatedLink>
-            <AnimatedLink href="https://npmjs.com/package/xmcp">
-              NPM
-            </AnimatedLink>
-          </div>
-          <div className="flex-1 justify-center flex">
-            <span className="block">
-              © 2025{" "}
-              <AnimatedLink href="https://basement.studio">
-                BASEMENT.STUDIO
-              </AnimatedLink>
-            </span>
-          </div>
-          <div className="flex-1 justify-center flex gap-4">
-            <AnimatedLink href="https://x.com/xmcp_dev">X</AnimatedLink>
-            <AnimatedLink href="https://discord.gg/FPRuDAhPX9">
-              Discord
-            </AnimatedLink>
-          </div>
-        </footer>
+        <div className="grow relative">
+          <Header />
+          {children}
+          <Footer />
+        </div>
         <Toolbar />
         <Analytics />
       </body>

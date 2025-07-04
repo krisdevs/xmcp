@@ -238,7 +238,7 @@ function ThreeLogo({ matcap }: { matcap: string }) {
 // Preload the model for better performance
 useGLTF.preload("/xmcp.glb");
 
-export const CavasLogo = ({ matcap }: { matcap: string }) => {
+export const XmcpLogo = ({ matcap }: { matcap: string }) => {
   const { isLoaded } = useGL();
 
   return (

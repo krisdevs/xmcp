@@ -1,10 +1,10 @@
 import { cn } from "@/utils/cn";
 import Link from "next/link";
-import { NavigationItem } from "@/utils/find-navigation-items";
+import { SidebarItem } from "@/utils/markdown";
 
 type ArticleNavigationProps = {
-  prev: NavigationItem | null;
-  next: NavigationItem | null;
+  prev: SidebarItem | null;
+  next: SidebarItem | null;
   className?: string;
 };
 
@@ -22,12 +22,12 @@ export function ArticleNavigation({
     >
       {prev ? (
         <Link
-          href={`/docs/${prev._slug}`}
+          href={`/docs/${prev.slug}`}
           className="group flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
         >
           <div className="flex flex-col items-start">
             <span className="text-xs text-muted-foreground/70">Previous</span>
-            <span>{prev._title}</span>
+            <span>{prev.title}</span>
           </div>
         </Link>
       ) : (
@@ -35,12 +35,12 @@ export function ArticleNavigation({
       )}
       {next ? (
         <Link
-          href={`/docs/${next._slug}`}
+          href={`/docs/${next.slug}`}
           className="group flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
         >
           <div className="flex flex-col items-end">
             <span className="text-xs text-muted-foreground/70">Next</span>
-            <span>{next._title}</span>
+            <span>{next.title}</span>
           </div>
         </Link>
       ) : (
