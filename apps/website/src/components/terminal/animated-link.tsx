@@ -18,7 +18,7 @@ export const AnimatedLink = ({
     <Link
       href={href}
       target="_blank"
-      className={cn("relative group", className)}
+      className={cn("relative group uppercase", className)}
     >
       {children}
       <div
