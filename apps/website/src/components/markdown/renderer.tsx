@@ -80,12 +80,12 @@ function createHeading(level: number) {
     const slug = slugify(children);
     return React.createElement(
       `h${level}`,
-      { id: slug },
+      { id: slug, className: "uppercase" },
       [
         React.createElement("a", {
           href: `#${slug}`,
           key: `link-${slug}`,
-          className: "anchor",
+          className: "anchor uppercase font-mono",
         }),
       ],
       children
@@ -104,6 +104,9 @@ const components = {
   h4: createHeading(4),
   h5: createHeading(5),
   h6: createHeading(6),
+  p: (props: { children: React.ReactNode }) => (
+    <p className="text-sm font-mono" {...props} />
+  ),
   Image: RoundedImage,
   a: CustomLink,
   code: Code,
