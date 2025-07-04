@@ -1,3 +1,10 @@
+---
+title: "First Tool"
+metadataTitle: "xmcp - First Tool | Documentation"
+publishedAt: "2025-07-4"
+summary: "Lorem ipsum"
+---
+
 # Writing Your First Tool
 
 This guide walks you through creating a custom weather tool that demonstrates the key concepts of schema validation, API integration, and error handling in xmcp.
@@ -10,7 +17,7 @@ Before starting, you'll need an xmcp project set up and a free API key from Open
 
 Create a new file `src/tools/weather.ts` and start with the basic structure. Every tool needs three exports: a schema for parameter validation, metadata for tool information, and a default function that implements the logic.
 
-```typescript
+```ts
 import { z } from "zod";
 import { type InferSchema } from "xmcp";
 
@@ -49,7 +56,7 @@ export default async function weather({
 
 The tool implementation fetches weather data from the OpenWeatherMap API and returns it in MCP format. Start by checking for the API key, then make the HTTP request, and handle both success and error cases appropriately.
 
-```typescript
+```ts
 export default async function weather({
   location,
   units,
