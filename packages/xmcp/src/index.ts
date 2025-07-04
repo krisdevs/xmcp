@@ -3,7 +3,12 @@ import dotenv from "dotenv";
 export { type Middleware } from "./types/middleware";
 dotenv.config();
 
-export type InferSchema<T extends Record<string, z.ZodType>> = {
+export type ToolSchema = Record<
+  string,
+  z.ZodType<unknown, z.ZodTypeDef, unknown>
+>;
+
+export type InferSchema<T extends ToolSchema> = {
   [K in keyof T]: z.infer<T[K]>;
 };
 
