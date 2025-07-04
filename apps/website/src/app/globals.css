@@ -30,10 +30,8 @@ body {
   color: #000000;
 }
 
-/* Remove focus outline */
 *:focus {
-  outline: 1px solid white;
-  outline-offset: 2px;
+  outline: none;
 }
 
 *:focus-visible {
