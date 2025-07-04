@@ -4,27 +4,13 @@ import {
   outputPath,
   runtimeFolderPath,
   adapterOutputPath,
-} from "../utils/constants";
+} from "@/utils/constants";
 import fs from "fs-extra";
 import { builtinModules } from "module";
-import { compilerContext } from "./compiler-context";
-import {
-  DEFAULT_HTTP_PORT,
-  DEFAULT_HTTP_BODY_SIZE_LIMIT,
-  DEFAULT_HTTP_ENDPOINT,
-  DEFAULT_HTTP_STATELESS,
-  XmcpParsedConfig,
-} from "./parse-xmcp-config";
-
-// Add this type for local use
-type CorsConfig = {
-  origin?: string | string[] | boolean;
-  methods?: string | string[];
-  allowedHeaders?: string | string[];
-  exposedHeaders?: string | string[];
-  credentials?: boolean;
-  maxAge?: number;
-};
+import { compilerContext } from "@/compiler/compiler-context";
+import { XmcpParsedConfig } from "@/compiler/parse-xmcp-config";
+import { getEntries } from "./get-entries";
+import { getInjectedVariables } from "./get-injected-variables";
 
 export function getWebpackConfig(xmcpConfig: XmcpParsedConfig): Configuration {
   const processFolder = process.cwd();
@@ -105,53 +91,6 @@ export function getWebpackConfig(xmcpConfig: XmcpParsedConfig): Configuration {
     ],
   };
 
-  // thsi will inject definitions for the following variables when bundling the code
-  const definedVariables: Record<string, string | number | boolean> = {};
-
-  if (xmcpConfig["http"]) {
-    // define variables
-    definedVariables.HTTP_DEBUG = mode === "development";
-    let cors: CorsConfig = {};
-    if (typeof xmcpConfig["http"] === "object") {
-      definedVariables.HTTP_PORT = xmcpConfig["http"].port;
-      definedVariables.HTTP_BODY_SIZE_LIMIT = JSON.stringify(
-        xmcpConfig["http"].bodySizeLimit
-      );
-      definedVariables.HTTP_ENDPOINT = JSON.stringify(
-        xmcpConfig["http"].endpoint
-      );
-      definedVariables.HTTP_STATELESS = DEFAULT_HTTP_STATELESS;
-      cors = xmcpConfig["http"].cors || {};
-    } else {
-      // http config is boolean
-      definedVariables.HTTP_PORT = DEFAULT_HTTP_PORT;
-      definedVariables.HTTP_BODY_SIZE_LIMIT = JSON.stringify(
-        DEFAULT_HTTP_BODY_SIZE_LIMIT
-      );
-      definedVariables.HTTP_ENDPOINT = JSON.stringify(DEFAULT_HTTP_ENDPOINT);
-      definedVariables.HTTP_STATELESS = DEFAULT_HTTP_STATELESS;
-      cors = {};
-    }
-    // inject cors
-    definedVariables.HTTP_CORS_ORIGIN = JSON.stringify(cors.origin ?? "");
-    definedVariables.HTTP_CORS_METHODS = JSON.stringify(cors.methods ?? "");
-    definedVariables.HTTP_CORS_ALLOWED_HEADERS = JSON.stringify(
-      cors.allowedHeaders ?? ""
-    );
-    definedVariables.HTTP_CORS_EXPOSED_HEADERS = JSON.stringify(
-      cors.exposedHeaders ?? ""
-    );
-    definedVariables.HTTP_CORS_CREDENTIALS =
-      typeof cors.credentials === "boolean" ? cors.credentials : false;
-    definedVariables.HTTP_CORS_MAX_AGE =
-      typeof cors.maxAge === "number" ? cors.maxAge : 0;
-
-    // inject oauth config
-    definedVariables.OAUTH_CONFIG = JSON.stringify(
-      xmcpConfig.experimental?.oauth || null
-    );
-  }
-
   // add entry points based on config
   config.entry = getEntries(xmcpConfig);
 
@@ -159,6 +98,7 @@ export function getWebpackConfig(xmcpConfig: XmcpParsedConfig): Configuration {
   config.plugins!.push(new ProvidePlugin(providedPackages));
 
   // add defined variables to config
+  const definedVariables = getInjectedVariables(xmcpConfig);
   config.plugins!.push(new DefinePlugin(definedVariables));
 
   return config;
@@ -182,26 +122,4 @@ class InjectRuntimePlugin {
       }
     );
   }
-}
-
-function getEntries(xmcpConfig: XmcpParsedConfig): Record<string, string> {
-  const entries: Record<string, string> = {};
-  if (xmcpConfig.stdio) {
-    entries.stdio = path.join(runtimeFolderPath, "stdio.js");
-  }
-  if (xmcpConfig["http"]) {
-    // non adapter mode
-    if (!xmcpConfig.experimental?.adapter) {
-      entries["http"] = path.join(runtimeFolderPath, "http.js");
-    }
-
-    // adapter mode enabled
-    if (xmcpConfig.experimental?.adapter === "express") {
-      entries["adapter"] = path.join(runtimeFolderPath, "adapter-express.js");
-    }
-    if (xmcpConfig.experimental?.adapter === "nextjs") {
-      entries["adapter"] = path.join(runtimeFolderPath, "adapter-nextjs.js");
-    }
-  }
-  return entries;
 }
