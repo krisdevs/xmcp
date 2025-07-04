@@ -1,5 +1,5 @@
 import express from "express";
-import mcpHandler from "../.xmcp/adapter/adapter.js";
+import mcpHandler from "../xmcp-adapter";
 
 const app = express();
 const port = 3000;

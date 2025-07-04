@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import mcpHandler from "../../../.xmcp/adapter/adapter.js";
+import mcpHandler from "../../../xmcp-adapter";
 
 type ResponseData = {
   message: string;

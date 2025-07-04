@@ -34,11 +34,13 @@ export function getWebpackConfig(xmcpConfig: XmcpParsedConfig): Configuration {
     ? adapterOutputPath
     : outputPath;
 
+  const fileName = xmcpConfig.experimental?.adapter ? "index.js" : "[name].js";
+
   const config: Configuration = {
     mode,
     watch: mode === "development",
     output: {
-      filename: "[name].js",
+      filename: fileName,
       path: selectedOutput,
       libraryTarget: "commonjs2",
     },
