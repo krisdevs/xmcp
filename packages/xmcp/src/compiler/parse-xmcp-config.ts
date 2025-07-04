@@ -129,12 +129,7 @@ export async function readConfig(): Promise<XmcpParsedConfig> {
     try {
       return await compileConfig();
     } catch (error) {
-      console.error("Failed to compile TypeScript config:", error);
-      // Fallback to default config if compilation fails
-      return {
-        stdio: true,
-        http: true,
-      } satisfies XmcpInputConfig;
+      throw new Error(`Failed to compile xmcp.config.ts:\n${error}`);
     }
   }
 

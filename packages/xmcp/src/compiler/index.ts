@@ -66,7 +66,6 @@ export async function compile({ onBuild }: CompileOptions = {}) {
     watcher.watch("./src/middleware.ts", {
       onAdd: () => {
         compilerContext.setContext({
-          ...compilerContext.getContext(),
           hasMiddleware: true,
         });
         if (compilerStarted) {

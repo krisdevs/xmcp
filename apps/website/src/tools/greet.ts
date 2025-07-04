@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { type InferSchema } from "xmcp";
+import { type InferSchema, type ToolSchema } from "xmcp";
 
 // Define the schema for tool parameters
-export const schema = {
+export const schema: ToolSchema = {
   name: z.string().describe("The name of the user to greet"),
 };
 
