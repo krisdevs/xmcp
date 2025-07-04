@@ -29,7 +29,7 @@
     "react-dom": "^19.0.0",
     "tailwind-merge": "^3.3.1",
     "three": "^0.178.0",
-    "xmcp": "workspace:*",
+    "xmcp": "0.0.17-alpha-001",
     "zod": "^3.25.71",
     "zustand": "^5.0.6"
   },

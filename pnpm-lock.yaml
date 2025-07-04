@@ -81,8 +81,8 @@ importers:
         specifier: ^0.178.0
         version: 0.178.0
       xmcp:
-        specifier: workspace:*
-        version: link:../../packages/xmcp
+        specifier: 0.0.17-alpha-001
+        version: 0.0.17-alpha-001(@types/node@20.19.2)(@types/react-dom@19.1.6(@types/react@19.1.8))(@types/react@19.1.8)(next@15.3.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(swc-loader@0.2.6(@swc/core@1.12.7)(webpack@5.99.9(@swc/core@1.12.7)))(tailwindcss@4.1.11)(typescript@5.8.3)(zod@3.25.71)
       zod:
         specifier: ^3.25.71
         version: 3.25.71
@@ -195,7 +195,7 @@ importers:
         version: 5.8.3
       xmcp:
         specifier: latest
-        version: 0.0.16(typescript@5.8.3)
+        version: 0.0.17-alpha-001(next@15.3.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(swc-loader@0.2.6(@swc/core@1.12.7)(webpack@5.99.9(@swc/core@1.12.7)))(typescript@5.8.3)(zod@3.25.67)
       zod:
         specifier: ^3.24.4
         version: 3.25.67
@@ -291,7 +291,7 @@ importers:
         version: 5.8.3
       xmcp:
         specifier: latest
-        version: 0.0.16(typescript@5.8.3)
+        version: 0.0.17-alpha-001(next@15.3.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(swc-loader@0.2.6(@swc/core@1.12.7)(webpack@5.99.9(@swc/core@1.12.7)))(typescript@5.8.3)(zod@3.25.67)
       zod:
         specifier: ^3.24.4
         version: 3.25.67
@@ -5500,9 +5500,12 @@ packages:
       utf-8-validate:
         optional: true
 
-  xmcp@0.0.16:
-    resolution: {integrity: sha512-B0xCSjFbUkGMmZf4SqtS8TUb2hXd1sUoetqEP8JCAR5HUWcR6Ng7ZD3bycul8xDnJdX+v4uu2m5MpzuwdPv49g==}
+  xmcp@0.0.17-alpha-001:
+    resolution: {integrity: sha512-Vjpx3MKMVrvHQYJw1ho6RJM1tdB4StfFlrWoe47yUMjDMsRM4GRY0RRP3gIHxWYSoIXBTTUF/NTNFZx7uizSfA==}
     hasBin: true
+    peerDependencies:
+      swc-loader: ^0.2.6
+      zod: ^3.22.4
 
   xmcp@0.0.2:
     resolution: {integrity: sha512-d/jGchyxGZLRYwVhKoCkIY1a0I25jIvy/YhMSD4IHb9cFaEVPaLmN/7MFVzx8EaueUSXx8M7Ce7fRU9OMKMYYA==}
@@ -6009,7 +6012,7 @@ snapshots:
       react-simple-code-editor: 0.14.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       serve-handler: 6.1.6
       tailwind-merge: 2.6.0
-      tailwindcss-animate: 1.0.7
+      tailwindcss-animate: 1.0.7(tailwindcss@4.1.11)
       zod: 3.25.71
     transitivePeerDependencies:
       - '@types/react'
@@ -6042,7 +6045,7 @@ snapshots:
       react-simple-code-editor: 0.14.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       serve-handler: 6.1.6
       tailwind-merge: 2.6.0
-      tailwindcss-animate: 1.0.7
+      tailwindcss-animate: 1.0.7(tailwindcss@4.1.11)
       zod: 3.25.71
     transitivePeerDependencies:
       - '@types/react'
@@ -6075,7 +6078,40 @@ snapshots:
       react-simple-code-editor: 0.14.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       serve-handler: 6.1.6
       tailwind-merge: 2.6.0
-      tailwindcss-animate: 1.0.7
+      tailwindcss-animate: 1.0.7(tailwindcss@4.1.11)
+      zod: 3.25.71
+    transitivePeerDependencies:
+      - '@types/react'
+      - '@types/react-dom'
+      - supports-color
+      - tailwindcss
+
+  '@modelcontextprotocol/inspector-client@0.14.3(@types/react-dom@19.1.6(@types/react@19.1.8))(@types/react@19.1.8)(tailwindcss@4.1.11)':
+    dependencies:
+      '@modelcontextprotocol/sdk': 1.13.2
+      '@radix-ui/react-checkbox': 1.3.2(@types/react-dom@19.1.6(@types/react@19.1.8))(@types/react@19.1.8)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@radix-ui/react-dialog': 1.1.14(@types/react-dom@19.1.6(@types/react@19.1.8))(@types/react@19.1.8)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@radix-ui/react-icons': 1.3.2(react@18.3.1)
+      '@radix-ui/react-label': 2.1.7(@types/react-dom@19.1.6(@types/react@19.1.8))(@types/react@19.1.8)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@radix-ui/react-popover': 1.1.14(@types/react-dom@19.1.6(@types/react@19.1.8))(@types/react@19.1.8)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@radix-ui/react-select': 2.2.5(@types/react-dom@19.1.6(@types/react@19.1.8))(@types/react@19.1.8)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@radix-ui/react-slot': 1.2.3(@types/react@19.1.8)(react@18.3.1)
+      '@radix-ui/react-tabs': 1.1.12(@types/react-dom@19.1.6(@types/react@19.1.8))(@types/react@19.1.8)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@radix-ui/react-toast': 1.2.14(@types/react-dom@19.1.6(@types/react@19.1.8))(@types/react@19.1.8)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@radix-ui/react-tooltip': 1.2.7(@types/react-dom@19.1.6(@types/react@19.1.8))(@types/react@19.1.8)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      ajv: 6.12.6
+      class-variance-authority: 0.7.1
+      clsx: 2.1.1
+      cmdk: 1.1.1(@types/react-dom@19.1.6(@types/react@19.1.8))(@types/react@19.1.8)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      lucide-react: 0.447.0(react@18.3.1)
+      pkce-challenge: 4.1.0
+      prismjs: 1.30.0
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+      react-simple-code-editor: 0.14.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      serve-handler: 6.1.6
+      tailwind-merge: 2.6.0
+      tailwindcss-animate: 1.0.7(tailwindcss@4.1.11)
       zod: 3.25.71
     transitivePeerDependencies:
       - '@types/react'
@@ -6117,6 +6153,30 @@ snapshots:
       shell-quote: 1.8.3
       spawn-rx: 5.1.2
       ts-node: 10.9.2(@swc/core@1.12.7)(@types/node@22.15.34)(typescript@5.8.3)
+      zod: 3.25.71
+    transitivePeerDependencies:
+      - '@swc/core'
+      - '@swc/wasm'
+      - '@types/node'
+      - '@types/react'
+      - '@types/react-dom'
+      - bufferutil
+      - supports-color
+      - tailwindcss
+      - typescript
+      - utf-8-validate
+
+  '@modelcontextprotocol/inspector@0.14.3(@swc/core@1.12.7)(@types/node@20.19.2)(@types/react-dom@19.1.6(@types/react@19.1.8))(@types/react@19.1.8)(tailwindcss@4.1.11)(typescript@5.8.3)':
+    dependencies:
+      '@modelcontextprotocol/inspector-cli': 0.14.3
+      '@modelcontextprotocol/inspector-client': 0.14.3(@types/react-dom@19.1.6(@types/react@19.1.8))(@types/react@19.1.8)(tailwindcss@4.1.11)
+      '@modelcontextprotocol/inspector-server': 0.14.3
+      '@modelcontextprotocol/sdk': 1.13.2
+      concurrently: 9.2.0
+      open: 10.1.2
+      shell-quote: 1.8.3
+      spawn-rx: 5.1.2
+      ts-node: 10.9.2(@swc/core@1.12.7)(@types/node@20.19.2)(typescript@5.8.3)
       zod: 3.25.71
     transitivePeerDependencies:
       - '@swc/core'
@@ -11351,7 +11411,9 @@ snapshots:
 
   tailwind-merge@3.3.1: {}
 
-  tailwindcss-animate@1.0.7: {}
+  tailwindcss-animate@1.0.7(tailwindcss@4.1.11):
+    dependencies:
+      tailwindcss: 4.1.11
 
   tailwindcss@4.1.11: {}
 
@@ -11459,6 +11521,26 @@ snapshots:
       source-map: 0.7.4
       typescript: 5.8.3
       webpack: 5.99.9(@swc/core@1.12.7)
+
+  ts-node@10.9.2(@swc/core@1.12.7)(@types/node@20.19.2)(typescript@5.8.3):
+    dependencies:
+      '@cspotcode/source-map-support': 0.8.1
+      '@tsconfig/node10': 1.0.11
+      '@tsconfig/node12': 1.0.11
+      '@tsconfig/node14': 1.0.3
+      '@tsconfig/node16': 1.0.4
+      '@types/node': 20.19.2
+      acorn: 8.15.0
+      acorn-walk: 8.3.4
+      arg: 4.1.3
+      create-require: 1.1.1
+      diff: 4.0.2
+      make-error: 1.3.6
+      typescript: 5.8.3
+      v8-compile-cache-lib: 3.0.1
+      yn: 3.1.1
+    optionalDependencies:
+      '@swc/core': 1.12.7
 
   ts-node@10.9.2(@swc/core@1.12.7)(@types/node@22.15.34)(typescript@5.8.3):
     dependencies:
@@ -11861,13 +11943,14 @@ snapshots:
 
   ws@8.18.3: {}
 
-  xmcp@0.0.16(typescript@5.8.3):
+  xmcp@0.0.17-alpha-001(@types/node@20.19.2)(@types/react-dom@19.1.6(@types/react@19.1.8))(@types/react@19.1.8)(next@15.3.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(swc-loader@0.2.6(@swc/core@1.12.7)(webpack@5.99.9(@swc/core@1.12.7)))(tailwindcss@4.1.11)(typescript@5.8.3)(zod@3.25.71):
     dependencies:
-      '@modelcontextprotocol/inspector': 0.14.3(@swc/core@1.12.7)(typescript@5.8.3)
+      '@modelcontextprotocol/inspector': 0.14.3(@swc/core@1.12.7)(@types/node@20.19.2)(@types/react-dom@19.1.6(@types/react@19.1.8))(@types/react@19.1.8)(tailwindcss@4.1.11)(typescript@5.8.3)
       '@modelcontextprotocol/sdk': 1.13.2
       '@swc/core': 1.12.7
       '@types/express': 5.0.3
       '@types/webpack-node-externals': 3.0.4(@swc/core@1.12.7)
+      '@vercel/mcp-adapter': 0.11.1(@modelcontextprotocol/sdk@1.13.2)(next@15.3.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0))
       chalk: 5.4.1
       chokidar: 3.6.0
       clean-webpack-plugin: 4.0.0(webpack@5.99.9(@swc/core@1.12.7))
@@ -11890,6 +11973,7 @@ snapshots:
       webpack: 5.99.9(@swc/core@1.12.7)
       webpack-node-externals: 3.0.0
       webpack-virtual-modules: 0.5.0
+      zod: 3.25.71
     transitivePeerDependencies:
       - '@swc/helpers'
       - '@swc/wasm'
@@ -11898,6 +11982,54 @@ snapshots:
       - '@types/react-dom'
       - bufferutil
       - esbuild
+      - next
+      - supports-color
+      - tailwindcss
+      - typescript
+      - uglify-js
+      - utf-8-validate
+      - webpack-cli
+
+  xmcp@0.0.17-alpha-001(next@15.3.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(swc-loader@0.2.6(@swc/core@1.12.7)(webpack@5.99.9(@swc/core@1.12.7)))(typescript@5.8.3)(zod@3.25.67):
+    dependencies:
+      '@modelcontextprotocol/inspector': 0.14.3(@swc/core@1.12.7)(typescript@5.8.3)
+      '@modelcontextprotocol/sdk': 1.13.2
+      '@swc/core': 1.12.7
+      '@types/express': 5.0.3
+      '@types/webpack-node-externals': 3.0.4(@swc/core@1.12.7)
+      '@vercel/mcp-adapter': 0.11.1(@modelcontextprotocol/sdk@1.13.2)(next@15.3.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0))
+      chalk: 5.4.1
+      chokidar: 3.6.0
+      clean-webpack-plugin: 4.0.0(webpack@5.99.9(@swc/core@1.12.7))
+      commander: 10.0.1
+      content-type: 1.0.5
+      cross-env: 7.0.3
+      del: 7.1.0
+      dotenv: 16.6.1
+      execa: 9.6.0
+      express: 4.21.2
+      fork-ts-checker-webpack-plugin: 8.0.0(typescript@5.8.3)(webpack@5.99.9(@swc/core@1.12.7))
+      fs-extra: 11.3.0
+      glob: 11.0.3
+      handlebars: 4.7.8
+      jsonwebtoken: 9.0.2
+      memfs: 4.17.2
+      raw-body: 3.0.0
+      swc-loader: 0.2.6(@swc/core@1.12.7)(webpack@5.99.9(@swc/core@1.12.7))
+      tsx: 4.20.3
+      webpack: 5.99.9(@swc/core@1.12.7)
+      webpack-node-externals: 3.0.0
+      webpack-virtual-modules: 0.5.0
+      zod: 3.25.67
+    transitivePeerDependencies:
+      - '@swc/helpers'
+      - '@swc/wasm'
+      - '@types/node'
+      - '@types/react'
+      - '@types/react-dom'
+      - bufferutil
+      - esbuild
+      - next
       - supports-color
       - tailwindcss
       - typescript
