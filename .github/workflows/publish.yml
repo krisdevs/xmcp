@@ -64,6 +64,24 @@ jobs:
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "Publishing version: $VERSION"
 
+      - name: Determine npm tag
+        id: npm_tag
+        run: |
+          if [[ "${{ github.event.release.prerelease }}" == "true" ]]; then
+            # Extract pre-release tag from version (e.g., 1.0.0-beta.1 -> beta)
+            VERSION="${{ steps.version.outputs.version }}"
+            if [[ $VERSION =~ -([a-zA-Z]+) ]]; then
+              TAG="${BASH_REMATCH[1]}"
+            else
+              TAG="prerelease"
+            fi
+            echo "tag=$TAG" >> $GITHUB_OUTPUT
+            echo "Pre-release detected, using npm tag: $TAG"
+          else
+            echo "tag=latest" >> $GITHUB_OUTPUT
+            echo "Stable release detected, using npm tag: latest"
+          fi
+
       - name: Update package versions
         run: |
           VERSION="${{ steps.version.outputs.version }}"
@@ -83,26 +101,28 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           cd packages/xmcp
-          echo "Publishing xmcp package..."
-          npm publish --access public
-          echo "✅ Successfully published xmcp@${{ steps.version.outputs.version }}"
+          echo "Publishing xmcp package with tag: ${{ steps.npm_tag.outputs.tag }}"
+          npm publish --access public --tag ${{ steps.npm_tag.outputs.tag }}
+          echo "✅ Successfully published xmcp@${{ steps.version.outputs.version }} with tag ${{ steps.npm_tag.outputs.tag }}"
 
       - name: Publish create-xmcp-app package
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           cd packages/create-xmcp-app
-          echo "Publishing create-xmcp-app package..."
-          npm publish --access public
-          echo "✅ Successfully published create-xmcp-app@${{ steps.version.outputs.version }}"
+          echo "Publishing create-xmcp-app package with tag: ${{ steps.npm_tag.outputs.tag }}"
+          npm publish --access public --tag ${{ steps.npm_tag.outputs.tag }}
+          echo "✅ Successfully published create-xmcp-app@${{ steps.version.outputs.version }} with tag ${{ steps.npm_tag.outputs.tag }}"
 
       - name: Create publish summary
         run: |
           cat >> $GITHUB_STEP_SUMMARY << EOF
           # 📦 NPM Publish Summary
 
-          Release \`${{ github.event.release.tag_name }}\`:
+          Release \`${{ github.event.release.tag_name }}\` (npm tag: \`${{ steps.npm_tag.outputs.tag }}\`):
 
           - **xmcp@${{ steps.version.outputs.version }}** - [View on NPM](https://www.npmjs.com/package/xmcp)
           - **create-xmcp-app@${{ steps.version.outputs.version }}** - [View on NPM](https://www.npmjs.com/package/create-xmcp-app)
+
+          ${{ github.event.release.prerelease && '⚠️ This is a pre-release. Install with `npm install xmcp@' || '✅ This is a stable release. Install with `npm install xmcp` or `npm install xmcp@' }}${{ steps.npm_tag.outputs.tag }}${{ github.event.release.prerelease && '`' || '`' }}
           EOF

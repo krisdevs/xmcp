@@ -1,8 +1,9 @@
-export function generateImportCode(
-  pathlist: string[],
-  hasMiddleware: boolean
-): string {
-  const importToolsCode = pathlist
+import { compilerContext } from "./compiler-context";
+
+export function generateImportCode(): string {
+  const { toolPaths, hasMiddleware } = compilerContext.getContext();
+
+  const importToolsCode = Array.from(toolPaths)
     .map((path) => {
       const relativePath = `../${path}`;
       return `"${path}": () => import("${relativePath}"),`;

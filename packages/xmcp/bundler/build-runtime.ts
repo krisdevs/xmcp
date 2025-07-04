@@ -34,6 +34,8 @@ const runtimeRoots: RuntimeRoot[] = [
   { name: "headers", path: "headers" },
   { name: "stdio", path: "transports/stdio" },
   { name: "http", path: "transports/http" },
+  { name: "adapter-express", path: "adapters/express" },
+  { name: "adapter-nextjs", path: "adapters/nextjs" },
 ];
 const entry: EntryObject = {};
 
@@ -89,6 +91,9 @@ const config: Configuration = {
   },
   resolve: {
     extensions: [".tsx", ".ts", ".jsx", ".js", ".json"],
+    alias: {
+      "@": srcPath,
+    },
   },
   watchOptions: {
     aggregateTimeout: 600,

@@ -17,13 +17,12 @@ import {
 } from "./base-streamable-http";
 import homeTemplate from "../../templates/home";
 import { httpContextProvider } from "./http-context";
-import chalk from "chalk";
 import { createOAuthProxy, type OAuthProxyConfig } from "../../../auth/oauth";
 import { OAuthProxy } from "../../../auth/oauth/factory";
+import { greenCheck } from "../../../utils/cli-icons";
+import { setResponseCorsHeaders } from "./setup-cors";
 
-const greenCheck = chalk.bold.green("✔");
-
-type CorsOptions = {
+export type CorsOptions = {
   origin?: string | string[] | boolean;
   methods?: string | string[];
   allowedHeaders?: string | string[];
@@ -33,7 +32,7 @@ type CorsOptions = {
 };
 
 // no session management, POST only
-class StatelessHttpServerTransport extends BaseHttpServerTransport {
+export class StatelessHttpServerTransport extends BaseHttpServerTransport {
   debug: boolean;
   bodySizeLimit: string;
   private _started: boolean = false;
@@ -320,52 +319,13 @@ export class StatelessStreamableHTTPTransport {
     this.app.use((req: Request, res: Response, next: NextFunction) => {
       const cors = this.corsOptions;
       // set cors headers dynamically
-      if (cors.origin !== undefined)
-        res.setHeader(
-          "Access-Control-Allow-Origin",
-          Array.isArray(cors.origin)
-            ? cors.origin.join(",")
-            : String(cors.origin)
-        );
-      if (cors.methods !== undefined)
-        res.setHeader(
-          "Access-Control-Allow-Methods",
-          Array.isArray(cors.methods)
-            ? cors.methods.join(",")
-            : String(cors.methods)
-        );
-      if (cors.allowedHeaders !== undefined)
-        res.setHeader(
-          "Access-Control-Allow-Headers",
-          Array.isArray(cors.allowedHeaders)
-            ? cors.allowedHeaders.join(",")
-            : String(cors.allowedHeaders)
-        );
-      if (cors.exposedHeaders !== undefined)
-        res.setHeader(
-          "Access-Control-Expose-Headers",
-          Array.isArray(cors.exposedHeaders)
-            ? cors.exposedHeaders.join(",")
-            : String(cors.exposedHeaders)
-        );
-      if (typeof cors.credentials === "boolean")
-        res.setHeader(
-          "Access-Control-Allow-Credentials",
-          String(cors.credentials)
-        );
-      if (typeof cors.maxAge === "number")
-        res.setHeader("Access-Control-Max-Age", String(cors.maxAge));
-
-      if (req.method === "OPTIONS") {
-        res.sendStatus(200);
-        return;
-      }
+      setResponseCorsHeaders(cors, res);
       next();
     });
 
     this.app.use(express.json({ limit: bodySizeLimit }));
 
-    this.app.use((req: Request, res: Response, next: NextFunction) => {
+    this.app.use((req: Request, _res: Response, next: NextFunction) => {
       this.log(`${req.method} ${req.path}`);
       next();
     });
@@ -389,7 +349,7 @@ export class StatelessStreamableHTTPTransport {
     }
 
     // isolate requests context
-    this.app.use((req: Request, res: Response, next: NextFunction) => {
+    this.app.use((req: Request, _res: Response, next: NextFunction) => {
       const id = randomUUID();
       httpContextProvider({ id, headers: req.headers }, () => {
         next();

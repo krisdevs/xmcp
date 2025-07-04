@@ -31,6 +31,8 @@ function getConfig() {
     "webpack-node-externals",
     "ts-loader",
     "fork-ts-checker-webpack-plugin",
+    "zod",
+    "@vercel/mcp-adapter",
   ];
 
   const __filename = fileURLToPath(import.meta.url);
@@ -112,6 +114,9 @@ function getConfig() {
     },
     resolve: {
       extensions: [".tsx", ".ts", ".jsx", ".js", ".json"],
+      alias: {
+        "@": srcPath,
+      },
     },
     watchOptions: {
       aggregateTimeout: 600,

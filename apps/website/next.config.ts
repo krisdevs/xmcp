@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  webpack: (config, _options) => {
+  webpack: (config) => {
     /** Add glslify loader to webpack */
     config.module.rules.push({
       test: /\.(glsl|vs|fs|vert|frag)$/,
