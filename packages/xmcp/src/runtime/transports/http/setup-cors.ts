@@ -1,5 +1,5 @@
 import { Response } from "express";
-import { CorsOptions } from "../transports/http/stateless-streamable-http";
+import { CorsOptions } from "./stateless-streamable-http";
 
 export function setResponseCorsHeaders(cors: CorsOptions, res: Response) {
   // set cors headers dynamically

@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import { createServer } from "../utils/server";
-import { StatelessHttpServerTransport } from "../transports/http/stateless-streamable-http";
-import { setResponseCorsHeaders } from "./setup-cors";
-import { httpContextProvider } from "../transports/http/http-context";
+import { createServer } from "@/runtime/utils/server";
+import { StatelessHttpServerTransport } from "@/runtime/transports/http/stateless-streamable-http";
+import { setResponseCorsHeaders } from "@/runtime/transports/http/setup-cors";
+import { httpContextProvider } from "@/runtime/transports/http/http-context";
 import { randomUUID } from "node:crypto";
 
 // cors config
@@ -26,7 +26,7 @@ const bodySizeLimit = HTTP_BODY_SIZE_LIMIT as string;
 
 function createMcpHandler() {
   return async (req: Request, res: Response) => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       const id = randomUUID();
       httpContextProvider({ id, headers: req.headers }, async () => {
         try {

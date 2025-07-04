@@ -90,6 +90,9 @@ const config: Configuration = {
   },
   resolve: {
     extensions: [".tsx", ".ts", ".jsx", ".js", ".json"],
+    alias: {
+      "@": srcPath,
+    },
   },
   watchOptions: {
     aggregateTimeout: 600,

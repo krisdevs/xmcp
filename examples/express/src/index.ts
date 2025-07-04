@@ -2,7 +2,7 @@ import express from "express";
 import mcpHandler from "../xmcp-adapter";
 
 const app = express();
-const port = 3000;
+const port = 3002;
 
 app.get("/mcp", mcpHandler);
 app.post("/mcp", mcpHandler);

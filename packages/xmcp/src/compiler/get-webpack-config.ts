@@ -39,6 +39,7 @@ export function getWebpackConfig(xmcpConfig: XmcpParsedConfig): Configuration {
   const config: Configuration = {
     mode,
     watch: mode === "development",
+    devtool: mode === "development" ? "eval-cheap-module-source-map" : false,
     output: {
       filename: fileName,
       path: selectedOutput,
@@ -85,6 +86,10 @@ export function getWebpackConfig(xmcpConfig: XmcpParsedConfig): Configuration {
           use: "swc-loader",
         },
       ],
+    },
+    optimization: {
+      minimize: mode === "production",
+      splitChunks: false,
     },
   };
 
