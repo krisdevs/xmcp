@@ -11,7 +11,13 @@ import { compilerContext } from "@/compiler/compiler-context";
 import { XmcpParsedConfig } from "@/compiler/parse-xmcp-config";
 import { getEntries } from "./get-entries";
 import { getInjectedVariables } from "./get-injected-variables";
+import { resolveTsconfigPathsToAlias } from "./resolve-tsconfig-paths";
+import { CleanWebpackPlugin } from "clean-webpack-plugin";
 
+// @ts-expect-error: injected by compiler
+const runtimeFiles = RUNTIME_FILES as Record<string, string>;
+
+/** Creates the webpack configuration that xmcp will use to bundle the user's code */
 export function getWebpackConfig(xmcpConfig: XmcpParsedConfig): Configuration {
   const processFolder = process.cwd();
   const { mode } = compilerContext.getContext();
@@ -51,6 +57,28 @@ export function getWebpackConfig(xmcpConfig: XmcpParsedConfig): Configuration {
           return callback(null, `commonjs ${request}`);
         }
 
+        // Check if request is inside .xmcp folder - if so, bundle it
+        if (request.includes(".xmcp")) {
+          return callback();
+        }
+
+        const filesToInclude = [...Object.keys(runtimeFiles), "import-map.js"];
+
+        // Check if request is a runtime file - if so, bundle it
+        for (const file of filesToInclude) {
+          if (
+            request.endsWith(`./${file}`) ||
+            request.endsWith(`./${file.replace(".js", "")}`)
+          ) {
+            return callback();
+          }
+        }
+
+        if (xmcpConfig.experimental?.adapter === "nextjs") {
+          // When using nextjs, we want next to bundle the code for the tool file
+          return callback(null, `commonjs ${request}`);
+        }
+
         callback();
       },
     ],
@@ -61,10 +89,11 @@ export function getWebpackConfig(xmcpConfig: XmcpParsedConfig): Configuration {
       alias: {
         "node:process": "process",
         "xmcp/headers": path.resolve(processFolder, ".xmcp/headers.js"),
+        ...resolveTsconfigPathsToAlias(),
       },
       extensions: [".tsx", ".ts", ".jsx", ".js", ".json"],
     },
-    plugins: [new InjectRuntimePlugin()],
+    plugins: [new InjectRuntimePlugin(), new CleanWebpackPlugin()],
     module: {
       rules: [
         {
@@ -112,9 +141,6 @@ class InjectRuntimePlugin {
       (_compilationParams) => {
         if (hasRun) return;
         hasRun = true;
-
-        // @ts-expect-error: injected by compiler
-        const runtimeFiles = RUNTIME_FILES as Record<string, string>;
 
         for (const [fileName, fileContent] of Object.entries(runtimeFiles)) {
           fs.writeFileSync(path.join(runtimeFolderPath, fileName), fileContent);

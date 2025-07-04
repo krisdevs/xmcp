@@ -1,9 +1,7 @@
-import { z } from "zod";
+import { fetchSidebar } from "@/basehub/actions";
 
 // Define the schema for tool parameters
-export const schema = {
-  name: z.string().describe("The name of the user to greet"),
-};
+export const schema = {};
 
 // Define tool metadata
 export const metadata = {
@@ -18,8 +16,10 @@ export const metadata = {
 };
 
 // Tool implementation
-export default async function greet({ name }: { name: string }) {
-  const result = `Hello, ${name}!`;
+export default async function getSidebar() {
+  const sidebar = await fetchSidebar();
+
+  const result = JSON.stringify(sidebar);
 
   return {
     content: [{ type: "text", text: result }],

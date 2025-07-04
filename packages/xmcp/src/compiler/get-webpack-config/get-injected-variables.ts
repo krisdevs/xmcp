@@ -1,3 +1,5 @@
+// TODO create a shaded utility to type injected variables shaded between the runtime and the xmcp compiler
+
 import {
   DEFAULT_HTTP_BODY_SIZE_LIMIT,
   DEFAULT_HTTP_ENDPOINT,
@@ -17,10 +19,14 @@ type CorsConfig = {
   maxAge?: number;
 };
 
+/**
+ * The XMCP runtime uses variables that are not defined by default.
+ *
+ * This utility will define those variables based on the user's config.
+ */
 export function getInjectedVariables(xmcpConfig: XmcpParsedConfig) {
   const { mode } = compilerContext.getContext();
 
-  // thsi will inject definitions for the following variables when bundling the code
   const definedVariables: Record<string, string | number | boolean> = {};
 
   if (xmcpConfig["http"]) {

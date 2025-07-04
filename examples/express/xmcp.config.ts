@@ -5,7 +5,7 @@ const config: XmcpConfig = {
     port: 3002,
   },
   experimental: {
-    adapter: true,
+    adapter: "express",
   },
 };
 

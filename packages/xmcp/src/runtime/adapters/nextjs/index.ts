@@ -5,16 +5,16 @@ import {
   loadTools,
 } from "@/runtime/utils/server";
 
-function mcpHandler(request: Request) {
+async function mcpHandler(request: Request) {
   const [toolPromises, toolModules] = loadTools();
 
-  Promise.all(toolPromises).then(() => {
-    const requestHandler = createVercelMcpHandler((server) => {
-      configureServer(server, toolModules);
-    }, INJECTED_CONFIG);
+  await Promise.all(toolPromises);
 
-    requestHandler(request);
-  });
+  const requestHandler = createVercelMcpHandler((server) => {
+    configureServer(server, toolModules);
+  }, INJECTED_CONFIG);
+
+  return requestHandler(request);
 }
 
 export default mcpHandler;
