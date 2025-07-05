@@ -13,9 +13,7 @@ import { getEntries } from "./get-entries";
 import { getInjectedVariables } from "./get-injected-variables";
 import { resolveTsconfigPathsToAlias } from "./resolve-tsconfig-paths";
 import { CleanWebpackPlugin } from "clean-webpack-plugin";
-
-// @ts-expect-error: injected by compiler
-const runtimeFiles = RUNTIME_FILES as Record<string, string>;
+import { InjectRuntimePlugin, runtimeFiles } from "./plugins";
 
 /** Creates the webpack configuration that xmcp will use to bundle the user's code */
 export function getWebpackConfig(xmcpConfig: XmcpParsedConfig): Configuration {
@@ -106,6 +104,9 @@ export function getWebpackConfig(xmcpConfig: XmcpParsedConfig): Configuration {
       minimize: mode === "production",
       splitChunks: false,
     },
+    watchOptions: {
+      ignored: [adapterOutputPath],
+    },
   };
 
   const providedPackages = {
@@ -131,21 +132,4 @@ export function getWebpackConfig(xmcpConfig: XmcpParsedConfig): Configuration {
   config.plugins!.push(new DefinePlugin(definedVariables));
 
   return config;
-}
-
-class InjectRuntimePlugin {
-  apply(compiler: Compiler) {
-    let hasRun = false;
-    compiler.hooks.beforeCompile.tap(
-      "InjectRuntimePlugin",
-      (_compilationParams) => {
-        if (hasRun) return;
-        hasRun = true;
-
-        for (const [fileName, fileContent] of Object.entries(runtimeFiles)) {
-          fs.writeFileSync(path.join(runtimeFolderPath, fileName), fileContent);
-        }
-      }
-    );
-  }
 }

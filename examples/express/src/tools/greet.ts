@@ -20,7 +20,7 @@ export const metadata = {
 
 // Tool implementation
 export default async function greet({ name }: { name: string }) {
-  const result = `Hello, ${name}!`;
+  const result = `Hello, ${name}!!`;
 
   return {
     content: [{ type: "text", text: result }],
