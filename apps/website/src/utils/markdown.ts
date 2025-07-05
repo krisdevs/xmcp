@@ -80,7 +80,8 @@ export function getAllMarkdownFiles(): MarkdownFile[] {
 
         let rawSlug: string;
         if (isIndexFile(item)) {
-          rawSlug = basePath;
+          // For root-level index files, use "index" as the slug
+          rawSlug = basePath === "" ? "index" : basePath;
         } else {
           rawSlug = path.join(basePath, cleanName.replace(/\.mdx$/, ""));
         }
@@ -187,10 +188,15 @@ export function generateSidebarTree(): SidebarItem[] {
       });
     } else {
       const directoryName = key.split("/").pop() || key;
-      const formattedTitle = directoryName
+      let formattedTitle = directoryName
         .split("-")
         .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
         .join(" ");
+
+      // handle fetching the root index file
+      if (formattedTitle === "Docs") {
+        formattedTitle = "Documentation";
+      }
 
       const children = groups[key]
         .filter((file) => {
@@ -207,7 +213,8 @@ export function generateSidebarTree(): SidebarItem[] {
 
       tree.push({
         title: formattedTitle,
-        slug: key,
+        // handle fetching the root index file
+        slug: key === "docs" ? "" : key,
         children,
         order: directoryOrder,
       });
@@ -220,6 +227,8 @@ export function generateSidebarTree(): SidebarItem[] {
     }
     return a.title.localeCompare(b.title);
   });
+
+  console.log(tree);
 
   return tree;
 }

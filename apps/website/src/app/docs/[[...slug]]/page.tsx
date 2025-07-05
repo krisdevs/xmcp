@@ -10,10 +10,13 @@ import { CustomMDX } from "@/components/markdown/renderer";
 export default async function Page({
   params,
 }: {
-  params: Promise<{ slug: string[] }>;
+  params: Promise<{ slug?: string[] }>;
 }) {
   const slug = (await params).slug;
-  const articleSlug = slug.join("/");
+  const articleSlug = slug ? slug.join("/") : "index";
+
+  console.log(articleSlug);
+
   const sidebarTree = generateSidebarTree();
   const { prev, next } = findNavigationItems(sidebarTree, articleSlug);
 
