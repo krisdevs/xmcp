@@ -1,11 +1,6 @@
-import { Compiler, Configuration, DefinePlugin, ProvidePlugin } from "webpack";
+import { Configuration, DefinePlugin, ProvidePlugin } from "webpack";
 import path from "path";
-import {
-  outputPath,
-  runtimeFolderPath,
-  adapterOutputPath,
-} from "@/utils/constants";
-import fs from "fs-extra";
+import { outputPath, adapterOutputPath } from "@/utils/constants";
 import { builtinModules } from "module";
 import { compilerContext } from "@/compiler/compiler-context";
 import { XmcpParsedConfig } from "@/compiler/parse-xmcp-config";
@@ -13,7 +8,11 @@ import { getEntries } from "./get-entries";
 import { getInjectedVariables } from "./get-injected-variables";
 import { resolveTsconfigPathsToAlias } from "./resolve-tsconfig-paths";
 import { CleanWebpackPlugin } from "clean-webpack-plugin";
-import { InjectRuntimePlugin, runtimeFiles } from "./plugins";
+import {
+  CreateTypeDefinitionPlugin,
+  InjectRuntimePlugin,
+  runtimeFiles,
+} from "./plugins";
 
 /** Creates the webpack configuration that xmcp will use to bundle the user's code */
 export function getWebpackConfig(xmcpConfig: XmcpParsedConfig): Configuration {
@@ -24,14 +23,16 @@ export function getWebpackConfig(xmcpConfig: XmcpParsedConfig): Configuration {
     ? adapterOutputPath
     : outputPath;
 
-  const fileName = xmcpConfig.experimental?.adapter ? "index.js" : "[name].js";
+  console.log("BUILDING IN", selectedOutput);
+
+  const filename = xmcpConfig.experimental?.adapter ? "index.js" : "[name].js";
 
   const config: Configuration = {
     mode,
     watch: mode === "development",
     devtool: mode === "development" ? "eval-cheap-module-source-map" : false,
     output: {
-      filename: fileName,
+      filename,
       path: selectedOutput,
       libraryTarget: "commonjs2",
     },
@@ -91,7 +92,11 @@ export function getWebpackConfig(xmcpConfig: XmcpParsedConfig): Configuration {
       },
       extensions: [".tsx", ".ts", ".jsx", ".js", ".json"],
     },
-    plugins: [new InjectRuntimePlugin(), new CleanWebpackPlugin()],
+    plugins: [
+      new CleanWebpackPlugin(),
+      new InjectRuntimePlugin(),
+      new CreateTypeDefinitionPlugin(),
+    ],
     module: {
       rules: [
         {

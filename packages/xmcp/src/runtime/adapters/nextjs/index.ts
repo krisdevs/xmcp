@@ -5,7 +5,7 @@ import {
   loadTools,
 } from "@/runtime/utils/server";
 
-async function mcpHandler(request: Request) {
+export async function xmcpHandler(request: Request) {
   const [toolPromises, toolModules] = loadTools();
 
   await Promise.all(toolPromises);
@@ -16,5 +16,3 @@ async function mcpHandler(request: Request) {
 
   return requestHandler(request);
 }
-
-export default mcpHandler;
