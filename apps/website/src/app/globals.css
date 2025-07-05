@@ -92,8 +92,13 @@
       @apply text-[1.1rem] leading-loose font-sans my-4 text-neutral-800 dark:text-neutral-200;
     }
 
-    .prose p code {
-      @apply text-sm border border-neutral-300;
+    .prose p code,
+    .prose li code {
+      @apply border border-neutral-300/50 text-[1rem] px-[4px] py-[4px];
+    }
+
+    .prose li code {
+      @apply text-[0.75rem] px-[1px] py-[2px];
     }
 
     .prose h1 {
@@ -117,11 +122,15 @@
     }
 
     .prose ul {
-      @apply list-disc pl-6;
+      @apply list-disc pl-6 font-sans text-sm;
     }
 
     .prose ol {
       @apply list-decimal pl-6;
+    }
+
+    .prose li {
+      @apply my-2;
     }
 
     .prose > :first-child {
