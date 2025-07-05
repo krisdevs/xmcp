@@ -1,6 +1,6 @@
 import { Configuration, DefinePlugin, ProvidePlugin } from "webpack";
 import path from "path";
-import { outputPath, adapterOutputPath } from "@/utils/constants";
+import { distOutputPath, adapterOutputPath } from "@/utils/constants";
 import { builtinModules } from "module";
 import { compilerContext } from "@/compiler/compiler-context";
 import { XmcpParsedConfig } from "@/compiler/parse-xmcp-config";
@@ -19,21 +19,23 @@ export function getWebpackConfig(xmcpConfig: XmcpParsedConfig): Configuration {
   const processFolder = process.cwd();
   const { mode } = compilerContext.getContext();
 
-  const selectedOutput = xmcpConfig.experimental?.adapter
+  const outputPath = xmcpConfig.experimental?.adapter
     ? adapterOutputPath
-    : outputPath;
+    : distOutputPath;
 
-  console.log("BUILDING IN", selectedOutput);
+  console.log("BUILDING IN", outputPath);
 
-  const filename = xmcpConfig.experimental?.adapter ? "index.js" : "[name].js";
+  const outputFilename = xmcpConfig.experimental?.adapter
+    ? "index.js"
+    : "[name].js";
 
   const config: Configuration = {
     mode,
     watch: mode === "development",
     devtool: mode === "development" ? "eval-cheap-module-source-map" : false,
     output: {
-      filename,
-      path: selectedOutput,
+      filename: outputFilename,
+      path: outputPath,
       libraryTarget: "commonjs2",
     },
     target: "node",

@@ -65,6 +65,7 @@
     "fs-extra": "^11.3.0",
     "glob": "^11.0.2",
     "handlebars": "^4.7.7",
+    "json5": "^2.2.3",
     "jsonwebtoken": "^9.0.2",
     "memfs": "^4.17.2",
     "raw-body": "^3.0.0",
