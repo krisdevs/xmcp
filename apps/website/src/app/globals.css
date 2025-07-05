@@ -94,7 +94,7 @@
 
     .prose p code,
     .prose li code {
-      @apply border border-neutral-300/50 text-[1rem] px-[4px] py-[4px];
+      @apply border border-neutral-300/30 text-[0.9rem] px-[4px] py-[1px];
     }
 
     .prose li code {

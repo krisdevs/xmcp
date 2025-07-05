@@ -13,8 +13,12 @@ XMCP is a lightweight, extensible framework for building and deploying powerful 
 
 You can create a new XMCP app from scratch or add it to an existing project.
 
-- [Add XMCP to Next.js](#add-xmcp-to-nextjs)
-- [Add XMCP to Express](#add-xmcp-to-express)
+- [Add XMCP to Next.js](#usage-with-nextjs-experimental)
+- [Add XMCP to Express](#usage-with-express-experimental)
+
+<br />
+
+---
 
 ### Create a new XMCP app
 
@@ -310,6 +314,20 @@ After setting up the project, your build and dev command should look like this:
 }
 ```
 
+The CLI will ask where to place the `tools` directory and what is the `url` for the MCP server.
+
+It will create the tools folder and add an endpoint to your Next.Js app.
+
+```typescript
+// src/app/api/mcp/route.ts
+
+import { xmcpAdapter } from ".xmcp/adapter";
+
+export { xmcpAdapter as GET, xmcpAdapter as POST };
+```
+
+Note: XMCP's `middleware.ts` and `xmcp/headers` are not supported since Next.js already supports those features.
+
 ## Usage with Express (experimental)
 
 XMCP can work on top of your existing Express project. To get started, run the following command:
@@ -340,3 +358,5 @@ app.get("/mcp", xmcpAdapter);
 
 app.post("/mcp", xmcpAdapter);
 ```
+
+Note: XMCP's `src/middleware.ts` is not supported in this mode.
