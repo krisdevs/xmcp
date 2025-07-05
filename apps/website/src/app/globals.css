@@ -28,6 +28,10 @@ body {
   color: var(--foreground);
   font-family: var(--font-mono);
 
+  p {
+    @apply text-[#999999] text-sm;
+  }
+
   .prose .anchor {
     @apply absolute invisible no-underline;
 

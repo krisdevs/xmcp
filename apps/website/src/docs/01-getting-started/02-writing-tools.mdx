@@ -1,0 +1,99 @@
+---
+title: "Writing Tools"
+metadataTitle: "xmcp - Writing Tools | Documentation"
+publishedAt: "2025-07-4"
+summary: "Lorem ipsum"
+---
+
+# Writing Your First Tool
+
+This guide walks you through creating a custom weather tool that demonstrates the key concepts of schema validation, API integration, and error handling in xmcp.
+
+This example extends of the showcased one for the Model Context Protocol guide.
+
+## Syntax
+
+The first thing you may have noticed if you are familiar with MCP is that the syntax for creating a tool differs. This is because the framework uses file system routing. xmcp will automatically handle the server and listing of your tools.
+
+One of the main ideas behind xmcp is separation of concerns. Each element should be easily identifiable, and the file should be self-contained. The aim is to provide clarity and ease of understanding.
+
+A tool is built on three core concepts:
+
+- A schema for parameter validation
+- A metadata object for tool information
+- A default function that implements the logic
+
+Each `tool.ts` file is a module that exports these three elements. If any of these are missing, the tool will not be discovered and prevent the server from starting/building correctly.
+
+Let's see these concepts in action.
+
+## Example
+
+You can find the example code for this guide [here](https://github.com/basementstudio/xmcp/blob/main/examples/tutorial).
+
+### Creating the Tool File
+
+```ts filename="src/tools/fetch-weather.ts"
+import { z } from "zod";
+import { type InferSchema } from "xmcp";
+import { NWS_API_BASE } from "../utils/constants";
+import { AlertsResponse } from "../models/weather";
+import { formatAlert, makeNWSRequest } from "../utils/weather";
+
+export const schema = {
+  state: z.string().length(2).describe("Two-letter state code (e.g. CA, NY)"),
+};
+
+export const metadata = {
+  name: "fetch-weather",
+  description: "Fetch data from the NWS API",
+  annotations: {
+    title: "Fetch Weather Data from NWS API",
+    readOnlyHint: true,
+    destructiveHint: false,
+    idempotentHint: true,
+  },
+};
+
+export default async function fetchWeather({
+  state,
+}: InferSchema<typeof schema>) {
+  // Implementation goes here
+}
+```
+
+// TO DO
+// explain the schema and metadata
+// perhaps a table for the metadata elements? and add a reference to model contetx protocol documentation
+
+## Implementing the Tool Logic
+
+// explain the infer schema
+// elaborate about the return type
+
+## Testing Your Tool
+
+Start the development server with `npm run dev` and you should see your weather tool discovered alongside the existing add tool. Test it by making a POST request to your HTTP endpoint with the tool name and required parameters.
+
+```bash
+curl -X POST http://localhost:3002/mcp \
+  -H "Content-Type: application/json" \
+  -d '{
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "tools/call",
+    "params": {
+      "name": "get_weather",
+      "arguments": {
+        "location": "London",
+        "units": "metric"
+      }
+    }
+  }'
+```
+
+## Next Steps
+
+You've successfully created a functional weather tool that demonstrates the core concepts of the tool syntax.
+
+// link to next section
