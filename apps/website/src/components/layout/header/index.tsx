@@ -7,7 +7,8 @@ export const Header = () => {
         className="
           pointer-events-none
           absolute left-1/2 top-0 -translate-x-1/2
-          w-[800px] h-full
+          w-full
+          max-w-[800px] h-full
         "
         style={{
           background: "rgba(0, 0, 0, 0.25)",
