@@ -6,12 +6,10 @@ import path from "path";
 // used for the message error to the user
 type PathType = "tools";
 
-interface PathValidationOptions {
-  pathStr: string | undefined;
-  type: PathType;
-}
-
-export function isValidPath({ pathStr, type }: PathValidationOptions): string {
+export function isValidPath(
+  pathStr: string | undefined,
+  type: PathType
+): string | undefined {
   function isNonEmptyString(str: unknown): str is string {
     return typeof str === "string" && str.length > 0;
   }
@@ -35,6 +33,15 @@ export function isValidPath({ pathStr, type }: PathValidationOptions): string {
     }
 
     return normalized; // still return the normalized path cause we're formatting to glob later
+  }
+
+  if (pathStr === undefined) {
+    return undefined;
+  }
+
+  // reject empty string
+  if (pathStr === "") {
+    throw new Error(`${type} path cannot be an empty string`);
   }
 
   if (isNonEmptyString(pathStr)) {

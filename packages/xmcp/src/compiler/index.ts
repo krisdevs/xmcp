@@ -44,10 +44,7 @@ export async function compile({ onBuild }: CompileOptions = {}) {
     ignoreInitial: false,
   });
 
-  let toolsPath = isValidPath({
-    pathStr: xmpcConfig.paths?.tools,
-    type: "tools",
-  });
+  let toolsPath = isValidPath(xmpcConfig.paths?.tools, "tools");
 
   // handle tools
   watcher.watch(`${toolsPath}/**/*.ts`, {

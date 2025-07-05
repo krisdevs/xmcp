@@ -58,7 +58,6 @@ const pathsConfigSchema = z.object({
 
 // TODO extract all this config and schemas to a separate file
 const configSchema = z.object({
-  paths: pathsConfigSchema.optional(),
   stdio: z.boolean().optional(),
   http: z
     .union([
@@ -73,6 +72,9 @@ const configSchema = z.object({
     ])
     .optional(),
   experimental: experimentalConfigSchema.optional(),
+  paths: pathsConfigSchema.optional().default({
+    tools: DEFAULT_TOOLS_DIR,
+  }),
   webpack: z.function().args(z.any()).returns(z.any()).optional(),
 });
 
@@ -144,6 +146,9 @@ export async function readConfig(): Promise<XmcpParsedConfig> {
   return {
     stdio: true,
     http: true,
+    paths: {
+      tools: DEFAULT_TOOLS_DIR,
+    },
   } satisfies XmcpInputConfig;
 }
 

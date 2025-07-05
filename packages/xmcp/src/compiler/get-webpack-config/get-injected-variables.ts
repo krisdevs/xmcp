@@ -73,9 +73,7 @@ export function getInjectedVariables(xmcpConfig: XmcpParsedConfig) {
     );
   }
 
-  if (xmcpConfig.paths?.tools) {
-    definedVariables.TOOLS_PATH = JSON.stringify(xmcpConfig.paths.tools);
-  }
+  definedVariables.TOOLS_PATH = JSON.stringify(xmcpConfig.paths?.tools);
 
   return definedVariables;
 }
