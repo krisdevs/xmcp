@@ -1,8 +1,9 @@
 import Link from "next/link";
 import Image from "next/image";
 import { MDXRemote } from "next-mdx-remote/rsc";
-import { highlight } from "sugar-high";
+// import { highlight } from "sugar-high";
 import React from "react";
+import { Code, Pre } from "./code-blocks";
 
 function Table({ data }: { data: { headers: string[]; rows: string[][] } }) {
   const headers = data.headers.map((header, index) => (
@@ -51,27 +52,6 @@ function RoundedImage(props: {
   height: number;
 }) {
   return <Image {...props} alt={props.alt} className="rounded-lg" />;
-}
-
-function Code({
-  children,
-  ...props
-}: {
-  children: string;
-  props: React.HTMLAttributes<HTMLElement>;
-}) {
-  const codeHTML = highlight(children);
-  return <code dangerouslySetInnerHTML={{ __html: codeHTML }} {...props} />;
-}
-
-function Pre({ children }: { children: React.ReactNode }) {
-  return (
-    <pre className="terminal-container relative w-auto">
-      <div className="p-4 bg-black border border-gray-400 overflow-x-auto">
-        {children}
-      </div>
-    </pre>
-  );
 }
 
 function slugify(str: string) {
