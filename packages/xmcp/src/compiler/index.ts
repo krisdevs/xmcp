@@ -16,6 +16,7 @@ import { onFirstBuild } from "./on-first-build";
 import { greenCheck } from "@/utils/cli-icons";
 import { compilerContext } from "./compiler-context";
 import { startHttpServer } from "./start-http-server";
+import { isValidPath } from "@/utils/path-validation";
 dotenv.config();
 
 export type CompilerMode = "development" | "production";
@@ -43,9 +44,13 @@ export async function compile({ onBuild }: CompileOptions = {}) {
     ignoreInitial: false,
   });
 
-  // TODO add hability to customize tools path
+  let toolsPath = isValidPath({
+    pathStr: xmpcConfig.paths?.tools,
+    type: "tools",
+  });
+
   // handle tools
-  watcher.watch("./src/tools/**/*.ts", {
+  watcher.watch(`${toolsPath}/**/*.ts`, {
     onAdd: (path) => {
       toolPaths.add(path);
       if (compilerStarted) {

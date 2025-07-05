@@ -10,6 +10,8 @@ export const DEFAULT_HTTP_BODY_SIZE_LIMIT = 1024 * 1024 * 10; // 10MB
 export const DEFAULT_HTTP_ENDPOINT = "/mcp";
 export const DEFAULT_HTTP_STATELESS = true;
 
+export const DEFAULT_TOOLS_DIR = "src/tools";
+
 // cors config schema
 const corsConfigSchema = z.object({
   origin: z.union([z.string(), z.array(z.string()), z.boolean()]).optional(),
@@ -48,8 +50,15 @@ const experimentalConfigSchema = z.object({
   adapter: adapterConfigSchema.optional(),
 });
 
+// paths config
+const pathsConfigSchema = z.object({
+  tools: z.string().default(DEFAULT_TOOLS_DIR),
+  // to do add resources prompts etc
+});
+
 // TODO extract all this config and schemas to a separate file
 const configSchema = z.object({
+  paths: pathsConfigSchema.optional(),
   stdio: z.boolean().optional(),
   http: z
     .union([
