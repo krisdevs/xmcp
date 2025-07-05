@@ -1,20 +1,186 @@
 ---
-title: "Getting Started"
+title: "XMCP documentation"
 metadataTitle: "xmcp - Getting Started | Documentation"
 publishedAt: "2025-07-4"
 summary: "Lorem ipsum"
 ---
 
-# Getting Started
+# Documentation
 
-Welcome to the xmcp documentation!
+XMCP is a lightweight, extensible framework for building and deploying powerful AI MCP tools. To add tools for your AI, you just need to create a new file in the `src/tools` directory, XMCP will automatically load them into the MCP server.
 
-This section will help you get started building your first xmcp app. You will learn about all the available features you can use to build MCP servers, seamlessly.
+## Getting started
 
-The framework is designed to be simple and easy to use, but it requires some knowledge of TypeScript and Model Context Protocol. We assume you already cover the basics of programming and are familiar with functional programming.
+You can create a new XMCP app from scratch or add it to an existing project.
 
-If you're new to Model Context Protocol, you can learn more about it [here](https://modelcontextprotocol.io/introduction).
+- [Add XMCP to Next.js](#add-xmcp-to-nextjs)
+- [Add XMCP to Express](#add-xmcp-to-express)
 
-Along the guide, we'll provide insights and examples which will help you grasp the core concepts.
+### Create a new XMCP app
 
-Next up, we'll walk you through the [installation](./installation) process.
+To get started, run the following command on your terminal:
+
+```bash
+npx create-xmcp-app@latest
+```
+
+You will be asked to configure your project:
+
+- Set a directory name for your project (or the current one)
+- Select a package manager (npm, pnpm, or yarn)
+- Choose transports (HTTP, STDIO, or both)
+- Configure Vercel deployment (optional)
+
+#### HTTP transport
+
+If you want to deploy your MCP on a server, you can use the HTTP transport. This can be used to create tools like fetching your database or perform fetch operations.
+
+#### STDIO transport
+
+STDIO transport is useful when you want to use your MCP server locally, useful for enabling your AI to perform operations on your machine. For example, you can create tools like searching and compressing images on a folder.
+
+## Project structure
+
+A basic project structure is as follows:
+
+```
+my-project/
+├── src/
+│   ├── middleware.ts   # Middleware for http request/response processing
+│   └── tools/          # Tool files are auto-discovered here
+│       ├── add.ts
+│       ├── multiply.ts
+├── dist/               # Built output (generated)
+├── package.json
+├── tsconfig.json
+└── xmcp.config.ts       # Configuration file for xmcp
+```
+
+### Creating tools
+
+Xmcp detects files under `src/tools/` directory and registers them as tools.
+This folder can be configured in the `xmcp.config.ts` file.
+
+The tool file should export three elements:
+
+- **schema**: The input parameters using Zod schemas
+- **metadata**: The tool's identity and behavior hints
+- **default**: The tool handler function
+
+Example of a tool file:
+
+```typescript
+// src/tools/add.ts
+
+import { z } from "zod";
+import { type InferSchema } from "xmcp";
+
+// 1. Schema - Define input parameters
+export const schema = {
+  a: z.number().describe("First number to add"),
+  b: z.number().describe("Second number to add"),
+};
+
+// 2. Metadata - Define tool identity and hints
+export const metadata = {
+  name: "add",
+  description: "Add two numbers together",
+  annotations: {
+    title: "Add Two Numbers",
+    readOnlyHint: true,
+    destructiveHint: false,
+    idempotentHint: true,
+  },
+};
+
+// 3. Implementation - The actual tool logic
+export default async function add({ a, b }: InferSchema<typeof schema>) {
+  return {
+    content: [{ type: "text", text: String(a + b) }],
+  };
+}
+```
+
+## Tool file structure
+
+### 1. Schema (Required)
+
+```typescript
+import { z } from "zod";
+
+export const schema = {
+  a: z.number().describe("First number to add"),
+  b: z.number().describe("Second number to add"),
+};
+```
+
+The schema object defines the tool's parameters with:
+
+- **Key**: Parameter name
+- **Value**: Zod schema with `.describe()` for documentation. This will be visibile through the inspector.
+- **Purpose**: Type validation and automatic parameter documentation.
+
+### 2. Metadata (Required)
+
+Define the tool's identity and behavior hints:
+
+```typescript
+export const metadata = {
+  name: "add",
+  description: "Add two numbers together",
+  annotations: {
+    title: "Add Two Numbers", // Human-readable display name
+    readOnlyHint: true, // true = doesn't modify external state
+    destructiveHint: false, // true = performs destructive operations
+    idempotentHint: true, // true = same inputs = same outputs
+  },
+};
+```
+
+The metadata object provides:
+
+- **name**: Unique identifier for the tool
+- **description**: Brief explanation of what the tool does
+- **annotations**: Behavioral hints for AI models and UIs
+
+This extends entirely from the MCP library.
+
+### 3. Implementation (Required)
+
+The default export function that performs the actual work:
+
+```typescript
+import { type InferSchema } from "xmcp";
+
+export default async function add({ a, b }: InferSchema<typeof schema>) {
+  return {
+    content: [{ type: "text", text: String(a + b) }],
+  };
+}
+```
+
+The implementation function:
+
+- **Parameters**: Automatically typed from your schema using the built-in `InferSchema`
+- **Return**: MCP-compatible response with content array
+- **Async**: Supports async operations for API calls, file I/O, etc.
+
+## Add XMCP to Next.js
+
+XMCP can work on top of your existing Next.js project. To get started, run the following command:
+
+```bash
+npx init-xmcp-app@latest --nextjs
+```
+
+You will be asked to configure your project:
+
+## Add XMCP to Express
+
+XMCP can work on top of your existing Express project. To get started, run the following command:
+
+```bash
+npx init-xmcp-app@latest --express
+```
+
+You will be asked to configure your project:

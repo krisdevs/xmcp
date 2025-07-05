@@ -114,9 +114,7 @@ const components = {
   h4: createHeading(4),
   h5: createHeading(5),
   h6: createHeading(6),
-  p: (props: { children: React.ReactNode }) => (
-    <p className="text-sm font-mono" {...props} />
-  ),
+  // p: (props: { children: React.ReactNode }) => <p {...props} />,
   Image: RoundedImage,
   a: CustomLink,
   code: Code,

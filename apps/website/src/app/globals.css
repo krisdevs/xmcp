@@ -5,15 +5,15 @@
   --foreground: #ffffff;
   --spacing: 0.25rem;
 
-  --sh-class: #a7a7a7;
-  --sh-identifier: #e1e4e8;
-  --sh-sign: #e1e4e8;
-  --sh-string: #a7a7a7;
-  --sh-keyword: #a7a7a7;
+  --sh-class: #2d5e9d;
+  --sh-identifier: #354150;
+  --sh-sign: #8996a3;
+  --sh-property: #0550ae;
+  --sh-entity: #249a97;
+  --sh-jsxliterals: #6266d1;
+  --sh-string: #00a99a;
+  --sh-keyword: #f47067;
   --sh-comment: #a19595;
-  --sh-jsxliterals: #a7a7a7;
-  --sh-property: #a7a7a7;
-  --sh-entity: #a7a7a7;
 }
 
 @theme inline {
@@ -23,200 +23,206 @@
   --font-mono: var(--font-geist-mono);
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-mono);
+@layer base {
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-mono);
 
-  p {
-    @apply text-[#999999] text-sm;
+    p {
+      @apply text-[#999999] text-sm;
+    }
+
+    .prose .anchor {
+      @apply absolute invisible no-underline;
+
+      margin-left: -1em;
+      padding-right: 0.5em;
+      width: 80%;
+      max-width: 700px;
+      cursor: pointer;
+    }
+
+    .anchor:hover {
+      @apply visible;
+    }
+
+    .prose {
+      @apply font-mono;
+    }
+
+    .prose a {
+      @apply underline transition-all decoration-neutral-400 dark:decoration-neutral-600 underline-offset-2 decoration-[0.1em];
+    }
+
+    .prose .anchor:after {
+      @apply text-neutral-300 dark:text-neutral-700;
+      content: "#";
+    }
+
+    .prose *:hover > .anchor {
+      @apply visible;
+    }
+
+    .prose pre {
+      @apply bg-neutral-50 dark:bg-neutral-900 overflow-x-auto py-2 px-2 text-sm;
+    }
+
+    .prose code {
+      @apply px-2 py-0.5;
+    }
+
+    .prose pre code {
+      @apply p-0;
+      border: initial;
+      line-height: 1;
+      font-size: 0.8rem;
+    }
+
+    .prose code span {
+      @apply font-medium;
+    }
+
+    .prose img {
+      /* Don't apply styles to next/image */
+      @apply m-0;
+    }
+
+    .prose p {
+      @apply text-[1.1rem] leading-loose font-sans my-4 text-neutral-800 dark:text-neutral-200;
+    }
+
+    .prose p code {
+      @apply text-sm border border-neutral-300;
+    }
+
+    .prose h1 {
+      @apply text-[2rem] font-medium tracking-tight mt-6 mb-2;
+    }
+
+    .prose h2 {
+      @apply text-[1.5rem] font-medium tracking-tight mt-6 mb-2;
+    }
+
+    .prose h3 {
+      @apply text-[1.25rem] font-medium tracking-tight mt-6 mb-2;
+    }
+
+    .prose h4 {
+      @apply text-[1rem] font-medium tracking-tight mt-6 mb-2;
+    }
+
+    .prose strong {
+      @apply font-medium;
+    }
+
+    .prose ul {
+      @apply list-disc pl-6;
+    }
+
+    .prose ol {
+      @apply list-decimal pl-6;
+    }
+
+    .prose > :first-child {
+      /* Override removing top margin, causing layout shift */
+      margin-top: 1.25em !important;
+      margin-bottom: 1.25em !important;
+    }
+
+    pre::-webkit-scrollbar {
+      display: none;
+    }
+
+    pre {
+      -ms-overflow-style: none; /* IE and Edge */
+      scrollbar-width: none; /* Firefox */
+      font-size: 0.8rem;
+    }
+
+    /* Remove Safari input shadow on mobile */
+    input[type="text"],
+    input[type="email"] {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+    }
+
+    table {
+      display: block;
+      max-width: fit-content;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+
+    .title {
+      text-wrap: balance;
+    }
+
+    .terminal-container {
+      border: 0.516px solid #929292;
+      background:
+        radial-gradient(
+          88.13% 114.4% at 100% 44.44%,
+          rgba(255, 255, 255, 0) 43.51%,
+          rgba(255, 255, 255, 0.4) 70.35%
+        ),
+        linear-gradient(
+          214deg,
+          rgba(234, 234, 234, 0.7) 19.77%,
+          rgba(234, 234, 234, 0.95) 22.28%,
+          rgba(237, 237, 237, 0) 100%
+        );
+      box-shadow:
+        -2.582px -1.549px 11.878px 0px rgba(0, 0, 0, 0.04) inset,
+        -1.033px -0.516px 0px 0px #fff inset,
+        -1.033px -1.549px 1.446px 0px rgba(255, 255, 255, 0.55) inset,
+        -1.033px 0.516px 0px 0px #fff inset,
+        0px 1.033px 1.239px 0px rgba(0, 0, 0, 0.15);
+    }
   }
 
-  .prose .anchor {
-    @apply absolute invisible no-underline;
-
-    margin-left: -1em;
-    padding-right: 0.5em;
-    width: 80%;
-    max-width: 700px;
-    cursor: pointer;
+  /* Text selection styling */
+  ::selection {
+    background-color: #ffffff;
+    color: #000000;
   }
 
-  .anchor:hover {
-    @apply visible;
+  ::-moz-selection {
+    background-color: #ffffff;
+    color: #000000;
   }
 
-  .prose > * {
-    @apply font-mono;
+  *:focus {
+    outline: none;
   }
 
-  .prose a {
-    @apply underline transition-all decoration-neutral-400 dark:decoration-neutral-600 underline-offset-2 decoration-[0.1em];
+  *:focus-visible {
+    outline: 1px solid white;
+    outline-offset: 2px;
   }
 
-  .prose .anchor:after {
-    @apply text-neutral-300 dark:text-neutral-700;
-    content: "#";
+  /* Custom scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 8px;
   }
 
-  .prose *:hover > .anchor {
-    @apply visible;
+  ::-webkit-scrollbar-track {
+    background: transparent;
   }
 
-  .prose pre {
-    @apply bg-neutral-50 dark:bg-neutral-900 overflow-x-auto py-2 px-2 text-sm;
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
   }
 
-  .prose code {
-    @apply px-2 py-0.5;
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
   }
 
-  .prose pre code {
-    @apply p-0;
-    border: initial;
-    line-height: 1;
-    font-size: 0.8rem;
+  /* Firefox scrollbar */
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
   }
-
-  .prose code span {
-    @apply font-medium;
-  }
-
-  .prose img {
-    /* Don't apply styles to next/image */
-    @apply m-0;
-  }
-
-  .prose p {
-    @apply my-4 text-neutral-800 dark:text-neutral-200;
-  }
-
-  .prose h1 {
-    @apply text-[1.5rem] font-medium tracking-tight mt-6 mb-2;
-  }
-
-  .prose h2 {
-    @apply text-[1rem] font-medium tracking-tight mt-6 mb-2;
-  }
-
-  .prose h3 {
-    @apply text-[1rem] font-medium tracking-tight mt-6 mb-2;
-  }
-
-  .prose h4 {
-    @apply text-[1rem] font-medium tracking-tight mt-6 mb-2;
-  }
-
-  .prose strong {
-    @apply font-medium;
-  }
-
-  .prose ul {
-    @apply list-disc pl-6;
-  }
-
-  .prose ol {
-    @apply list-decimal pl-6;
-  }
-
-  .prose > :first-child {
-    /* Override removing top margin, causing layout shift */
-    margin-top: 1.25em !important;
-    margin-bottom: 1.25em !important;
-  }
-
-  pre::-webkit-scrollbar {
-    display: none;
-  }
-
-  pre {
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
-    font-size: 0.8rem;
-  }
-
-  /* Remove Safari input shadow on mobile */
-  input[type="text"],
-  input[type="email"] {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-  }
-
-  table {
-    display: block;
-    max-width: fit-content;
-    overflow-x: auto;
-    white-space: nowrap;
-  }
-
-  .title {
-    text-wrap: balance;
-  }
-
-  .terminal-container {
-    border: 0.516px solid #929292;
-    background:
-      radial-gradient(
-        88.13% 114.4% at 100% 44.44%,
-        rgba(255, 255, 255, 0) 43.51%,
-        rgba(255, 255, 255, 0.4) 70.35%
-      ),
-      linear-gradient(
-        214deg,
-        rgba(234, 234, 234, 0.7) 19.77%,
-        rgba(234, 234, 234, 0.95) 22.28%,
-        rgba(237, 237, 237, 0) 100%
-      );
-    box-shadow:
-      -2.582px -1.549px 11.878px 0px rgba(0, 0, 0, 0.04) inset,
-      -1.033px -0.516px 0px 0px #fff inset,
-      -1.033px -1.549px 1.446px 0px rgba(255, 255, 255, 0.55) inset,
-      -1.033px 0.516px 0px 0px #fff inset,
-      0px 1.033px 1.239px 0px rgba(0, 0, 0, 0.15);
-  }
-}
-
-/* Text selection styling */
-::selection {
-  background-color: #ffffff;
-  color: #000000;
-}
-
-::-moz-selection {
-  background-color: #ffffff;
-  color: #000000;
-}
-
-*:focus {
-  outline: none;
-}
-
-*:focus-visible {
-  outline: 1px solid white;
-  outline-offset: 2px;
-}
-
-/* Custom scrollbar styling */
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.3);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.5);
-}
-
-/* Firefox scrollbar */
-html {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
 }
