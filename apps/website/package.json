@@ -38,7 +38,7 @@
     "sugar-high": "^0.9.3",
     "tailwind-merge": "^3.3.1",
     "three": "^0.178.0",
-    "xmcp": "0.0.17-alpha-001",
+    "xmcp": "0.0.17",
     "zod": "^3.25.71",
     "zustand": "^5.0.6"
   },
