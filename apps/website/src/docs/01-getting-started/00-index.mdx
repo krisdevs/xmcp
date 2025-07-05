@@ -63,9 +63,9 @@ This folder can be configured in the `xmcp.config.ts` file.
 
 The tool file should export three elements:
 
-- **schema**: The input parameters using Zod schemas
-- **metadata**: The tool's identity and behavior hints
-- **default**: The tool handler function
+- **Schema**: The input parameters using Zod schemas.
+- **Metadata**: The tool's identity and behavior hints.
+- **Default**: The tool handler function.
 
 ```typescript
 // src/tools/add.ts
@@ -120,7 +120,11 @@ The schema object defines the tool's parameters with:
 
 ### 2. Metadata (Required)
 
-Define the tool's identity and behavior hints:
+Define the tool's identity and behavior hints. The metadata object provides:
+
+- **Name**: Unique identifier for the tool
+- **Description**: Brief explanation of what the tool does
+- **Annotations**: Behavioral hints for AI models and UIs
 
 ```typescript
 export const metadata = {
@@ -135,17 +139,13 @@ export const metadata = {
 };
 ```
 
-The metadata object provides:
-
-- **name**: Unique identifier for the tool
-- **description**: Brief explanation of what the tool does
-- **annotations**: Behavioral hints for AI models and UIs
-
-This extends entirely from the MCP library.
-
 ### 3. Implementation (Required)
 
-The default export function that performs the actual work:
+The default export function that performs the actual work.
+
+- **Parameters**: Automatically typed from your schema using the built-in `InferSchema`.
+- **Returns**: MCP-compatible response with content array.
+- **Async**: Supports async operations for API calls, file I/O, etc.
 
 ```typescript
 import { type InferSchema } from "xmcp";
@@ -156,12 +156,6 @@ export default async function add({ a, b }: InferSchema<typeof schema>) {
   };
 }
 ```
-
-The implementation function:
-
-- **Parameters**: Automatically typed from your schema using the built-in `InferSchema`
-- **Return**: MCP-compatible response with content array
-- **Async**: Supports async operations for API calls, file I/O, etc.
 
 ## Add XMCP to Next.js
 
