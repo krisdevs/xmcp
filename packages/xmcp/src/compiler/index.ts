@@ -30,6 +30,9 @@ export async function compile({ onBuild }: CompileOptions = {}) {
   let compilerStarted = false;
 
   const xmpcConfig = await getConfig();
+  compilerContext.setContext({
+    xmcpConfig: xmpcConfig,
+  });
   let webpackConfig = getWebpackConfig(xmpcConfig);
 
   if (xmpcConfig.webpack) {
