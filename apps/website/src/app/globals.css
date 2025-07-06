@@ -2,7 +2,7 @@
 
 :root {
   --background: #000000;
-  --foreground: #ffffff;
+  --foreground: #999999;
   --spacing: 0.25rem;
 
   --sh-class: #2d5e9d;
@@ -21,6 +21,7 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-size-sm: 0.9rem;
 }
 
 @layer base {
@@ -29,8 +30,18 @@
     color: var(--foreground);
     font-family: var(--font-mono);
 
-    p {
-      @apply text-[#999999] text-sm;
+    p,
+    li {
+      @apply text-sm;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      @apply text-white;
     }
 
     .prose .anchor {
