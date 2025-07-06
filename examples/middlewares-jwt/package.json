@@ -1,0 +1,16 @@
+{
+  "name": "middlewares-jwt",
+  "description": "JWT authentication middleware",
+  "scripts": {
+    "build": "xmcp build",
+    "dev": "xmcp dev",
+    "start": "node dist/http.js"
+  },
+  "dependencies": {
+    "xmcp": "workspace:*",
+    "zod": "3.24.4"
+  },
+  "devDependencies": {
+    "swc-loader": "^0.2.6"
+  }
+}
