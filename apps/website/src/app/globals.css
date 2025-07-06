@@ -103,8 +103,8 @@
     .prose pre code {
       @apply p-0;
       border: initial;
-      line-height: 1;
-      font-size: 0.8rem;
+      line-height: 160%;
+      font-size: 0.7rem;
     }
 
     .prose code span {
@@ -125,7 +125,7 @@
       @apply font-mono;
       color: #bababa;
       letter-spacing: -0.5px;
-      line-height: 160%;
+      line-height: 180%;
       margin-top: 1rem;
       margin-bottom: 0.5rem;
       font-size: 1rem;
@@ -166,19 +166,18 @@
     }
 
     .prose ul {
-      @apply font-mono text-sm;
+      @apply font-mono text-sm mt-4;
       list-style: none;
       padding-left: 0;
     }
 
     .prose ol {
-      @apply list-decimal pl-6;
+      @apply list-decimal pl-6 mt-4;
     }
 
     .prose li {
-      @apply my-2 relative;
+      @apply my-3 relative;
       font-size: 1rem;
-      color: #999;
       padding-left: 1rem;
     }
 
@@ -187,6 +186,7 @@
       position: absolute;
       left: 0;
       color: #fff;
+      font-weight: bold;
     }
 
     .prose hr {

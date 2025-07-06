@@ -58,13 +58,3 @@ export function Pre({ children }: { children: React.ReactNode }) {
     </pre>
   );
 }
-
-/*
-<pre className="terminal-container relative w-auto">
-  <div className="p-4 bg-black border border-gray-400 overflow-x-auto">
-    <preContext.Provider value={{ editor: true }}>
-      {children}
-    </preContext.Provider>
-  </div>
-</pre>
-*/
