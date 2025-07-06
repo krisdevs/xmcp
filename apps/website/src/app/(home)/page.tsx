@@ -1,4 +1,4 @@
-import { TerminalIntro } from "./sections/terminal-intro";
+import { IntroSection } from "./sections/intro-section";
 import { FeaturesSection } from "./sections/features-section";
 
 export default async function Home() {
@@ -8,7 +8,7 @@ export default async function Home() {
         className="max-w-[40rem] mx-auto text-center flex flex-col px-8"
         style={{ gap: "calc(var(--spacing) * 20)" }}
       >
-        <TerminalIntro />
+        <IntroSection />
         <FeaturesSection />
       </div>
     </div>

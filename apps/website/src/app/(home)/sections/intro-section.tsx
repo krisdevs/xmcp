@@ -2,7 +2,7 @@ import { XmcpLogo } from "@/components/terminal/logo";
 import { Terminal } from "@/components/terminal/terminal";
 import Link from "next/link";
 
-export function TerminalIntro() {
+export function IntroSection() {
   return (
     <>
       <div className="space-y-4 text-left">
@@ -13,7 +13,7 @@ export function TerminalIntro() {
         <p>
           <i>Bootstrap your MCP server with one command</i>
         </p>
-        <Terminal>npx init-xmcp</Terminal>
+        <Terminal className="mt-12">npx init-xmcp</Terminal>
         <p>
           <i>
             Plug into your existing{" "}
