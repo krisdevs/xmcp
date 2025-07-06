@@ -2,6 +2,7 @@ import { generateConfig } from "./generate-config.js";
 import { install } from "./install.js";
 import { updatePackageJson } from "./update-package.js";
 import { updateTsConfig } from "./update-tsconfig.js";
+import { updateGitignore } from "./update-gitignore.js";
 import { createTool } from "./create-tool.js";
 import { Framework } from "./detect-framework.js";
 
@@ -22,6 +23,8 @@ export async function init(options: InitOptions) {
   updatePackageJson(projectRoot);
 
   updateTsConfig(projectRoot);
+
+  updateGitignore(projectRoot);
 
   createTool(projectRoot, toolsPath);
 }
