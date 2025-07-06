@@ -13,9 +13,9 @@ export function IntroSection() {
           The framework for building & shipping MCP applications
         </h1>
         <p className="text-balance text-[#BABABA] text-[1rem]">
-          Designed with DX in mind, it simplifies setup and removes friction in
-          just one command — making it easy to build & deploy AI tools on top of
-          the Model Context Protocol ecosystem.
+          Designed with DX in mind, it streamlines development and lowers the
+          barrier to entry for anyone looking to create and deploy powerful
+          tools on top of the Model Context Protocol ecosystem.
         </p>
         <div className="space-y-4 text-left mt-12">
           <Terminal>npx create-xmcp-app</Terminal>
