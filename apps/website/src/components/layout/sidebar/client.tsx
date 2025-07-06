@@ -110,8 +110,8 @@ export function SidebarClient({
   return (
     <div className="absolute left-0 top-0 hidden h-full lg:block lg:w-[340px]">
       <nav className="sticky left-8 top-0 z-10 flex h-auto min-h-[600px] flex-col px-8 lg:h-[calc(100dvh-64px)]">
-        <div className="flex justify-center">
-          <div className="relative w-[150px] h-[150px] flex items-center justify-center mx-auto">
+        <div className="flex justify-start -ml-5.5">
+          <div className="relative w-[150px] h-[150px] flex items-center justify-center">
             <XmcpLogo matcap={matcap} />
           </div>
         </div>
