@@ -337,6 +337,71 @@ export default async function search({ query }: InferSchema<typeof schema>) {
 }
 ```
 
+## xmcp.config.ts
+
+You can customize the configuration of your `xmcp` app by creating a `xmcp.config.ts` file.
+
+```typescript
+const config: XmcpConfig = {
+  http: true, // builds your app with the HTTP transport
+  stdio: true, // builds your app with the STDIO transport
+};
+
+export default config;
+```
+
+### Custom tools directory
+
+You can customize the directory where `xmcp` will look for tools by adding the following to your `xmcp.config.ts` file:
+
+```typescript
+const config: XmcpConfig = {
+  tools: {
+    directory: "path/to/tools",
+  },
+};
+
+export default config;
+```
+
+### Customize the HTTP transport options
+
+You can customize the HTTP configuration by adding the following to your `xmcp.config.ts` file:
+
+```typescript
+const config: XmcpConfig = {
+  http: {
+    port: 3000,
+    // The endpoint where the MCP server will be available
+    endpoint: "/my-custom-endpoint",
+    bodySizeLimit: 10 * 1024 * 1024,
+    cors: {
+      origin: "*",
+      methods: ["GET", "POST"],
+      allowedHeaders: ["Content-Type"],
+      credentials: true,
+      exposedHeaders: ["Content-Type"],
+      maxAge: 600,
+    },
+  },
+};
+
+export default config;
+```
+
+### Customize the webpack configuration
+
+`xmcp` uses webpack and swc to bundle your tools. You can customize the configuration by adding the following to your `xmcp.config.ts` file:
+
+````typescript
+const config: XmcpConfig = {
+  webpack: (config) => {
+
+  }
+};
+
+
+
 ## Vercel Deployment
 
 xmcp can be deployed to Vercel with the `--vercel` flag. This will create `.vercel` directory with the built output.
@@ -345,7 +410,7 @@ xmcp can be deployed to Vercel with the `--vercel` flag. This will create `.verc
 xmcp build --vercel
 
 vercel deploy --prod --prebuilt
-```
+````
 
 You can also add a `vercel.json` file to configure deployment on vercel:
 
