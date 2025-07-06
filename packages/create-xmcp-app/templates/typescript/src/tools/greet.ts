@@ -3,16 +3,15 @@ import { type InferSchema } from "xmcp";
 
 // Define the schema for tool parameters
 export const schema = {
-  a: z.number().describe("First number to add"),
-  b: z.number().describe("Second number to add"),
+  name: z.string().describe("The name of the user to greet"),
 };
 
 // Define tool metadata
 export const metadata = {
-  name: "add",
-  description: "Add two numbers together",
+  name: "greet",
+  description: "Greet the user",
   annotations: {
-    title: "Add Two Numbers",
+    title: "Greet the user",
     readOnlyHint: true,
     destructiveHint: false,
     idempotentHint: true,
@@ -20,8 +19,10 @@ export const metadata = {
 };
 
 // Tool implementation
-export default async function add({ a, b }: InferSchema<typeof schema>) {
+export default async function greet({ name }: InferSchema<typeof schema>) {
+  const result = `Hello, ${name}!`;
+
   return {
-    content: [{ type: "text", text: String(a + b) }],
+    content: [{ type: "text", text: result }],
   };
 }
