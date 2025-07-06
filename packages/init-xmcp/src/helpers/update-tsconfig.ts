@@ -28,14 +28,18 @@ export function updateTsConfig(projectRoot: string) {
   }
 
   // alias for accessing the handler, otherwise should be pointing to .xmcp/adapter when importing it
-  tsconfig.compilerOptions.paths["@xmcp/*"] = ["./.xmcp/*"];
+  if (!tsconfig.compilerOptions.paths["@xmcp/*"]) {
+    tsconfig.compilerOptions.paths["@xmcp/*"] = ["./.xmcp/*"];
+  }
 
   if (!tsconfig.include) {
     tsconfig.include = [];
   }
 
-  // include xmcp.d.ts in the build
-  tsconfig.include.push("xmcp.d.ts");
+  if (!tsconfig.include.includes("xmcp.d.ts")) {
+    // include xmcp.d.ts in the build
+    tsconfig.include.push("xmcp.d.ts");
+  }
 
   fs.writeJsonSync(tsconfigPath, tsconfig, { spaces: 2 });
 }
