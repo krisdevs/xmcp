@@ -1,15 +1,10 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
 import { Toolbar } from "basehub/next-toolbar";
 import { Footer } from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -53,7 +48,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-[100dvh] flex flex-col max-w-[1200px] font-mono mx-auto`}
+        className={`${geistMono.variable} antialiased min-h-[100dvh] flex flex-col max-w-[1200px] font-mono mx-auto`}
       >
         <div className="grow relative">
           <Header />

@@ -52,8 +52,14 @@ function GetStartedCard({
           className
         )}
       >
-        <div className="top-1 left-1 absolute w-full h-full group-hover:border border-white group-hover:visible invisible"></div>
-        <div className="relative border border-muted p-4 group-hover:border-white bg-black">
+        <div
+          className="top-1 left-1 absolute w-full h-full group-hover:border group-hover:visible invisible"
+          style={{ borderColor: "#333" }}
+        ></div>
+        <div
+          className="relative border border-muted p-4 group-hover:bg-black"
+          style={{ borderColor: "#333" }}
+        >
           <h3 className="pb-[5rem] italic">
             {title}{" "}
             <span className="invisible group-hover:visible">{"->"}</span>

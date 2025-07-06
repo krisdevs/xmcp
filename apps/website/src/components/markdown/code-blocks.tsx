@@ -48,7 +48,10 @@ export function Code({
 
 export function Pre({ children }: { children: React.ReactNode }) {
   return (
-    <pre className="my-6 border border-white relative w-auto overflow-x-auto bg-black p-4">
+    <pre
+      className="my-8 border relative w-auto overflow-x-auto bg-black p-4"
+      style={{ borderColor: "#333" }}
+    >
       <preContext.Provider value={{ editor: true }}>
         {children}
       </preContext.Provider>
