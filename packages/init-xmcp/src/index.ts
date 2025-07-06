@@ -184,11 +184,11 @@ const program = new Command()
         packageManager,
       });
 
-      console.log(chalk.green("\n✅ xmcp initialized successfully!"));
-      console.log(chalk.blue("\n📁 Files created:"));
+      console.log(chalk.green("\n✔ xmcp initialized successfully!"));
+      console.log(chalk.blue("\n❯ Files created:"));
       console.log(`   • xmcp.config.ts`);
       console.log(`   • ${toolsPath}/greet.ts`);
-      console.log(chalk.blue("\n📁 Files updated:"));
+      console.log(chalk.blue("\n❯ Files updated:"));
       console.log(`   • package.json`);
       console.log(`   • tsconfig.json`);
 
