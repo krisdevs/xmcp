@@ -54,7 +54,7 @@ function RoundedImage(props: {
   return <Image {...props} alt={props.alt} className="rounded-lg" />;
 }
 
-function slugify(str: string) {
+export function slugify(str: string) {
   return str
     .toString()
     .toLowerCase()
@@ -66,19 +66,29 @@ function slugify(str: string) {
 }
 
 function createHeading(level: number) {
-  const Heading = ({ children }: { children: string }) => {
+  const Heading = ({ children, ...props }: { children: string }) => {
     const slug = slugify(children);
-    return React.createElement(
-      `h${level}`,
-      { id: slug, className: "uppercase" },
-      [
-        React.createElement("a", {
-          href: `#${slug}`,
-          key: `link-${slug}`,
-          className: "anchor uppercase font-mono",
-        }),
-      ],
-      children
+
+    const ElementTag = `h${level}` as "h1";
+
+    // Don't create anchor links for h1 titles
+    if (level === 1) {
+      return (
+        <ElementTag className="uppercase relative" {...props}>
+          <div id={slug} className="absolute pointer-none:"></div>
+          <span>{children}</span>
+        </ElementTag>
+      );
+    }
+
+    return (
+      <ElementTag className="uppercase relative" {...props}>
+        <div id={slug} className="absolute -top-[10rem] pointer-none:"></div>
+        <a href={`#${slug}`} className="uppercase font-mono">
+          <div className="anchor" />
+          <span>{children}</span>
+        </a>
+      </ElementTag>
     );
   };
 

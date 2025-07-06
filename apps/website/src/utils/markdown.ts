@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
+import { slugify } from "@/components/markdown/renderer";
 
 export interface MarkdownFrontmatter {
   title?: string;
@@ -229,6 +230,40 @@ export function generateSidebarTree(): SidebarItem[] {
   });
 
   console.log(tree);
+
+  return tree;
+}
+
+export function getSidebarTreeFromIndex(): SidebarItem[] {
+  const indexFile = path.join(DOCS_DIRECTORY, "index.mdx");
+
+  if (!fs.existsSync(indexFile)) {
+    console.warn("❌ Could not find index.mdx file in docs directory");
+    return [];
+  }
+
+  const fileContent = fs.readFileSync(indexFile, "utf8");
+  const { content } = matter(fileContent);
+
+  const lines = content.split("\n");
+  const tree: SidebarItem[] = [];
+
+  lines.forEach((line, index) => {
+    // Only process h2 headings (##) as parent items
+    const headingMatch = line.match(/^(#{2})\s+(.+)$/);
+    if (!headingMatch) return;
+
+    const title = headingMatch[2].trim();
+    const slug = slugify(title);
+
+    const item: SidebarItem = {
+      title,
+      slug: `#${slug}`,
+      order: index,
+    };
+
+    tree.push(item);
+  });
 
   return tree;
 }

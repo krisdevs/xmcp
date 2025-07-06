@@ -74,14 +74,14 @@ function TypewriterText({
   );
 }
 
-export default function TypingEffect() {
+export default function TypingEffect({ children }: { children: string }) {
   const [isComplete, setIsComplete] = useState(false);
 
   return (
-    <div className="text-left flex items-center py-4">
+    <div className="text-left flex items-center py-2">
       <span className="text-white mr-2 select-none">⊹</span>
       <TypewriterText
-        text="npx create-xmcp-app"
+        text={children}
         className="text-white"
         speed={80}
         onComplete={() => setIsComplete(true)}

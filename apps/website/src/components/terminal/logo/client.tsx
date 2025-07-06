@@ -250,7 +250,7 @@ export const XmcpLogo = ({ matcap }: { matcap: string }) => {
     >
       <Suspense fallback={null}>
         <ThreeLogo matcap={matcap} />
-        <PerspectiveCamera makeDefault position={[0, 0, 3]} fov={30} />
+        <PerspectiveCamera makeDefault position={[0, 0, 3]} fov={25} />
         <color attach="background" args={["#000000"]} />
       </Suspense>
     </Canvas>
