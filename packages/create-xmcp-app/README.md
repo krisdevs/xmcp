@@ -35,3 +35,12 @@ You will be asked for the project name and then guided through a series of promp
 - `--vercel`: Add Vercel support for deployment
 - `--http`: Enable HTTP transport
 - `--stdio`: Enable STDIO transport
+
+## Getting Started
+
+- Visit [xmcp.dev](https://xmcp.dev) to learn more about the project.
+- Visit [xmcp.dev/docs](https://xmcp.dev/docs) to view the full documentation.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](<[LICENSE](https://github.com/basementstudio/xmcp/blob/main/license.md)>) file for details.

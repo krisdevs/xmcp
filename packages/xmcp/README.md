@@ -22,24 +22,23 @@
 Bootstrap your first `xmcp` application with:
 
 ```bash
-npx create-xmcp-app
+npx create-xmcp-app@latest
 ```
 
 or initialize `xmcp` on an existing Next.js or Express project with:
 
 ```bash
-npx init-xmcp
+npx init-xmcp@latest
 ```
 
 ## Features
 
-⊹ **Hot Reloading** - Instant development feedback with automatic rebuilds\
-⊹ **File system routing** - Tools are auto-registered from src/tools\
-⊹ **TypeScript First** - Full TypeScript support with type inference\
-⊹ **Schema Validation** - Native parameter validation powered by Zod\
-⊹ **Rich Tooling** - Built-in CLI for development and building\
-⊹ **Vercel Support** - Deploy-ready for Vercel out of the box\
-⊹ **Deploy Anywhere** - Flexible deployment across any platform
+⊹ **File System Routing** - Tools are auto-registered from a `tools` directory\
+⊹ **Hot Reloading** - Instant development feedback\
+⊹ **Middlewares** - Toolkit for shipping authentication and custom middlewares\
+⊹ **Extensible Configuration** - Customizable configuration for your MCP server\
+⊹ **Deploy Anywhere** - Flexible deployment across any platform\
+⊹ **Vercel Support** - Deploy-ready for Vercel out of the box
 
 ## Learn more
 
