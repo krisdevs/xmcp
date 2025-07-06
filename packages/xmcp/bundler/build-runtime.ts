@@ -101,22 +101,7 @@ const config: Configuration = {
   },
   optimization: {
     minimize: true,
-    splitChunks: {
-      chunks: "all",
-      cacheGroups: {
-        shared: {
-          minChunks: 2,
-          priority: 10,
-          reuseExistingChunk: true,
-          enforce: true,
-        },
-        default: {
-          minChunks: 2,
-          priority: -20,
-          reuseExistingChunk: true,
-        },
-      },
-    },
+    splitChunks: false,
   },
   plugins: [
     new ForkTsCheckerWebpackPlugin({

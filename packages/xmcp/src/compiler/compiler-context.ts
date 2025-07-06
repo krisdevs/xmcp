@@ -1,5 +1,6 @@
 import { CompilerMode } from ".";
 import { createContext } from "../utils/context";
+import { XmcpParsedConfig } from "./parse-xmcp-config";
 
 interface CompilerContext {
   /** The mode of the compiler. */
@@ -15,6 +16,8 @@ interface CompilerContext {
   toolPaths: Set<string>;
   /** Whether the middleware is enabled. */
   hasMiddleware: boolean;
+  /** The parsed config. */
+  xmcpConfig?: XmcpParsedConfig;
 }
 
 export const compilerContext = createContext<CompilerContext>({
@@ -34,4 +37,12 @@ export const compilerContextProvider = (
     },
     callback
   );
+};
+
+export const getXmcpConfig = () => {
+  const { xmcpConfig } = compilerContext.getContext();
+  if (!xmcpConfig) {
+    throw new Error("xmcp config not found");
+  }
+  return xmcpConfig;
 };

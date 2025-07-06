@@ -9,14 +9,14 @@
   },
   "contributors": [
     {
-      "name": "Matias Gonzalez Fernandez",
-      "email": "matiasngf@hotmail.com",
-      "url": "https://github.com/matiasngf"
-    },
-    {
       "name": "Valentina Bearzotti",
       "email": "valebearzotti1@gmail.com",
       "url": "https://github.com/valebearzotti"
+    },
+    {
+      "name": "Matias Gonzalez Fernandez",
+      "email": "matiasngf@hotmail.com",
+      "url": "https://github.com/matiasngf"
     }
   ],
   "license": "MIT",
@@ -65,6 +65,7 @@
     "fs-extra": "^11.3.0",
     "glob": "^11.0.2",
     "handlebars": "^4.7.7",
+    "json5": "^2.2.3",
     "jsonwebtoken": "^9.0.2",
     "memfs": "^4.17.2",
     "raw-body": "^3.0.0",

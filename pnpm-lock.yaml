@@ -479,6 +479,9 @@ importers:
       handlebars:
         specifier: ^4.7.7
         version: 4.7.8
+      json5:
+        specifier: ^2.2.3
+        version: 2.2.3
       jsonwebtoken:
         specifier: ^9.0.2
         version: 9.0.2

@@ -1,87 +1,39 @@
-import { Compiler, Configuration, DefinePlugin, ProvidePlugin } from "webpack";
+import { Configuration, DefinePlugin, ProvidePlugin } from "webpack";
 import path from "path";
-import {
-  outputPath,
-  runtimeFolderPath,
-  adapterOutputPath,
-} from "@/utils/constants";
-import fs from "fs-extra";
-import { builtinModules } from "module";
+import { distOutputPath, adapterOutputPath } from "@/utils/constants";
 import { compilerContext } from "@/compiler/compiler-context";
 import { XmcpParsedConfig } from "@/compiler/parse-xmcp-config";
 import { getEntries } from "./get-entries";
 import { getInjectedVariables } from "./get-injected-variables";
 import { resolveTsconfigPathsToAlias } from "./resolve-tsconfig-paths";
 import { CleanWebpackPlugin } from "clean-webpack-plugin";
-
-// @ts-expect-error: injected by compiler
-const runtimeFiles = RUNTIME_FILES as Record<string, string>;
+import { CreateTypeDefinitionPlugin, InjectRuntimePlugin } from "./plugins";
+import { getExternals } from "./get-externals";
 
 /** Creates the webpack configuration that xmcp will use to bundle the user's code */
 export function getWebpackConfig(xmcpConfig: XmcpParsedConfig): Configuration {
   const processFolder = process.cwd();
   const { mode } = compilerContext.getContext();
 
-  const selectedOutput = xmcpConfig.experimental?.adapter
+  const outputPath = xmcpConfig.experimental?.adapter
     ? adapterOutputPath
-    : outputPath;
+    : distOutputPath;
 
-  const fileName = xmcpConfig.experimental?.adapter ? "index.js" : "[name].js";
+  const outputFilename = xmcpConfig.experimental?.adapter
+    ? "index.js"
+    : "[name].js";
 
   const config: Configuration = {
     mode,
     watch: mode === "development",
     devtool: mode === "development" ? "eval-cheap-module-source-map" : false,
     output: {
-      filename: fileName,
-      path: selectedOutput,
+      filename: outputFilename,
+      path: outputPath,
       libraryTarget: "commonjs2",
     },
     target: "node",
-    externals: [
-      /**
-       * Externalize Node.js built-in modules, bundle everything else
-       */
-      function (data, callback) {
-        const { request } = data;
-
-        if (!request) {
-          return callback();
-        }
-
-        const isBuiltinModule =
-          builtinModules.includes(request) ||
-          builtinModules.includes(request.replace(/^node:/, ""));
-
-        if (isBuiltinModule) {
-          return callback(null, `commonjs ${request}`);
-        }
-
-        // Check if request is inside .xmcp folder - if so, bundle it
-        if (request.includes(".xmcp")) {
-          return callback();
-        }
-
-        const filesToInclude = [...Object.keys(runtimeFiles), "import-map.js"];
-
-        // Check if request is a runtime file - if so, bundle it
-        for (const file of filesToInclude) {
-          if (
-            request.endsWith(`./${file}`) ||
-            request.endsWith(`./${file.replace(".js", "")}`)
-          ) {
-            return callback();
-          }
-        }
-
-        if (xmcpConfig.experimental?.adapter === "nextjs") {
-          // When using nextjs, we want next to bundle the code for the tool file
-          return callback(null, `commonjs ${request}`);
-        }
-
-        callback();
-      },
-    ],
+    externals: getExternals(),
     resolve: {
       fallback: {
         process: false,
@@ -93,7 +45,7 @@ export function getWebpackConfig(xmcpConfig: XmcpParsedConfig): Configuration {
       },
       extensions: [".tsx", ".ts", ".jsx", ".js", ".json"],
     },
-    plugins: [new InjectRuntimePlugin(), new CleanWebpackPlugin()],
+    plugins: [new InjectRuntimePlugin(), new CreateTypeDefinitionPlugin()],
     module: {
       rules: [
         {
@@ -107,6 +59,13 @@ export function getWebpackConfig(xmcpConfig: XmcpParsedConfig): Configuration {
       splitChunks: false,
     },
   };
+
+  // Do not watch the adapter output folder, avoid infinite loop
+  if (mode === "development" && !xmcpConfig.experimental?.adapter) {
+    config.watchOptions = {
+      ignored: [adapterOutputPath],
+    };
+  }
 
   const providedPackages = {
     // connects the user exports with our runtime
@@ -130,22 +89,11 @@ export function getWebpackConfig(xmcpConfig: XmcpParsedConfig): Configuration {
   const definedVariables = getInjectedVariables(xmcpConfig);
   config.plugins!.push(new DefinePlugin(definedVariables));
 
-  return config;
-}
-
-class InjectRuntimePlugin {
-  apply(compiler: Compiler) {
-    let hasRun = false;
-    compiler.hooks.beforeCompile.tap(
-      "InjectRuntimePlugin",
-      (_compilationParams) => {
-        if (hasRun) return;
-        hasRun = true;
-
-        for (const [fileName, fileContent] of Object.entries(runtimeFiles)) {
-          fs.writeFileSync(path.join(runtimeFolderPath, fileName), fileContent);
-        }
-      }
-    );
+  // add clean plugin
+  if (!xmcpConfig.experimental?.adapter) {
+    // not needed in adapter mode since it only outputs one file
+    config.plugins!.push(new CleanWebpackPlugin());
   }
+
+  return config;
 }
