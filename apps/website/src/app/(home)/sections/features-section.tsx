@@ -1,31 +1,27 @@
 const features = [
   {
+    title: "File System Routing",
+    description: "Tools are auto-registered from a `tools` directory",
+  },
+  {
     title: "Hot Reloading",
-    description: "Instant development feedback with automatic rebuilds",
+    description: "Instant development feedback",
   },
   {
-    title: "File system routing",
-    description: "Tools are auto-registered from src/tools",
+    title: "Middlewares",
+    description: "Toolkit for shipping authentication and custom middlewares",
   },
   {
-    title: "TypeScript First",
-    description: "Full TypeScript support with type inference",
-  },
-  {
-    title: "Schema Validation",
-    description: "Native parameter validation powered by Zod",
-  },
-  {
-    title: "Rich Tooling",
-    description: "Built-in CLI for development and building",
-  },
-  {
-    title: "Vercel Support",
-    description: "Deploy-ready for Vercel out of the box",
+    title: "Extensible Configuration",
+    description: "Customizable configuration for your MCP server",
   },
   {
     title: "Deploy Anywhere",
     description: "Flexible deployment across any platform",
+  },
+  {
+    title: "Vercel Support",
+    description: "Deploy-ready for Vercel out of the box",
   },
 ];
 
