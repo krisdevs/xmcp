@@ -1,50 +1,68 @@
 ---
-title: "XMCP documentation"
+title: "xmcp - Documentation"
 metadataTitle: "xmcp - Getting Started | Documentation"
-publishedAt: "2025-07-4"
-summary: "Lorem ipsum"
+publishedAt: "2025-07-06"
+summary: "The framework for building & shipping MCP applications."
 ---
 
 # Documentation
 
-XMCP is a lightweight, extensible framework for building and deploying powerful AI MCP tools. To add tools for your AI, you just need to create a new file in the `src/tools` directory, XMCP will automatically load them into the MCP server.
+`xmcp` is a framework for building and shipping MCP applications with TypeScript. Designed with DX in mind, it simplifies setup and removes friction in just one command — making it easy to build & deploy AI tools on top of the Model Context Protocol ecosystem.
 
 ## Getting started
 
 You can create a new MCP server from scratch or add it to an existing project:
 
 - [Create a new MCP server from scratch](#create-a-new-xmcp-app)
-- [Add XMCP to your existing Next.js app](#usage-with-nextjs-experimental)
-- [Add XMCP to your existing Express app](#usage-with-express-experimental)
+- [Add xmcp to your existing Next.js app](#usage-with-nextjs-experimental)
+- [Add xmcp to your existing Express app](#usage-with-express-experimental)
 
 <br />
 
 ---
 
-### Create a new XMCP app
+### Create a new xmcp app
 
-To get started, run the following command on your terminal:
+The easiest way to get started with `xmcp` is by using `create-xmcp-app`. This CLI tool allows you to scaffold a template project with all the necessary files and dependencies to get you up and running quickly.
 
 ```bash
 npx create-xmcp-app@latest
 ```
 
-You will be asked to configure your project:
+You will be asked for the project name and then guided through a series of prompts to configure your project.
 
-- Set a directory name for your project (or the current one)
-- Select a package manager (npm, pnpm, or yarn)
-- Choose transports (HTTP, STDIO, or both)
-- Configure Vercel deployment (optional)
+#### Building with HTTP
 
-#### HTTP transport
+The HTTP transport is your go to choice when you want to deploy your MCP on a server. This can be used to create tools like fetching your database or perform fetch operations.
 
-If you want to deploy your MCP on a server, you can use the HTTP transport. This can be used to create tools like fetching your database or perform fetch operations.
+`xmcp` uses stateless servers. This means that every time you call a tool, a new transport will be instantiated. There is no tracking of sessions or state.
 
-XMCP uses stateless MCP servers, this means that every time you call a tool, a new MCP server is created.
+To configure your server for usage in any MCP client, the configuration should be as follows:
 
-#### STDIO transport
+```json
+{
+  "mcpServers": {
+    "my-project": {
+      "url": "http://localhost:3002/mcp"
+    }
+  }
+}
+```
 
-STDIO transport is useful when you want to use your MCP server locally, useful for enabling your AI to perform operations on your machine. For example, you can create tools like searching and compressing images on a folder.
+The `url` is the endpoint where the MCP server is running. Port defaults to `3002`.
+
+#### Building with STDIO
+
+The STDIO transport is useful when you want to use your MCP server locally, useful for enabling your AI to perform operations on your machine. For example, you can create tools like searching and compressing images on a folder.
+You can also publish the server as a package on NPM.
+
+#### Building with both
+
+You can also build your MCP server with both transports. This is useful when you want to use your MCP server locally and on a server.
+
+```bash
+xmcp build --stdio --http
+```
 
 ## Project structure
 
@@ -55,8 +73,8 @@ my-project/
 ├── src/
 │   ├── middleware.ts   # Middleware for http request/response processing
 │   └── tools/          # Tool files are auto-discovered here
-│       ├── add.ts
-│       ├── multiply.ts
+│       ├── greet.ts
+│       ├── search.ts
 ├── dist/               # Built output (generated)
 ├── package.json
 ├── tsconfig.json
@@ -65,8 +83,7 @@ my-project/
 
 ### Creating tools
 
-Xmcp detects files under `src/tools/` directory and registers them as tools.
-This folder can be configured in the `xmcp.config.ts` file.
+`xmcp` detects files under `tools` directory that you have set on installation and registers them as tools. This path can be configured in the `xmcp.config.ts` file.
 
 The tool file should export three elements:
 
@@ -75,33 +92,34 @@ The tool file should export three elements:
 - **Default**: The tool handler function.
 
 ```typescript
-// src/tools/add.ts
+// src/tools/greet.ts
 
 import { z } from "zod";
 import { type InferSchema } from "xmcp";
 
-// 1. Schema - Define input parameters
+// Define the schema for tool parameters
 export const schema = {
-  a: z.number().describe("First number to add"),
-  b: z.number().describe("Second number to add"),
+  name: z.string().describe("The name of the user to greet"),
 };
 
-// 2. Metadata - Define tool identity and hints
+// Define tool metadata
 export const metadata = {
-  name: "add",
-  description: "Add two numbers together",
+  name: "greet",
+  description: "Greet the user",
   annotations: {
-    title: "Add Two Numbers",
+    title: "Greet the user",
     readOnlyHint: true,
     destructiveHint: false,
     idempotentHint: true,
   },
 };
 
-// 3. Implementation - The actual tool logic
-export default async function add({ a, b }: InferSchema<typeof schema>) {
+// Tool implementation
+export default async function greet({ name }: InferSchema<typeof schema>) {
+  const result = `Hello, ${name}!`;
+
   return {
-    content: [{ type: "text", text: String(a + b) }],
+    content: [{ type: "text", text: result }],
   };
 }
 ```
@@ -141,7 +159,7 @@ npm run dev
 # Build for production
 npm run build
 
-# Start built server (stdio transport)
+# Start built server (STDIO transport)
 node dist/stdio.js
 
 # Start built server (HTTP transport)
@@ -151,6 +169,8 @@ node dist/http.js
 ## Using tools
 
 At this point, you can configure your MCP server on clients like Cursor.
+
+If you're using the HTTP transport, your configuration should look like this:
 
 ```json
 {
@@ -162,30 +182,24 @@ At this point, you can configure your MCP server on clients like Cursor.
 }
 ```
 
-Or manually call a tool:
+If you're using the STDIO transport, your configuration for local development should look like this:
 
-```bash
-curl -X POST http://localhost:3002/mcp \
-  -H "Content-Type: application/json" \
-  -d '{
-    "jsonrpc": "2.0",
-    "id": 1,
-    "method": "tools/call",
-    "params": {
-      "name": "add",
-      "arguments": {
-        "a": 1,
-        "b": 2
-      }
+```json
+{
+  "mcpServers": {
+    "my-project": {
+      "command": "node",
+      "args": ["/ABSOLUTE/PATH/TO/PARENT/FOLDER/my-project/dist/stdio.js"]
     }
-  }'
+  }
+}
 ```
 
 ## Middlewares
 
-When building an `HTTP server`, you can use middlewares to process the request and response.
+When building an `HTTP server`, you can use middlewares to intercept the request and response. This is useful for authentication, rate limiting, and other common tasks.
 
-To get started, create a `src/middleware.ts` file with the following content:
+To get started, create a `middleware.ts` file with the following content:
 
 ```typescript
 // src/middleware.ts
@@ -206,7 +220,7 @@ const middleware: Middleware = async (req, res, next) => {
 export default middleware;
 ```
 
-Middlewares can also be an array of middlewares.
+Middlewares can also be an array of middlewares. Useful for when you need to chain multiple middlewares.
 
 ```typescript
 // src/middleware.ts
@@ -224,7 +238,7 @@ const middleware: Middleware = [
 export default middleware;
 ```
 
-## Autentication
+## Authentication
 
 ### API Key Authentication
 
@@ -246,7 +260,7 @@ const middleware: Middleware = [
 export default middleware;
 ```
 
-This middleware can also be used with a validation function. It should **return a boolean** value indicating if the api key is valid.
+This middleware can also be used with a validation function. It should **return a boolean** value indicating if the API key is valid.
 
 ```typescript
 // src/middleware.ts
@@ -263,18 +277,20 @@ const middleware: Middleware = apiKeyAuthMiddleware({
 export default middleware;
 ```
 
-## XMCP/headers
+## xmcp/headers
 
-If you are building an `HTTP Server`, you can access the request headers using the `xmcp/headers` module.
+If you are building an HTTP server, you can access the request headers using the `xmcp/headers` module.
 
 For example, you can use the `x-api-key` header to fetch data from an external API.
 
 ```typescript
-// src/tools/add.ts
+// src/tools/search.ts
 
 import { headers } from "xmcp/headers";
 
-export default async function add({ a, b }: InferSchema<typeof schema>) {
+// ... schema and metadata
+
+export default async function search({ query }: InferSchema<typeof schema>) {
   const headers = headers();
   const apiKey = headers["x-api-key"];
 
@@ -296,12 +312,14 @@ xmcp build --vercel
 vercel deploy --prod --prebuilt
 ```
 
-## Usage with Next.js (experimental)
+## Usage with Next.js
 
-XMCP can work on top of your existing Next.js project. To get started, run the following command:
+> **Warning**: This is an experimental feature and may not work as expected.
+
+`xmcp` can work on top of your existing Next.js project. To get started, run the following command:
 
 ```bash
-npx init-xmcp-app@latest
+npx init-xmcp@latest
 ```
 
 After setting up the project, your build and dev command should look like this:
@@ -317,24 +335,26 @@ After setting up the project, your build and dev command should look like this:
 
 The CLI will ask where to place the `tools` directory and what is the `url` for the MCP server.
 
-It will create the tools folder and add an endpoint to your Next.Js app.
+It will create the tools folder and add an endpoint to your Next.js app.
 
 ```typescript
-// src/app/api/mcp/route.ts
+// src/app/mcp/route.ts
 
-import { xmcpAdapter } from ".xmcp/adapter";
+import { xmcpHandler } from "@xmcp/adapter";
 
-export { xmcpAdapter as GET, xmcpAdapter as POST };
+export { xmcpHandler as GET, xmcpHandler as POST };
 ```
 
-Note: XMCP's `middleware.ts` and `xmcp/headers` are not supported since Next.js already supports those features.
+Note: `middleware.ts` and `xmcp/headers` are not supported since Next.js already supports those features.
 
-## Usage with Express (experimental)
+## Usage with Express
 
-XMCP can work on top of your existing Express project. To get started, run the following command:
+> **Warning**: This is an experimental feature and may not work as expected.
+
+`xmcp` can work on top of your existing Express project. To get started, run the following command:
 
 ```bash
-npx init-xmcp-app@latest
+npx init-xmcp@latest
 ```
 
 After setting up the project, your build and dev command should look like this:
@@ -348,16 +368,16 @@ After setting up the project, your build and dev command should look like this:
 }
 ```
 
-When running `dev` or `build` command, XMCP will bundle your tools into `.xmcp/adapter`.
+When running `dev` or `build` command, `xmcp` will bundle your tools into `.xmcp/adapter`.
 
 You should add the `/mcp` endpoint in your existing server.
 
 ```typescript
-import { xmcpAdapter } from "path/to/.xmcp/adapter";
+import { xmcpHandler } from "path/to/.xmcp/adapter";
 
-app.get("/mcp", xmcpAdapter);
+app.get("/mcp", xmcpHandler);
 
-app.post("/mcp", xmcpAdapter);
+app.post("/mcp", xmcpHandler);
 ```
 
-Note: XMCP's `src/middleware.ts` is not supported in this mode.
+Note: `middleware.ts` is not supported in this mode.
