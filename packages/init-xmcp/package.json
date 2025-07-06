@@ -1,0 +1,57 @@
+{
+  "name": "init-xmcp",
+  "version": "0.0.1",
+  "author": {
+    "name": "Basement Studio",
+    "email": "hello@basement.studio",
+    "url": "https://basement.studio"
+  },
+  "contributors": [
+    {
+      "name": "Matias Gonzalez Fernandez",
+      "email": "matiasngf@hotmail.com",
+      "url": "https://github.com/matiasngf"
+    },
+    {
+      "name": "Valentina Bearzotti",
+      "email": "valebearzotti1@gmail.com",
+      "url": "https://github.com/valebearzotti"
+    }
+  ],
+  "license": "MIT",
+  "keywords": [
+    "mcp",
+    "modelcontextprotocol",
+    "http",
+    "stdio"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/basementstudio/xmcp"
+  },
+  "homepage": "https://xmcp.dev",
+  "description": "Initialize xmcp apps with one command",
+  "main": "dist/index.js",
+  "bin": {
+    "init-xmcp": "dist/index.js"
+  },
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "commander": "^11.1.0",
+    "fs-extra": "^11.2.0",
+    "inquirer": "^9.2.12",
+    "ora": "^7.0.1"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
+    "@types/inquirer": "^9.0.7",
+    "@types/node": "^20.17.47",
+    "typescript": "^5.3.3"
+  }
+}

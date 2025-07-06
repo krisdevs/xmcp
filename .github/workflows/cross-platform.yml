@@ -32,7 +32,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build main packages only
-        run: pnpm turbo build --filter=xmcp --filter=create-xmcp-app
+        run: pnpm turbo build --filter=xmcp --filter=create-xmcp-app --filter=init-xmcp
 
       - name: Test CLI functionality (Unix)
         if: matrix.os != 'windows-latest'
@@ -77,4 +77,27 @@ jobs:
             exit 1
           }
           Write-Host "✅ create-xmcp-app CLI works on Windows"
+        shell: powershell
+
+      - name: Test init-xmcp (Unix)
+        if: matrix.os != 'windows-latest'
+        run: |
+          # Test that init-xmcp can be invoked
+          cd packages/init-xmcp
+          if ! node dist/index.js --help; then
+            echo "❌ init-xmcp CLI failed on ${{ matrix.os }}"
+            exit 1
+          fi
+          echo "✅ init-xmcp CLI works on ${{ matrix.os }}"
+
+      - name: Test init-xmcp (Windows)
+        if: matrix.os == 'windows-latest'
+        run: |
+          cd packages/init-xmcp
+          node dist/index.js --help
+          if ($LASTEXITCODE -ne 0) {
+            Write-Host "❌ init-xmcp CLI failed on Windows"
+            exit 1
+          }
+          Write-Host "✅ init-xmcp CLI works on Windows"
         shell: powershell

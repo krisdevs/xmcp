@@ -72,5 +72,8 @@ export function getInjectedVariables(xmcpConfig: XmcpParsedConfig) {
       xmcpConfig.experimental?.oauth || null
     );
   }
+
+  definedVariables.TOOLS_PATH = JSON.stringify(xmcpConfig.paths?.tools);
+
   return definedVariables;
 }
