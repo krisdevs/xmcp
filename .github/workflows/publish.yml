@@ -35,7 +35,7 @@ jobs:
         run: pnpm install --no-frozen-lockfile
 
       - name: Build packages
-        run: pnpm turbo build --filter=xmcp --filter=create-xmcp-app
+        run: pnpm turbo build --filter=xmcp --filter=create-xmcp-app --filter=init-xmcp
 
       - name: Verify build outputs
         run: |
@@ -54,6 +54,14 @@ jobs:
             exit 1
           fi
           echo "✅ create-xmcp-app CLI build verified"
+
+          # Verify init-xmcp CLI build
+          cd ../init-xmcp
+          if [ ! -f "dist/index.js" ]; then
+            echo "❌ init-xmcp CLI build verification failed"
+            exit 1
+          fi
+          echo "✅ init-xmcp CLI build verified"
 
       - name: Extract version from release tag
         id: version
@@ -96,6 +104,11 @@ jobs:
           npm version "$VERSION" --no-git-tag-version
           echo "✅ Updated create-xmcp-app version to $VERSION"
 
+          # Update init-xmcp package version
+          cd ../init-xmcp
+          npm version "$VERSION" --no-git-tag-version
+          echo "✅ Updated init-xmcp version to $VERSION"
+
       - name: Publish xmcp package
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -114,6 +127,15 @@ jobs:
           npm publish --access public --tag ${{ steps.npm_tag.outputs.tag }}
           echo "✅ Successfully published create-xmcp-app@${{ steps.version.outputs.version }} with tag ${{ steps.npm_tag.outputs.tag }}"
 
+      - name: Publish init-xmcp package
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          cd packages/init-xmcp
+          echo "Publishing init-xmcp package with tag: ${{ steps.npm_tag.outputs.tag }}"
+          npm publish --access public --tag ${{ steps.npm_tag.outputs.tag }}
+          echo "✅ Successfully published init-xmcp@${{ steps.version.outputs.version }} with tag ${{ steps.npm_tag.outputs.tag }}"
+
       - name: Create publish summary
         run: |
           cat >> $GITHUB_STEP_SUMMARY << EOF
@@ -123,6 +145,7 @@ jobs:
 
           - **xmcp@${{ steps.version.outputs.version }}** - [View on NPM](https://www.npmjs.com/package/xmcp)
           - **create-xmcp-app@${{ steps.version.outputs.version }}** - [View on NPM](https://www.npmjs.com/package/create-xmcp-app)
+          - **init-xmcp@${{ steps.version.outputs.version }}** - [View on NPM](https://www.npmjs.com/package/init-xmcp)
 
           ${{ github.event.release.prerelease && '⚠️ This is a pre-release. Install with `npm install xmcp@' || '✅ This is a stable release. Install with `npm install xmcp` or `npm install xmcp@' }}${{ steps.npm_tag.outputs.tag }}${{ github.event.release.prerelease && '`' || '`' }}
           EOF

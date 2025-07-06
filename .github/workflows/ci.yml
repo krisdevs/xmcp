@@ -36,10 +36,10 @@ jobs:
         run: pnpm install --no-frozen-lockfile
 
       - name: Build main packages only
-        run: pnpm turbo build --filter=xmcp --filter=create-xmcp-app
+        run: pnpm turbo build --filter=xmcp --filter=create-xmcp-app --filter=init-xmcp
 
       - name: Lint packages (if available)
-        run: pnpm turbo lint --filter=xmcp --filter=create-xmcp-app || echo "No lint script available, skipping..."
+        run: pnpm turbo lint --filter=xmcp --filter=create-xmcp-app --filter=init-xmcp || echo "No lint script available, skipping..."
 
       - name: Verify xmcp package build
         run: |
@@ -68,6 +68,16 @@ jobs:
             exit 1
           fi
           echo "✅ create-xmcp-app CLI build successful"
+
+      - name: Verify init-xmcp CLI build
+        run: |
+          cd packages/init-xmcp
+          # Check that build outputs were created
+          if [ ! -f "dist/index.js" ]; then
+            echo "❌ init-xmcp CLI build failed - dist/index.js not found"
+            exit 1
+          fi
+          echo "✅ init-xmcp CLI build successful"
 
       - name: Test xmcp CLI availability
         if: env.SKIP_CLI_TESTS != 'true'
@@ -112,6 +122,38 @@ jobs:
 
           echo "✅ create-xmcp-app successfully created test project"
 
+      - name: Test init-xmcp CLI functionality
+        if: env.SKIP_CLI_TESTS != 'true'
+        run: |
+          # Create a temporary directory for testing
+          TEST_DIR=$(mktemp -d)
+          cd "$TEST_DIR"
+
+          # Test init-xmcp CLI
+          echo "Testing init-xmcp CLI..."
+
+          # Install init-xmcp globally for testing
+          cd "$GITHUB_WORKSPACE"
+          pnpm --filter=init-xmcp pack
+          cd packages/init-xmcp
+          PACK_FILE=$(ls init-xmcp-*.tgz)
+          npm install -g "$PACK_FILE"
+
+          # Create a test project using non-interactive flags
+          cd "$TEST_DIR"
+          echo "Creating test project with init-xmcp..."
+          init-xmcp test-init-project --yes --nextjs || {
+            echo "❌ init-xmcp failed to create project"
+            exit 1
+          }
+
+          if [ ! -d "test-init-project" ]; then
+            echo "❌ Test project directory was not created"
+            exit 1
+          fi
+
+          echo "✅ init-xmcp successfully created test project"
+
       - name: Test example projects build
         if: env.SKIP_CLI_TESTS != 'true'
         run: |
@@ -142,7 +184,7 @@ jobs:
         if: always() && env.SKIP_CLI_TESTS != 'true'
         run: |
           # Clean up any global packages installed during testing
-          npm uninstall -g create-xmcp-app xmcp || true
+          npm uninstall -g create-xmcp-app xmcp init-xmcp || true
 
       - name: CLI tests skipped notice
         if: env.SKIP_CLI_TESTS == 'true'
@@ -176,7 +218,7 @@ jobs:
           echo "Checking main package.json files..."
 
           # Check only main packages (skip eslint-config-custom)
-          for pkg in packages/xmcp/package.json packages/create-xmcp-app/package.json; do
+          for pkg in packages/xmcp/package.json packages/create-xmcp-app/package.json packages/init-xmcp/package.json; do
             echo "Checking $pkg..."
             
             if ! jq -e '.name' "$pkg" > /dev/null; then

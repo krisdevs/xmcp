@@ -39,10 +39,10 @@ jobs:
         run: pnpm install --no-frozen-lockfile
 
       - name: Build main packages only
-        run: pnpm turbo build --filter=xmcp --filter=create-xmcp-app
+        run: pnpm turbo build --filter=xmcp --filter=create-xmcp-app --filter=init-xmcp
 
       - name: Lint packages (if available)
-        run: pnpm turbo lint --filter=xmcp --filter=create-xmcp-app || echo "No lint script available, skipping..."
+        run: pnpm turbo lint --filter=xmcp --filter=create-xmcp-app --filter=init-xmcp || echo "No lint script available, skipping..."
 
       - name: Test package builds
         run: pnpm run test:build
