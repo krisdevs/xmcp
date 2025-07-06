@@ -28,7 +28,7 @@ const features = [
 export function FeaturesSection() {
   return (
     <div className="space-y-6">
-      <h2 className="max-w-[30rem] mx-auto text-2xl">Features</h2>
+      <h2 className="w-full mx-auto text-xl uppercase">Features</h2>
       <ul className="text-left space-y-4 text-pretty">
         {features.map((feature) => (
           <Feature
@@ -52,7 +52,7 @@ function Feature({
   return (
     <li className="relative">
       <span className="text-white items-center gap-2">
-        <span className="absolute -left-4">⊹ </span>
+        <span className="absolute -left-4 font-bold">⊹ </span>
         <i>{title}</i>
       </span>{" "}
       - {description}

@@ -4,22 +4,22 @@ import Link from "next/link";
 const cards = [
   {
     title: "Create an xmcp app",
-    description: "Bootstrap your xmcp app with one command.",
+    description: "Learn how to create an xmcp app with our documentation",
     href: "/docs#create-a-new-xmcp-app",
   },
   {
-    title: "Examples",
-    description: "Browse our examples.",
+    title: "Browse examples",
+    description: "Learn more about xmcp by browsing our examples",
     href: "https://github.com/basementstudio/xmcp/tree/main/examples",
   },
   {
     title: "Next.js",
-    description: "Plug an MCP server into your existing Next.js app.",
+    description: "Plug an xmcp app to an existing Next.js project",
     href: "/docs#usage-with-nextjs",
   },
   {
     title: "Express",
-    description: "Add an MCP server to any existing Express app.",
+    description: "Plug an xmcp app to an existing Express project",
     href: "/docs#usage-with-express",
   },
 ];
@@ -27,7 +27,7 @@ const cards = [
 export function GetStartedSection() {
   return (
     <div className="space-y-6">
-      <h2 className="max-w-[30rem] mx-auto text-2xl">Get started</h2>
+      <h2 className="w-full mx-auto text-xl uppercase">Get started</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {cards.map((card, index) => (
           <GetStartedCard key={index} {...card} />
