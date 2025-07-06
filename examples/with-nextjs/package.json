@@ -1,7 +1,6 @@
 {
   "name": "with-nextjs",
-  "version": "0.1.0",
-  "private": true,
+  "description": "Add xmcp to a nextjs app",
   "scripts": {
     "dev": "xmcp dev & next dev --turbopack",
     "build": "xmcp build && next build",

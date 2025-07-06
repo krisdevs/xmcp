@@ -1,5 +1,5 @@
 {
-  "name": "middleware-custom",
+  "name": "middlewares-custom",
   "description": "An MCP server with custom middleware",
   "scripts": {
     "build": "xmcp build",

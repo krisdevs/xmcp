@@ -1,5 +1,5 @@
 {
-  "name": "auth-api-key",
+  "name": "middlewares-api-key",
   "description": "An MCP server with API key authentication",
   "scripts": {
     "build": "xmcp build",

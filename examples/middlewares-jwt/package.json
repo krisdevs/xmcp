@@ -1,5 +1,5 @@
 {
-  "name": "auth-jwt",
+  "name": "middlewares-jwt",
   "description": "An MCP server with JWT authentication",
   "scripts": {
     "build": "xmcp build",

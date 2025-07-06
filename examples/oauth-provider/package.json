@@ -1,6 +1,6 @@
 {
-  "name": "http-transport",
-  "description": "A simple mcp server with http transport",
+  "name": "oauth-provider",
+  "description": "An MCP server with OAuth provider",
   "scripts": {
     "build": "xmcp build",
     "dev": "xmcp dev",

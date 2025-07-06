@@ -1,7 +1,7 @@
 {
-  "name": "express-example",
+  "name": "with-express",
   "version": "1.0.0",
-  "description": "Simple Express app with TypeScript",
+  "description": "Add xmcp to an express app",
   "main": "dist/index.js",
   "scripts": {
     "dev": "xmcp dev & tsx watch src/index.ts",

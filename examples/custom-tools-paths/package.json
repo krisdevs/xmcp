@@ -1,6 +1,6 @@
 {
-  "name": "http-transport",
-  "description": "A simple mcp server with http transport",
+  "name": "custom-tools-paths",
+  "description": "A simple mcp server with custom tools paths",
   "scripts": {
     "build": "xmcp build",
     "dev": "xmcp dev",
