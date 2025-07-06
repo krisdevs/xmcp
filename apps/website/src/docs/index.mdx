@@ -36,34 +36,12 @@ You will be asked for the project name and then guided through a series of promp
 
 The HTTP transport is your go to choice when you want to deploy your MCP on a server. This can be used to create tools like fetching your database or perform fetch operations.
 
-`xmcp` uses stateless servers. This means that every time you call a tool, a new transport will be instantiated. There is no tracking of sessions or state.
-
-To configure your server for usage in any MCP client, the configuration should be as follows:
-
-```json
-{
-  "mcpServers": {
-    "my-project": {
-      "url": "http://localhost:3002/mcp"
-    }
-  }
-}
-```
-
-The `url` is the endpoint where the MCP server is running. Port defaults to `3002`.
+`xmcp` uses stateless mode. This means that every time you call a tool, a new transport will be instantiated. There is no tracking of sessions or state.
 
 #### Building with STDIO
 
 The STDIO transport is useful when you want to use your MCP server locally, useful for enabling your AI to perform operations on your machine. For example, you can create tools like searching and compressing images on a folder.
 You can also publish the server as a package on NPM.
-
-#### Building with both
-
-You can also build your MCP server with both transports. This is useful when you want to use your MCP server locally and on a server.
-
-```bash
-xmcp build --stdio --http
-```
 
 ## Project structure
 
@@ -84,7 +62,7 @@ my-project/
 
 ### Creating tools
 
-`xmcp` detects files under `tools` directory that you have set on installation and registers them as tools. This path can be configured in the `xmcp.config.ts` file.
+`xmcp` detects files under the `/src/tools/` directory and registers them as tools. This path can be configured in the `xmcp.config.ts` file.
 
 The tool file should export three elements:
 
@@ -169,7 +147,7 @@ node dist/http.js
 
 ## Using tools
 
-At this point, you can configure your MCP server on clients like Cursor.
+At this point, you can configure your MCP server on clients like `Cursor`.
 
 If you're using the HTTP transport, your configuration should look like this:
 
@@ -190,7 +168,7 @@ If you're using the STDIO transport, your configuration for local development sh
   "mcpServers": {
     "my-project": {
       "command": "node",
-      "args": ["/ABSOLUTE/PATH/TO/PARENT/FOLDER/my-project/dist/stdio.js"]
+      "args": ["/ABSOLUTE/PATH/TO/my-project/dist/stdio.js"]
     }
   }
 }
