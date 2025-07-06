@@ -22,7 +22,7 @@ export default async function Page({
 
   return (
     <div className="flex gap-8 w-full flex-col">
-      <div className="flex-1 pt-[4rem] px-4 lg:px-0 box-content">
+      <div className="flex-1 pt-10 px-4 lg:px-0 box-content">
         <article className="prose">
           <CustomMDX source={article.content} />
         </article>
