@@ -4,7 +4,10 @@ import { Command } from "commander";
 import chalk from "chalk";
 import inquirer from "inquirer";
 import { init } from "./helpers/init.js";
-import { detectFramework } from "./helpers/detect-framework.js";
+import {
+  detectFramework,
+  detectTypeScript,
+} from "./helpers/detect-framework.js";
 import { detectPackageManager } from "./helpers/install.js";
 import fs from "fs-extra";
 import path from "path";
@@ -62,9 +65,14 @@ const program = new Command()
       process.exit(1);
     }
 
-    // detect framework and package manager
+    // detect framework package manager and language
     const detectedFramework = detectFramework(projectRoot);
     const detectedPackageManager = detectPackageManager(projectRoot);
+    const detectedTypeScript = detectTypeScript(projectRoot);
+
+    if (!detectedTypeScript) {
+      process.exit(1);
+    }
 
     // determine tools path
     let toolsPath: string;
@@ -136,7 +144,7 @@ const program = new Command()
       }
     }
 
-    // Check if tools directory already exists and has content
+    // check if tools directory already exists and has content
     const toolsDirPath = path.join(projectRoot, toolsPath);
     if (fs.existsSync(toolsDirPath)) {
       const toolsDirContent = fs.readdirSync(toolsDirPath);
@@ -169,7 +177,6 @@ const program = new Command()
     try {
       console.log(chalk.blue("\n Initializing xmcp..."));
 
-      // Call the init function with our determined settings
       await init({
         projectRoot,
         framework: detectedFramework,
@@ -182,7 +189,8 @@ const program = new Command()
       console.log(`   • xmcp.config.ts`);
       console.log(`   • ${toolsPath}/greet.ts`);
       console.log(chalk.blue("\n📁 Files updated:"));
-      console.log(`   • package.json scripts`);
+      console.log(`   • package.json`);
+      console.log(`   • tsconfig.json`);
 
       console.log(chalk.blue("\nNext steps:"));
       console.log(

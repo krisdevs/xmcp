@@ -3,6 +3,8 @@ import fs from "fs-extra";
 
 /**
  * update package.json scripts to include xmcp build and dev commands
+ * @param projectPath - The root directory of the project
+ * @returns void
  */
 export function updatePackageJson(projectPath: string): void {
   const packageJsonPath = path.join(projectPath, "package.json");

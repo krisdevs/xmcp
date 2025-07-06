@@ -1,6 +1,7 @@
 import { generateConfig } from "./generate-config.js";
-import { updatePackageJson } from "./update-package.js";
 import { install } from "./install.js";
+import { updatePackageJson } from "./update-package.js";
+import { updateTsConfig } from "./update-tsconfig.js";
 import { createTool } from "./create-tool.js";
 import { Framework } from "./detect-framework.js";
 
@@ -19,6 +20,8 @@ export async function init(options: InitOptions) {
   await install(projectRoot, packageManager);
 
   updatePackageJson(projectRoot);
+
+  updateTsConfig(projectRoot);
 
   createTool(projectRoot, toolsPath);
 }

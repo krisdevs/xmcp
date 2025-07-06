@@ -33,7 +33,7 @@ export async function install(
   projectPath: string,
   packageManager: "npm" | "pnpm" | "yarn"
 ) {
-  const dependencies = ["xmcp"];
+  const dependencies = ["xmcp", "zod"];
   const devDependencies = ["swc-loader"];
 
   const commands = {
