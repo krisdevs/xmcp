@@ -1,4 +1,5 @@
 import { rootFolder } from "@/utils/constants";
+import chalk from "chalk";
 import fs from "fs";
 import path from "path";
 
@@ -27,7 +28,7 @@ export function isValidPath(
     const normalized = normalizePath(p);
     const absPath = path.resolve(rootFolder, normalized);
     if (!fs.existsSync(absPath)) {
-      throw new Error(
+      exitError(
         `The path set in xmcp config for ${type} does not exist: ${absPath}`
       );
     }
@@ -41,17 +42,24 @@ export function isValidPath(
 
   // reject empty string
   if (pathStr === "") {
-    throw new Error(`${type} path cannot be an empty string`);
+    exitError(`${type} path cannot be an empty string`);
   }
 
   if (isNonEmptyString(pathStr)) {
     if (isGlob(pathStr)) {
-      throw new Error(
+      exitError(
         `If you are using a glob pattern, please use a string for the ${type} path`
       );
     }
     return resolveAndCheckExists(pathStr);
   }
 
-  throw new Error(`${type} path must be a non-empty string`);
+  exitError(`${type} path must be a non-empty string`);
+}
+
+function exitError(message: string) {
+  console.log("");
+  console.log(chalk.red.bold(message));
+  console.log("");
+  process.exit(1);
 }

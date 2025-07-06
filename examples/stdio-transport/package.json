@@ -1,0 +1,20 @@
+{
+  "name": "stdio-transport",
+  "description": "A simple xmcp server with stdio transport",
+  "main": "./dist/stdio.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "xmcp build",
+    "dev": "xmcp dev",
+    "start": "node dist/stdio.js"
+  },
+  "dependencies": {
+    "xmcp": "workspace:*",
+    "zod": "3.24.4"
+  },
+  "devDependencies": {
+    "swc-loader": "^0.2.6"
+  }
+}
