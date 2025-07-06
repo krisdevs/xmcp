@@ -1,4 +1,4 @@
-# XMCP Application
+# xmcp Application
 
 This project was created with [create-xmcp-app](https://github.com/basementstudio/xmcp).
 
@@ -14,7 +14,7 @@ yarn dev
 pnpm dev
 ```
 
-This will start the MCP server with both HTTP and STDIO transport methods.
+This will start the MCP server with the selected transport method.
 
 ## Project Structure
 
@@ -73,17 +73,35 @@ pnpm build
 
 This will compile your TypeScript code and output it to the `dist` directory.
 
-## Running in Production
+## Running the Server
 
-To run your bundled MCP server in production:
+You can run the server for the transport built with:
+
+- HTTP: `node dist/http.js`
+- STDIO: `node dist/stdio.js`
+
+Given the selected transport method, you will have a custom start script added to the `package.json` file.
+
+For HTTP:
 
 ```bash
 npm run start-http
 # or
+yarn start-http
+# or
+pnpm start-http
+```
+
+For STDIO:
+
+```bash
 npm run start-stdio
+# or
+yarn start-stdio
+# or
+pnpm start-stdio
 ```
 
 ## Learn More
 
-- [XMCP Documentation](https://github.com/basementstudio/xmcp)
-- [Tool Structure Documentation](src/tools/tools.md)
+- [xmcp Documentation](https://xmcp.dev/docs)

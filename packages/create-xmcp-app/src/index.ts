@@ -22,7 +22,7 @@ const packageJson = JSON.parse(
 
 const program = new Command()
   .name("create-xmcp-app")
-  .description("Create a new XMCP application")
+  .description("Create a new xmcp application")
   .version(
     packageJson.version,
     "-v, --version",
@@ -36,8 +36,9 @@ const program = new Command()
   .option("--use-yarn", "Use yarn as package manager")
   .option("--use-pnpm", "Use pnpm as package manager")
   .option("--skip-install", "Skip installing dependencies", false)
-  .option("--local", "Use local xmcp package (for development)", false)
-  .option("--vercel", "Add Vercel postbuild script for deployment", false)
+  .option("--vercel", "Add Vercel support for deployment", false)
+  .option("--http", "Enable HTTP transport", false)
+  .option("--stdio", "Enable STDIO transport", false)
   .action(async (projectDir, options) => {
     console.log(chalk.bold(`\ncreate-xmcp-app@${packageJson.version}`));
 
@@ -83,6 +84,13 @@ const program = new Command()
     let skipInstall = options.skipInstall;
     let transports = ["http"];
 
+    // Handle transport selection from CLI options
+    if (options.http || options.stdio) {
+      transports = [];
+      if (options.http) transports.push("http");
+      if (options.stdio) transports.push("stdio");
+    }
+
     if (!options.yes) {
       if (options.useYarn) packageManager = "yarn";
       if (options.usePnpm) packageManager = "pnpm";
@@ -104,33 +112,35 @@ const program = new Command()
         packageManager = pmAnswers.packageManager;
       }
 
-      // Transport selection
-      const transportAnswers = await inquirer.prompt([
-        {
-          type: "checkbox",
-          name: "transports",
-          message: "Select the transports you want to use:",
-          choices: [
-            {
-              name: "HTTP (runs on a server)",
-              value: "http",
-              checked: true,
+      // Transport selection (skip if already specified via CLI options)
+      if (!options.http && !options.stdio) {
+        const transportAnswers = await inquirer.prompt([
+          {
+            type: "checkbox",
+            name: "transports",
+            message: "Select the transports you want to use:",
+            choices: [
+              {
+                name: "HTTP (runs on a server)",
+                value: "http",
+                checked: true,
+              },
+              {
+                name: "STDIO (runs on the user's machine)",
+                value: "stdio",
+                checked: false,
+              },
+            ],
+            validate: (input) => {
+              if (input.length === 0) {
+                return "You must select at least one transport.";
+              }
+              return true;
             },
-            {
-              name: "STDIO (runs on the user's machine)",
-              value: "stdio",
-              checked: false,
-            },
-          ],
-          validate: (input) => {
-            if (input.length === 0) {
-              return "You must select at least one transport.";
-            }
-            return true;
           },
-        },
-      ]);
-      transports = transportAnswers.transports;
+        ]);
+        transports = transportAnswers.transports;
+      }
 
       if (!options.vercel && transports.includes("http")) {
         const vercelAnswers = await inquirer.prompt([
@@ -146,19 +156,8 @@ const program = new Command()
 
       console.log();
       console.log(
-        `Creating a new XMCP app in ${chalk.green(resolvedProjectPath)}.`
+        `Creating a new xmcp app in ${chalk.green(resolvedProjectPath)}.\n`
       );
-      console.log();
-      console.log("Options:");
-      console.log(`  - ${chalk.cyan("Package Manager")}: ${packageManager}`);
-      console.log(`  - ${chalk.cyan("Transports")}: ${transports.join(", ")}`);
-      if (useLocalXmcp) {
-        console.log(`  - ${chalk.cyan("Use Local XMCP")}: Yes`);
-      }
-      console.log(
-        `  - ${chalk.cyan("Vercel deploy")}: ${deployToVercel ? "Yes" : "No"}`
-      );
-      console.log();
 
       const { confirmed } = await inquirer.prompt([
         {
@@ -177,19 +176,9 @@ const program = new Command()
       // Use command-line options when --yes is provided
       if (options.useYarn) packageManager = "yarn";
       if (options.usePnpm) packageManager = "pnpm";
-
-      createProject({
-        projectPath: resolvedProjectPath,
-        projectName,
-        packageManager,
-        transports: transports,
-        useLocalXmcp,
-        deployToVercel,
-        skipInstall,
-      });
     }
 
-    const spinner = ora("Creating your XMCP app...").start();
+    const spinner = ora("Creating your xmcp app...").start();
     try {
       createProject({
         projectPath: resolvedProjectPath,
@@ -201,7 +190,7 @@ const program = new Command()
         skipInstall,
       });
 
-      spinner.succeed(chalk.green("Your XMCP app is ready"));
+      spinner.succeed(chalk.green("Your xmcp app is ready"));
 
       console.log();
       console.log("Next steps:");
@@ -222,13 +211,8 @@ const program = new Command()
       }
 
       console.log();
-      console.log("To learn more about XMCP:");
-      console.log(
-        "  - Read the documentation at https://github.com/basementstudio/xmcp"
-      );
-      console.log();
-      console.log(`From the ${chalk.bgBlack.white("basement.")}`);
-      console.log();
+      console.log("To learn more about xmcp:");
+      console.log(`  - Read the documentation at https://xmcp.dev/docs\n`);
     } catch (error) {
       spinner.fail(chalk.red("Failed to create the project."));
       console.error(error);

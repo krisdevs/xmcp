@@ -20,7 +20,7 @@ Initialize `xmcp` applications with one command on top of Next.js and Express pr
 ## Usage
 
 ```bash
-npx init-xmcp
+npx init-xmcp@latest
 ```
 
 ## Options
