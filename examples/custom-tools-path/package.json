@@ -1,6 +1,6 @@
 {
-  "name": "custom-tools-paths",
-  "description": "A simple mcp server with custom tools paths",
+  "name": "custom-tools-path",
+  "description": "A simple mcp server with custom tools path",
   "scripts": {
     "build": "xmcp build",
     "dev": "xmcp dev",
