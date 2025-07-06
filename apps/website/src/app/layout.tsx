@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     description: "The framework for building & shipping MCP applications.",
   },
   twitter: {
-    card: "summary_large_image",
+    card: "summary",
     title: "xmcp — The TypeScript MCP framework",
     description: "The framework for building & shipping MCP applications.",
     images: "/og-image.png",
