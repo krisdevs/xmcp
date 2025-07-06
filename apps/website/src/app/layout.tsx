@@ -48,7 +48,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistMono.variable} antialiased min-h-[100dvh] flex flex-col max-w-[1200px] font-mono mx-auto`}
+        className={`${geistMono.variable} antialiased min-h-[100dvh] flex flex-col max-w-[1400px] font-mono mx-auto`}
       >
         <div className="grow relative">
           <Header />

@@ -9,7 +9,7 @@ export default function DocsLayout({
     <>
       <Sidebar />
       <div className="flex-1 flex justify-center">
-        <div className="w-full max-w-[600px]">{children}</div>
+        <div className="w-full max-w-[700px]">{children}</div>
       </div>
     </>
   );
