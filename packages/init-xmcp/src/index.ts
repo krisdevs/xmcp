@@ -39,6 +39,7 @@ const program = new Command()
     ""
   )
   .option("--tools-path <path>", "Specify custom tools path", "")
+  .option("--route-path <path>", "Specify custom route path", "")
   .action(async (options) => {
     console.log(chalk.bold(`\ninit-xmcp@${packageJson.version}`));
 
@@ -84,6 +85,18 @@ const program = new Command()
       toolsPath = hasSrcFolder ? "src/tools" : "tools";
     }
 
+    // determine route path
+    let routePath: string | undefined;
+    if (detectedFramework === "nextjs") {
+      if (options.routePath) {
+        routePath = options.routePath;
+      } else {
+        // check if src folder exists and default to src/mcp if it does, otherwise mcp
+        const hasSrcFolder = fs.existsSync(path.join(projectRoot, "src"));
+        routePath = hasSrcFolder ? "src/app/mcp" : "app/mcp";
+      }
+    }
+
     // determine package manager
     let packageManager: "npm" | "yarn" | "pnpm";
     if (detectedPackageManager) {
@@ -107,6 +120,14 @@ const program = new Command()
         message: "Tools directory path:",
         default: toolsPath,
       });
+      if (detectedFramework === "nextjs") {
+        prompts.push({
+          type: "input",
+          name: "routePath",
+          message: "Route directory path:",
+          default: routePath, // will not be undefined if detectedFramework is nextjs
+        });
+      }
       if (!detectedPackageManager) {
         prompts.push({
           type: "list",
@@ -139,6 +160,9 @@ const program = new Command()
       }
 
       toolsPath = answers.toolsPath;
+      if (detectedFramework === "nextjs" && answers.routePath) {
+        routePath = answers.routePath;
+      }
       if (!detectedPackageManager) {
         packageManager = answers.packageManager;
       }
@@ -174,6 +198,39 @@ const program = new Command()
       }
     }
 
+    // check if route directory already exists and has content
+    if (routePath) {
+      // means detectedFramework is nextjs
+      const routeDirPath = path.join(projectRoot, routePath);
+      if (fs.existsSync(routeDirPath)) {
+        const routeDirContent = fs.readdirSync(routeDirPath);
+        if (routeDirContent.length > 0) {
+          console.warn(
+            chalk.yellow(
+              `Warning: Route directory "${routePath}" already exists and is not empty.`
+            )
+          );
+
+          if (!options.yes) {
+            const { overwrite } = await inquirer.prompt([
+              {
+                type: "confirm",
+                name: "overwrite",
+                message:
+                  "Do you want to continue? Existing files will be preserved.",
+                default: true,
+              },
+            ]);
+
+            if (!overwrite) {
+              console.log(chalk.yellow("❌ Aborting initialization."));
+              process.exit(0);
+            }
+          }
+        }
+      }
+    }
+
     try {
       console.log(chalk.blue("\n Initializing xmcp..."));
 
@@ -181,6 +238,7 @@ const program = new Command()
         projectRoot,
         framework: detectedFramework,
         toolsPath,
+        routePath,
         packageManager,
       });
 

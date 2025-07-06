@@ -5,16 +5,20 @@ import { updateTsConfig } from "./update-tsconfig.js";
 import { updateGitignore } from "./update-gitignore.js";
 import { createTool } from "./create-tool.js";
 import { Framework } from "./detect-framework.js";
+import { createRoute } from "./create-handler.js";
+import chalk from "chalk";
 
 interface InitOptions {
   projectRoot: string;
   framework: Framework;
   toolsPath: string;
+  routePath: string | undefined;
   packageManager: "npm" | "yarn" | "pnpm";
 }
 
 export async function init(options: InitOptions) {
-  const { projectRoot, framework, toolsPath, packageManager } = options;
+  const { projectRoot, framework, toolsPath, routePath, packageManager } =
+    options;
 
   generateConfig(projectRoot, framework, toolsPath);
 
@@ -27,4 +31,8 @@ export async function init(options: InitOptions) {
   updateGitignore(projectRoot);
 
   createTool(projectRoot, toolsPath);
+
+  if (framework === "nextjs" && routePath) {
+    createRoute(projectRoot, routePath);
+  }
 }

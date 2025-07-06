@@ -8,15 +8,18 @@ import chalk from "chalk";
  * @param toolsPath - Path for tools directory (relative to project root)
  */
 export function createTool(projectRoot: string, toolsPath: string): void {
-  const toolsDirPath = path.join(projectRoot, toolsPath);
+  // normalize the path to handle any path separators correctly
+  const normalizedToolsPath = path.normalize(toolsPath);
+  const toolsDirPath = path.join(projectRoot, normalizedToolsPath);
 
   try {
-    // create tools directory
+    // create tools directory and all parent directories
     fs.ensureDirSync(toolsDirPath);
 
-    fs.writeFileSync(path.join(toolsDirPath, "greet.ts"), toolTemplate);
+    const toolFilePath = path.join(toolsDirPath, "greet.ts");
+    fs.writeFileSync(toolFilePath, toolTemplate);
 
-    console.log(chalk.green(`Created tool: ${toolsPath}/greet.ts`));
+    console.log(chalk.green(`Created tool: ${normalizedToolsPath}/greet.ts`));
   } catch (error) {
     console.error(chalk.red(`Failed to create tool: ${error}`));
     throw error;
