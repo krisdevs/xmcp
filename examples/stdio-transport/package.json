@@ -1,10 +1,14 @@
 {
   "name": "stdio-transport",
   "description": "A simple mcp server with stdio transport",
+  "main": "./dist/stdio.js",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "xmcp build",
     "dev": "xmcp dev",
-    "start": "node dist/http.js"
+    "start": "node dist/stdio.js"
   },
   "dependencies": {
     "xmcp": "workspace:*",
