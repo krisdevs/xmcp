@@ -13,7 +13,7 @@
     "ts-loader": "^9.4.2",
     "typescript": "^5.0.4",
     "xmcp": "workspace:*",
-    "zod": "^3.24.4"
+    "zod": "3.24.4"
   },
   "devDependencies": {
     "@types/jsonwebtoken": "^9.0.10",
