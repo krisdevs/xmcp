@@ -40,6 +40,8 @@ const program = new Command()
   )
   .option("--tools-path <path>", "Specify custom tools path", "")
   .option("--route-path <path>", "Specify custom route path", "")
+  .option("--skip-tools", "Skip tool creation", false)
+  .option("--skip-route", "Skip route creation", false)
   .action(async (options) => {
     console.log(chalk.bold(`\ninit-xmcp@${packageJson.version}`));
 
@@ -76,18 +78,20 @@ const program = new Command()
     }
 
     // determine tools path
-    let toolsPath: string;
-    if (options.toolsPath) {
-      toolsPath = options.toolsPath;
-    } else {
-      // check if src folder exists and default to src/tools if it does, otherwise tools
-      const hasSrcFolder = fs.existsSync(path.join(projectRoot, "src"));
-      toolsPath = hasSrcFolder ? "src/tools" : "tools";
+    let toolsPath: string | undefined;
+    if (!options.skipTools) {
+      if (options.toolsPath) {
+        toolsPath = options.toolsPath;
+      } else {
+        // check if src folder exists and default to src/tools if it does, otherwise tools
+        const hasSrcFolder = fs.existsSync(path.join(projectRoot, "src"));
+        toolsPath = hasSrcFolder ? "src/tools" : "tools";
+      }
     }
 
     // determine route path
     let routePath: string | undefined;
-    if (detectedFramework === "nextjs") {
+    if (detectedFramework === "nextjs" && !options.skipRoute) {
       if (options.routePath) {
         routePath = options.routePath;
       } else {
@@ -114,13 +118,17 @@ const program = new Command()
       console.log(`   Framework: ${chalk.cyan(detectedFramework)}`);
 
       const prompts = [];
-      prompts.push({
-        type: "input",
-        name: "toolsPath",
-        message: "Tools directory path:",
-        default: toolsPath,
-      });
-      if (detectedFramework === "nextjs") {
+
+      if (!options.skipTools) {
+        prompts.push({
+          type: "input",
+          name: "toolsPath",
+          message: "Tools directory path:",
+          default: toolsPath,
+        });
+      }
+
+      if (detectedFramework === "nextjs" && !options.skipRoute) {
         prompts.push({
           type: "input",
           name: "routePath",
@@ -128,6 +136,7 @@ const program = new Command()
           default: routePath, // will not be undefined if detectedFramework is nextjs
         });
       }
+
       if (!detectedPackageManager) {
         prompts.push({
           type: "list",
@@ -145,6 +154,7 @@ const program = new Command()
           chalk.green(`   Package manager detected: ${packageManager}`)
         );
       }
+
       prompts.push({
         type: "confirm",
         name: "confirmed",
@@ -159,8 +169,14 @@ const program = new Command()
         process.exit(0);
       }
 
-      toolsPath = answers.toolsPath;
-      if (detectedFramework === "nextjs" && answers.routePath) {
+      if (!options.skipTools) {
+        toolsPath = answers.toolsPath;
+      }
+      if (
+        detectedFramework === "nextjs" &&
+        !options.skipRoute &&
+        answers.routePath
+      ) {
         routePath = answers.routePath;
       }
       if (!detectedPackageManager) {
@@ -169,30 +185,32 @@ const program = new Command()
     }
 
     // check if tools directory already exists and has content
-    const toolsDirPath = path.join(projectRoot, toolsPath);
-    if (fs.existsSync(toolsDirPath)) {
-      const toolsDirContent = fs.readdirSync(toolsDirPath);
-      if (toolsDirContent.length > 0) {
-        console.warn(
-          chalk.yellow(
-            `Warning: Tools directory "${toolsPath}" already exists and is not empty.`
-          )
-        );
+    if (toolsPath) {
+      const toolsDirPath = path.join(projectRoot, toolsPath);
+      if (fs.existsSync(toolsDirPath)) {
+        const toolsDirContent = fs.readdirSync(toolsDirPath);
+        if (toolsDirContent.length > 0) {
+          console.warn(
+            chalk.yellow(
+              `Warning: Tools directory "${toolsPath}" already exists and is not empty.`
+            )
+          );
 
-        if (!options.yes) {
-          const { overwrite } = await inquirer.prompt([
-            {
-              type: "confirm",
-              name: "overwrite",
-              message:
-                "Do you want to continue? Existing files will be preserved.",
-              default: true,
-            },
-          ]);
+          if (!options.yes) {
+            const { overwrite } = await inquirer.prompt([
+              {
+                type: "confirm",
+                name: "overwrite",
+                message:
+                  "Do you want to continue? Existing files will be preserved.",
+                default: true,
+              },
+            ]);
 
-          if (!overwrite) {
-            console.log(chalk.yellow("❌ Aborting initialization."));
-            process.exit(0);
+            if (!overwrite) {
+              console.log(chalk.yellow("❌ Aborting initialization."));
+              process.exit(0);
+            }
           }
         }
       }
@@ -245,7 +263,15 @@ const program = new Command()
       console.log(chalk.green("\n✔ xmcp initialized successfully!"));
       console.log(chalk.blue("\n❯ Files created:"));
       console.log(`   • xmcp.config.ts`);
-      console.log(`   • ${toolsPath}/greet.ts`);
+
+      if (toolsPath) {
+        console.log(`   • ${toolsPath}/greet.ts`);
+      }
+
+      if (routePath) {
+        console.log(`   • ${routePath}/route.ts`);
+      }
+
       console.log(chalk.blue("\n❯ Files updated:"));
       console.log(`   • package.json`);
       console.log(`   • tsconfig.json`);

@@ -11,7 +11,7 @@ import chalk from "chalk";
 interface InitOptions {
   projectRoot: string;
   framework: Framework;
-  toolsPath: string;
+  toolsPath: string | undefined;
   routePath: string | undefined;
   packageManager: "npm" | "yarn" | "pnpm";
 }
@@ -30,7 +30,9 @@ export async function init(options: InitOptions) {
 
   updateGitignore(projectRoot);
 
-  createTool(projectRoot, toolsPath);
+  if (toolsPath) {
+    createTool(projectRoot, toolsPath);
+  }
 
   if (framework === "nextjs" && routePath) {
     createRoute(projectRoot, routePath);
