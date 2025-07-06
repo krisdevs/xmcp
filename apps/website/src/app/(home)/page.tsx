@@ -1,5 +1,6 @@
 import { IntroSection } from "./sections/intro-section";
 import { FeaturesSection } from "./sections/features-section";
+import { GetStartedSection } from "./sections/get-started-section";
 
 export default async function Home() {
   return (
@@ -10,6 +11,7 @@ export default async function Home() {
       >
         <IntroSection />
         <FeaturesSection />
+        <GetStartedSection />
       </div>
     </div>
   );

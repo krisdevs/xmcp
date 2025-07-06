@@ -66,19 +66,19 @@ function slugify(str: string) {
 }
 
 function createHeading(level: number) {
-  const Heading = ({ children }: { children: string }) => {
+  const Heading = ({ children, ...props }: { children: string }) => {
     const slug = slugify(children);
-    return React.createElement(
-      `h${level}`,
-      { id: slug, className: "uppercase" },
-      [
-        React.createElement("a", {
-          href: `#${slug}`,
-          key: `link-${slug}`,
-          className: "anchor uppercase font-mono",
-        }),
-      ],
-      children
+
+    const ElementTag = `h${level}` as "h1";
+
+    return (
+      <ElementTag className="uppercase relative" {...props}>
+        <div id={slug} className="absolute -top-[6rem] pointer-none:"></div>
+        <a href={`#${slug}`} className="uppercase font-mono">
+          <div className="anchor" />
+          <span>{children}</span>
+        </a>
+      </ElementTag>
     );
   };
 
