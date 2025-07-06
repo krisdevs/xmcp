@@ -251,8 +251,30 @@ const program = new Command()
       console.log(`   • tsconfig.json`);
 
       console.log(chalk.blue("\nNext steps:"));
+
+      // code integration for express projects (default)
+      if (detectedFramework !== "nextjs") {
+        const integrationCode = `import { xmcpHandler } from '@xmcp/adapter';
+
+myApp.post("/mcp", xmcpHandler);
+myApp.get("/mcp", xmcpHandler);`;
+
+        const lines = integrationCode.split("\n");
+        const maxLength = Math.max(...lines.map((line) => line.length)) + 2;
+
+        console.log(
+          "\nTo get started with the xmcpHandler in your Express application, add this code to your server:\n"
+        );
+        console.log(chalk.green(chalk.bgBlack(`  ${" ".repeat(maxLength)}`)));
+        lines.forEach((line) => {
+          const padding = " ".repeat(maxLength - line.length);
+          console.log(chalk.green(chalk.bgBlack(`  ${line}${padding}`)));
+        });
+        console.log(chalk.green(chalk.bgBlack(`  ${" ".repeat(maxLength)}`)));
+      }
+
       console.log(
-        `   Run "${packageManager} run dev" to start the development server`
+        `   \nRun "${packageManager} run dev" to start the development server\n`
       );
     } catch (error) {
       console.error(chalk.red("\nFailed to initialize xmcp:"));
