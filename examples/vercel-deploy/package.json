@@ -1,6 +1,6 @@
 {
   "name": "vercel-deploy",
-  "description": "A simple mcp server with vercel deploy",
+  "description": "Deploy your xmcp server to vercel",
   "scripts": {
     "build": "xmcp build",
     "dev": "xmcp dev",

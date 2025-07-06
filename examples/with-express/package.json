@@ -1,6 +1,5 @@
 {
   "name": "with-express",
-  "version": "1.0.0",
   "description": "Add xmcp to an express app",
   "main": "dist/index.js",
   "scripts": {

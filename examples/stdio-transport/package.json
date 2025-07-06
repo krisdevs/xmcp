@@ -1,6 +1,6 @@
 {
   "name": "stdio-transport",
-  "description": "A simple mcp server with stdio transport",
+  "description": "A simple xmcp server with stdio transport",
   "main": "./dist/stdio.js",
   "files": [
     "dist"

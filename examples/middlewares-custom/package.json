@@ -1,6 +1,6 @@
 {
   "name": "middlewares-custom",
-  "description": "An MCP server with custom middleware",
+  "description": "Custom middleware function",
   "scripts": {
     "build": "xmcp build",
     "dev": "xmcp dev",

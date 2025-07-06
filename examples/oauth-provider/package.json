@@ -1,6 +1,6 @@
 {
   "name": "oauth-provider",
-  "description": "An MCP server with OAuth provider",
+  "description": "OAuth provider",
   "scripts": {
     "build": "xmcp build",
     "dev": "xmcp dev",

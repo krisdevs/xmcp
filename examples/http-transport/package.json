@@ -1,6 +1,6 @@
 {
   "name": "http-transport",
-  "description": "A simple mcp server with http transport",
+  "description": "xmcp server with http transport",
   "scripts": {
     "build": "xmcp build",
     "dev": "xmcp dev",

@@ -1,6 +1,6 @@
 {
   "name": "custom-webpack-config",
-  "description": "A simple mcp server with custom webpack config",
+  "description": "xmcp server with custom webpack config",
   "scripts": {
     "build": "xmcp build",
     "dev": "xmcp dev",
