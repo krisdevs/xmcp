@@ -2,6 +2,13 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import { slugify } from "@/components/markdown/renderer";
+import {
+  DOCS_DIRECTORY,
+  extractOrderFromFilename,
+  isIndexFile,
+  generateTitleFromFilename,
+  generateSlugFromPath,
+} from "./utils";
 
 export interface MarkdownFrontmatter {
   title?: string;
@@ -26,40 +33,6 @@ export interface SidebarItem {
   order: number;
 }
 
-const DOCS_DIRECTORY = path.join(process.cwd(), "src/docs");
-
-// Extract numeric prefix from filename (e.g., "01-introduction.mdx" -> { order: 1, cleanName: "introduction" })
-function extractOrderFromFilename(filename: string): {
-  order: number;
-  cleanName: string;
-} {
-  const match = filename.match(/^(\d+)[-_](.+)$/);
-  if (match) {
-    return {
-      order: parseInt(match[1], 10),
-      cleanName: match[2],
-    };
-  }
-  return {
-    order: 999,
-    cleanName: filename,
-  };
-}
-
-function isIndexFile(filename: string): boolean {
-  const { cleanName } = extractOrderFromFilename(filename);
-  return cleanName.replace(/\.(md|mdx)$/, "") === "index";
-}
-
-function generateTitleFromFilename(filename: string): string {
-  const { cleanName } = extractOrderFromFilename(filename);
-  const nameWithoutExtension = cleanName.replace(/\.(md|mdx)$/, "");
-  return nameWithoutExtension
-    .split("-")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
-}
-
 export function getAllMarkdownFiles(): MarkdownFile[] {
   const files: MarkdownFile[] = [];
 
@@ -77,17 +50,8 @@ export function getAllMarkdownFiles(): MarkdownFile[] {
         const fileContent = fs.readFileSync(itemPath, "utf8");
         const { data, content } = matter(fileContent);
 
-        const { order, cleanName } = extractOrderFromFilename(item);
-
-        let rawSlug: string;
-        if (isIndexFile(item)) {
-          // For root-level index files, use "index" as the slug
-          rawSlug = basePath === "" ? "index" : basePath;
-        } else {
-          rawSlug = path.join(basePath, cleanName.replace(/\.mdx$/, ""));
-        }
-
-        const slug = rawSlug.replace(/\\/g, "/").replace(/^\/+|\/+$/g, "");
+        const { order } = extractOrderFromFilename(item);
+        const slug = generateSlugFromPath(basePath, item);
         const title = data.title || generateTitleFromFilename(item);
 
         files.push({

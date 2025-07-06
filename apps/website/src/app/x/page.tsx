@@ -1,5 +1,7 @@
 import { XmcpLogo } from "@/components/terminal/logo";
 
+export const dynamic = "force-static";
+
 export default async function Page() {
   return (
     <div className="min-h-[calc(100vh-12rem)]">
