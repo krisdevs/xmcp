@@ -5,7 +5,7 @@ import Link from "next/link";
 export function IntroSection() {
   return (
     <div className="min-h-[calc(100vh-88px)] flex flex-col items-stretch justify-center">
-      <div className="space-y-6 pb-12">
+      <div className="space-y-6 pb-24">
         <div className="relative w-[150px] md:w-[200px] lg:w-[220px] aspect-square flex items-center justify-center mx-auto">
           <XmcpLogo />
         </div>
