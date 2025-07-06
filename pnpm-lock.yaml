@@ -179,6 +179,19 @@ importers:
         specifier: ^0.2.6
         version: 0.2.6(@swc/core@1.12.7)(webpack@5.99.9(@swc/core@1.12.7))
 
+  examples/custom-webpack-config:
+    dependencies:
+      xmcp:
+        specifier: workspace:*
+        version: link:../../packages/xmcp
+      zod:
+        specifier: 3.24.4
+        version: 3.24.4
+    devDependencies:
+      swc-loader:
+        specifier: ^0.2.6
+        version: 0.2.6(@swc/core@1.12.7)(webpack@5.99.9(@swc/core@1.12.7))
+
   examples/http-transport:
     dependencies:
       xmcp:
@@ -232,6 +245,19 @@ importers:
         version: 0.2.6(@swc/core@1.12.7)(webpack@5.99.9(@swc/core@1.12.7))
 
   examples/middlewares-jwt:
+    dependencies:
+      xmcp:
+        specifier: workspace:*
+        version: link:../../packages/xmcp
+      zod:
+        specifier: 3.24.4
+        version: 3.24.4
+    devDependencies:
+      swc-loader:
+        specifier: ^0.2.6
+        version: 0.2.6(@swc/core@1.12.7)(webpack@5.99.9(@swc/core@1.12.7))
+
+  examples/oauth-provider:
     dependencies:
       xmcp:
         specifier: workspace:*
