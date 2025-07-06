@@ -6824,7 +6824,7 @@ snapshots:
       open: 10.1.2
       shell-quote: 1.8.3
       spawn-rx: 5.1.2
-      ts-node: 10.9.2(@swc/core@1.12.7)(@types/node@20.19.2)(typescript@5.8.3)
+      ts-node: 10.9.2(@swc/core@1.12.7)(@types/node@22.15.34)(typescript@5.8.3)
       zod: 3.25.71
     transitivePeerDependencies:
       - '@swc/core'
