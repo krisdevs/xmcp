@@ -59,6 +59,12 @@ importers:
       '@react-three/fiber':
         specifier: ^9.1.4
         version: 9.1.4(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(three@0.178.0)
+      '@shikijs/langs':
+        specifier: ^3.7.0
+        version: 3.7.0
+      '@shikijs/themes':
+        specifier: ^3.7.0
+        version: 3.7.0
       '@types/mdx':
         specifier: ^2.0.13
         version: 2.0.13
@@ -225,7 +231,7 @@ importers:
         version: 5.8.3
       xmcp:
         specifier: latest
-        version: 0.0.17(next@15.3.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(swc-loader@0.2.6(@swc/core@1.12.7)(webpack@5.99.9(@swc/core@1.12.7)))(typescript@5.8.3)(zod@3.25.67)
+        version: 0.0.18(next@15.3.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(swc-loader@0.2.6(@swc/core@1.12.7)(webpack@5.99.9(@swc/core@1.12.7)))(typescript@5.8.3)(zod@3.25.67)
       zod:
         specifier: ^3.24.4
         version: 3.25.67
@@ -321,7 +327,7 @@ importers:
         version: 5.8.3
       xmcp:
         specifier: latest
-        version: 0.0.17(next@15.3.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(swc-loader@0.2.6(@swc/core@1.12.7)(webpack@5.99.9(@swc/core@1.12.7)))(typescript@5.8.3)(zod@3.25.71)
+        version: 0.0.18(next@15.3.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(swc-loader@0.2.6(@swc/core@1.12.7)(webpack@5.99.9(@swc/core@1.12.7)))(typescript@5.8.3)(zod@3.25.71)
       zod:
         specifier: ^3.24.4
         version: 3.25.71
@@ -6129,6 +6135,13 @@ packages:
       swc-loader: ^0.2.6
       zod: ^3.22.4
 
+  xmcp@0.0.18:
+    resolution: {integrity: sha512-lQa1nz96PRW35nAHDFpAg0eb7UsiINMQ5KjSUVfgGhkCAmsHVQ8sVqPYf2DnYVC/sBFaITE0Mw6W+iUOnZt95Q==}
+    hasBin: true
+    peerDependencies:
+      swc-loader: ^0.2.6
+      zod: ^3.22.4
+
   xmcp@0.0.2:
     resolution: {integrity: sha512-d/jGchyxGZLRYwVhKoCkIY1a0I25jIvy/YhMSD4IHb9cFaEVPaLmN/7MFVzx8EaueUSXx8M7Ce7fRU9OMKMYYA==}
     hasBin: true
@@ -10085,7 +10098,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-module-utils@2.12.1(@typescript-eslint/parser@8.35.0(eslint@9.30.0(jiti@2.4.2))(typescript@5.8.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0)(eslint@9.30.0(jiti@2.4.2)))(eslint@9.30.0(jiti@2.4.2)):
+  eslint-module-utils@2.12.1(@typescript-eslint/parser@8.35.0(eslint@9.30.0(jiti@2.4.2))(typescript@5.8.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1)(eslint@9.30.0(jiti@2.4.2)):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
@@ -10107,7 +10120,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 9.30.0(jiti@2.4.2)
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.12.1(@typescript-eslint/parser@8.35.0(eslint@9.30.0(jiti@2.4.2))(typescript@5.8.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0)(eslint@9.30.0(jiti@2.4.2)))(eslint@9.30.0(jiti@2.4.2))
+      eslint-module-utils: 2.12.1(@typescript-eslint/parser@8.35.0(eslint@9.30.0(jiti@2.4.2))(typescript@5.8.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1)(eslint@9.30.0(jiti@2.4.2))
       hasown: 2.0.2
       is-core-module: 2.16.1
       is-glob: 4.0.3
@@ -13626,7 +13639,7 @@ snapshots:
       - utf-8-validate
       - webpack-cli
 
-  xmcp@0.0.17(next@15.3.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(swc-loader@0.2.6(@swc/core@1.12.7)(webpack@5.99.9(@swc/core@1.12.7)))(typescript@5.8.3)(zod@3.25.67):
+  xmcp@0.0.18(next@15.3.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(swc-loader@0.2.6(@swc/core@1.12.7)(webpack@5.99.9(@swc/core@1.12.7)))(typescript@5.8.3)(zod@3.25.67):
     dependencies:
       '@modelcontextprotocol/inspector': 0.14.3(@swc/core@1.12.7)(typescript@5.8.3)
       '@modelcontextprotocol/sdk': 1.13.2
@@ -13648,6 +13661,7 @@ snapshots:
       fs-extra: 11.3.0
       glob: 11.0.3
       handlebars: 4.7.8
+      json5: 2.2.3
       jsonwebtoken: 9.0.2
       memfs: 4.17.2
       raw-body: 3.0.0
@@ -13673,7 +13687,7 @@ snapshots:
       - utf-8-validate
       - webpack-cli
 
-  xmcp@0.0.17(next@15.3.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(swc-loader@0.2.6(@swc/core@1.12.7)(webpack@5.99.9(@swc/core@1.12.7)))(typescript@5.8.3)(zod@3.25.71):
+  xmcp@0.0.18(next@15.3.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(swc-loader@0.2.6(@swc/core@1.12.7)(webpack@5.99.9(@swc/core@1.12.7)))(typescript@5.8.3)(zod@3.25.71):
     dependencies:
       '@modelcontextprotocol/inspector': 0.14.3(@swc/core@1.12.7)(typescript@5.8.3)
       '@modelcontextprotocol/sdk': 1.13.2
@@ -13695,6 +13709,7 @@ snapshots:
       fs-extra: 11.3.0
       glob: 11.0.3
       handlebars: 4.7.8
+      json5: 2.2.3
       jsonwebtoken: 9.0.2
       memfs: 4.17.2
       raw-body: 3.0.0

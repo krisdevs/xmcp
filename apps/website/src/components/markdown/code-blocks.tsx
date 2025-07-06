@@ -1,11 +1,20 @@
 "use client";
 
 import * as React from "react";
-import { createHighlighter } from "shiki";
 
-const highlighter = await createHighlighter({
-  themes: ["github-dark-high-contrast", "vesper"],
-  langs: ["typescript", "bash", "json", "tsx"],
+import { createHighlighterCoreSync } from "shiki/core";
+import { createJavaScriptRegexEngine } from "shiki/engine/javascript";
+import js from "@shikijs/langs/javascript";
+import ts from "@shikijs/langs/typescript";
+import bash from "@shikijs/langs/bash";
+import json from "@shikijs/langs/json";
+import tsx from "@shikijs/langs/tsx";
+import githubDarkHighContrast from "@shikijs/themes/github-dark-high-contrast";
+
+const highlighter = createHighlighterCoreSync({
+  langs: [js, ts, bash, json, tsx],
+  themes: [githubDarkHighContrast],
+  engine: createJavaScriptRegexEngine(),
 });
 
 const preContext = React.createContext<{ editor: boolean }>({ editor: false });
