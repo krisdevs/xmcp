@@ -9,11 +9,11 @@ import ts from "@shikijs/langs/typescript";
 import bash from "@shikijs/langs/bash";
 import json from "@shikijs/langs/json";
 import tsx from "@shikijs/langs/tsx";
-import githubDarkHighContrast from "@shikijs/themes/github-dark-high-contrast";
+import ayuDark from "@shikijs/themes/ayu-dark";
 
 const highlighter = createHighlighterCoreSync({
   langs: [js, ts, bash, json, tsx],
-  themes: [githubDarkHighContrast],
+  themes: [ayuDark],
   engine: createJavaScriptRegexEngine(),
 });
 
@@ -39,7 +39,8 @@ export function Code({
   let theme = "none";
 
   if (lang && lang !== "bash") {
-    theme = "github-dark-high-contrast";
+    //theme = "github-dark-high-contrast";
+    theme = "ayu-dark";
   }
 
   const codeHTML = highlighter.codeToHtml(children, {
@@ -48,7 +49,7 @@ export function Code({
   });
   return (
     <code
-      className={`${className} [&>pre]:p-0 [&>pre]:!bg-transparent`}
+      className={`${className} [&>pre]:p-0 [&>pre]:!bg-transparent [&_*]:!text-sm`}
       dangerouslySetInnerHTML={{ __html: codeHTML }}
       {...props}
     />
