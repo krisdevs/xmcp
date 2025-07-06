@@ -15,7 +15,7 @@
 
 ## The TypeScript MCP Framework
 
-`xmcp` is a framework for building and shipping MCP applications with TypeScript. Designed with DX in mind, it simplifies setup and removes friction in just one command — making it easy to build & deploy AI tools on top of the Model Context Protocol ecosystem.
+`xmcp` is a framework for building and shipping MCP applications with TypeScript. Designed with DX in mind, it streamlines development and lowers the barrier to entry for anyone looking to create and deploy powerful tools on top of the Model Context Protocol ecosystem.
 
 ## Getting Started
 
