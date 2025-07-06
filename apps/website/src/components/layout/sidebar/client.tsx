@@ -30,7 +30,7 @@ export function SidebarClient({
 
   useEffect(() => {
     const handleScroll = () => {
-      const scrollPosition = window.scrollY + 100;
+      const scrollPosition = window.scrollY + 200;
 
       const headings = document.querySelectorAll("h2, h3, h4");
       let currentActive = "";
@@ -130,7 +130,7 @@ export function SidebarClient({
                     "w-full leading-[114%] transition-colors duration-150 font-mono uppercase font-medium",
                     isActive
                       ? "text-white"
-                      : "text-[rgba(153,153,153,1)] hover:text-white hover:bg-[rgba(255,255,255,0.05)]"
+                      : "text-[rgba(153,153,153,1)] hover:text-white"
                   )}
                 >
                   {item.title}
