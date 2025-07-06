@@ -12,7 +12,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "xmcp | The MCP framework",
+  title: "xmcp — The TypeScript MCP framework",
   description: "The framework for building & shipping MCP applications.",
   icons: {
     icon: [
@@ -31,8 +31,14 @@ export const metadata: Metadata = {
     url: "https://xmcp.dev",
     type: "website",
     locale: "en_US",
-    title: "xmcp | The MCP framework",
+    title: "xmcp — The TypeScript MCP framework",
     description: "The framework for building & shipping MCP applications.",
+  },
+  twitter: {
+    card: "summary",
+    title: "xmcp — The TypeScript MCP framework",
+    description: "The framework for building & shipping MCP applications.",
+    images: "/og-image.png",
   },
   manifest: "/site.webmanifest",
   appleWebApp: {

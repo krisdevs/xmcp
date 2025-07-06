@@ -1,4 +1,25 @@
 import { Sidebar } from "@/components/layout/sidebar";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "xmcp — Documentation",
+  description: "The documentation for the xmcp framework.",
+  openGraph: {
+    siteName: "xmcp",
+    images: "/og-image.png",
+    url: "https://xmcp.dev/docs",
+    type: "website",
+    locale: "en_US",
+    title: "xmcp — Documentation",
+    description: "The documentation for the xmcp framework.",
+  },
+  twitter: {
+    card: "summary",
+    title: "xmcp — Documentation",
+    description: "The documentation for the xmcp framework.",
+    images: "/og-image.png",
+  },
+};
 
 export default function DocsLayout({
   children,
