@@ -347,6 +347,15 @@ xmcp build --vercel
 vercel deploy --prod --prebuilt
 ```
 
+You can also add a `vercel.json` file to configure deployment on vercel:
+
+```json
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "xmcp build --vercel"
+}
+```
+
 ## Usage with Next.js
 
 > **Warning**: This is an experimental feature and may not work as expected.
