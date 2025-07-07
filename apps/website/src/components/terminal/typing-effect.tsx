@@ -29,6 +29,7 @@ function SolidCursor() {
 function TypewriterText({
   text,
   className,
+  initialDelay = 0,
   delay = 0,
   speed = 25,
   onComplete,
@@ -36,6 +37,7 @@ function TypewriterText({
 }: {
   text: string;
   className?: string;
+  initialDelay?: number;
   delay?: number;
   speed?: number;
   onComplete?: () => void;
@@ -45,8 +47,11 @@ function TypewriterText({
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showBlinkingCursor, setShowBlinkingCursor] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
+  const [started, setStarted] = useState(initialDelay === 0);
 
   useEffect(() => {
+    if (!started) return;
+
     const startTimer = setTimeout(() => {
       setShowBlinkingCursor(true);
       setIsTyping(true);
@@ -64,7 +69,19 @@ function TypewriterText({
     }, delay);
 
     return () => clearTimeout(startTimer);
-  }, [currentIndex, text, delay, speed, onComplete]);
+  }, [currentIndex, text, delay, speed, onComplete, started]);
+
+  useEffect(() => {
+    if (initialDelay === 0) {
+      return;
+    }
+
+    const init = setTimeout(() => {
+      setStarted(true);
+    }, initialDelay);
+
+    return () => clearTimeout(init);
+  }, [initialDelay]);
 
   return (
     <span className={className}>
@@ -74,7 +91,13 @@ function TypewriterText({
   );
 }
 
-export default function TypingEffect({ children }: { children: string }) {
+export default function TypingEffect({
+  children,
+  initialDelay = 0,
+}: {
+  children: string;
+  initialDelay?: number;
+}) {
   const [isComplete, setIsComplete] = useState(false);
 
   return (
@@ -84,6 +107,7 @@ export default function TypingEffect({ children }: { children: string }) {
         text={children}
         className="text-white"
         speed={80}
+        initialDelay={initialDelay}
         onComplete={() => setIsComplete(true)}
       />
       <div className="inline-block w-1.5">
