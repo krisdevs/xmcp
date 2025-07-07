@@ -9,13 +9,13 @@ function getInstallCommand(packageManager: string): string {
   switch (packageManager) {
     case "yarn":
       // Add --check-engines flag to enforce Node version requirement
-      return "yarn install --check-engines";
+      return "yarn install --check-engines xmcp@latest";
     case "pnpm":
-      return "pnpm install";
+      return "pnpm install xmcp@latest";
     case "npm":
     default:
       // npm automatically checks engines by default
-      return "npm install";
+      return "npm install xmcp@latest";
   }
 }
 
