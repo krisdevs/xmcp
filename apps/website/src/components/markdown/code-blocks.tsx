@@ -19,6 +19,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { cn } from "@/utils/cn";
 
 const highlighter = createHighlighterCoreSync({
   langs: [js, ts, bash, json, tsx],
@@ -67,7 +68,13 @@ export function Code({
   );
 }
 
-export function Pre({ children }: { children: React.ReactNode }) {
+export function Pre({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
   const [codeText, setCodeText] = useState("");
   const [hasLanguage, setHasLanguage] = useState(false);
   const preRef = useRef<HTMLPreElement>(null);
@@ -90,7 +97,10 @@ export function Pre({ children }: { children: React.ReactNode }) {
   return (
     <pre
       ref={preRef}
-      className="my-8 border relative w-auto overflow-x-auto bg-black p-4"
+      className={cn(
+        "my-8 border relative w-auto overflow-x-auto bg-black p-4 [&_span]:!font-mono",
+        className
+      )}
       style={{ borderColor: "#333" }}
     >
       <preContext.Provider value={{ editor: true }}>
