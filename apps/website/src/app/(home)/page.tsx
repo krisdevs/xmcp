@@ -3,6 +3,8 @@ import { AllYouNeedIsToolsSection } from "./sections/all-you-need-is-tools";
 import { FeaturesSection } from "./sections/features-section";
 import { GetStartedSection } from "./sections/get-started-section";
 
+export const dynamic = "force-static";
+
 export default async function Home() {
   return (
     <div className="font-mono min-h-[calc(100vh-12rem)] flex justify-center">
