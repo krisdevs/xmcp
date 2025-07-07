@@ -4,7 +4,8 @@ export function generateImportCode(): string {
   const { toolPaths, hasMiddleware } = compilerContext.getContext();
 
   const importToolsCode = Array.from(toolPaths)
-    .map((path) => {
+    .map((p) => {
+      const path = p.replace(/\\/g, "/");
       const relativePath = `../${path}`;
       return `"${path}": () => import("${relativePath}"),`;
     })
