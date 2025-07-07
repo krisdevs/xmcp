@@ -13,8 +13,10 @@ import * as THREE from "three";
 import { useShader } from "@/hooks/use-shader";
 import { animate, useMotionValue, useMotionValueEvent } from "framer-motion";
 import { cn } from "@/utils/cn";
-import { create } from "zustand";
 import { clamp } from "three/src/math/MathUtils.js";
+
+const revealStart = 0.2;
+const revealEnd = 0.8;
 
 const animated = {
   current: false,
@@ -29,14 +31,6 @@ type GLTFResult = GLTF & {
     Glass: THREE.MeshPhysicalMaterial;
   };
 };
-
-const useGL = create<{
-  isLoaded: boolean;
-  setIsLoaded: (isLoaded: boolean) => void;
-}>((set) => ({
-  isLoaded: false,
-  setIsLoaded: (isLoaded) => set({ isLoaded }),
-}));
 
 function ThreeLogo({ matcap }: { matcap: string }) {
   const groupRef = useRef<THREE.Group>(null);
@@ -106,7 +100,7 @@ function ThreeLogo({ matcap }: { matcap: string }) {
     `,
     },
     {
-      uReveal: { value: animated.current ? 1 : 0 },
+      uReveal: { value: animated.current ? revealEnd : revealStart },
       uMatcap: { value: matcapTexture },
     }
   );
@@ -119,7 +113,7 @@ function ThreeLogo({ matcap }: { matcap: string }) {
   const damping = 0.95;
   const autoRotationSpeed = 1;
 
-  const reveal = useMotionValue(0);
+  const reveal = useMotionValue(revealStart);
 
   useMotionValueEvent(reveal, "change", (value) => {
     matcapMaterial.uniforms.uReveal.value = value;
@@ -128,16 +122,14 @@ function ThreeLogo({ matcap }: { matcap: string }) {
   useEffect(() => {
     if (animated.current) return;
 
-    animate(reveal, 0.9, {
-      duration: 1.5,
+    animate(reveal, revealEnd, {
+      duration: 1,
       ease: "easeOut",
       onComplete: () => {
         animated.current = true;
       },
     });
   }, [reveal]);
-
-  const startedRef = useRef(false);
 
   // Global mouse event handlers for cursor
   useEffect(() => {
@@ -216,11 +208,6 @@ function ThreeLogo({ matcap }: { matcap: string }) {
     );
 
     groupRef.current.rotation.y += delta * velocity.current;
-
-    if (!startedRef.current) {
-      startedRef.current = true;
-      useGL.setState({ isLoaded: true });
-    }
   });
 
   return (
@@ -248,14 +235,10 @@ function ThreeLogo({ matcap }: { matcap: string }) {
 useGLTF.preload("/xmcp.glb");
 
 export const XmcpLogo = ({ matcap }: { matcap: string }) => {
-  const { isLoaded } = useGL();
-
   return (
     <Canvas
       gl={{ antialias: true, alpha: false }}
-      className={cn("absolute inset-0 w-full h-full", {
-        "opacity-0": !isLoaded,
-      })}
+      className={cn("absolute inset-0 w-full h-full", {})}
     >
       <Suspense fallback={null}>
         <ThreeLogo matcap={matcap} />
