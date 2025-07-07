@@ -2,15 +2,15 @@ import { Code, Pre } from "@/components/markdown/code-blocks";
 
 export function AllYouNeedIsToolsSection() {
   return (
-    <div className="space-y-16">
-      <h2 className="w-full mx-auto text-xl uppercase">
+    <div className="space-y-8">
+      <h2 className="w-full mx-auto text-xl uppercase mb-12">
         All you need is /tools
       </h2>
       <p className="text-balance text-[#BABABA] text-[1rem]">
         Declarative, file-system based DX. The easiest way to ship an MCP server
       </p>
       <div className="prose !text-left [&_span]:!text-muted [&_span:nth-child(4)_span]:!text-white">
-        <Pre>
+        <Pre className="my-0 !mt-8">
           <Code lang="text">
             {`my-project/
 ├── src/
