@@ -98,7 +98,7 @@ export function Pre({
     <pre
       ref={preRef}
       className={cn(
-        "my-8 border relative w-auto overflow-x-auto bg-black p-4",
+        "my-8 border relative w-auto overflow-x-auto bg-black p-4 [&_span]:!font-mono",
         className
       )}
       style={{ borderColor: "#333" }}
