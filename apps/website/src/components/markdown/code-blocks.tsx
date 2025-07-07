@@ -60,6 +60,7 @@ export function Code({
 
 export function Pre({ children }: { children: React.ReactNode }) {
   const [codeText, setCodeText] = useState("");
+  const [hasLanguage, setHasLanguage] = useState(false);
   const preRef = useRef<HTMLPreElement>(null);
 
   useEffect(() => {
@@ -67,6 +68,12 @@ export function Pre({ children }: { children: React.ReactNode }) {
       const codeElement = preRef.current.querySelector("code");
       if (codeElement) {
         setCodeText(codeElement.textContent || "");
+
+        const className = codeElement.className || "";
+        const hasLangClass =
+          className.includes("language-") &&
+          !className.includes("language-text");
+        setHasLanguage(hasLangClass);
       }
     }
   }, [children]);
@@ -80,7 +87,9 @@ export function Pre({ children }: { children: React.ReactNode }) {
       <preContext.Provider value={{ editor: true }}>
         {children}
       </preContext.Provider>
-      <CopyButton text={codeText} className="absolute top-3.5 right-6" />
+      {hasLanguage && (
+        <CopyButton text={codeText} className="absolute top-3.5 right-6" />
+      )}
     </pre>
   );
 }
