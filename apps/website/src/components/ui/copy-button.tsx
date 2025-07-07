@@ -60,6 +60,7 @@ export const CopyButton = ({
           "absolute size-6 grid place-items-center z-20 cursor-pointer transition-all duration-300 group"
         )}
         onClick={handleCopy}
+        aria-label="Copy to clipboard"
       >
         <div className="relative size-full grid place-items-center">
           <Icons.lightCheck
