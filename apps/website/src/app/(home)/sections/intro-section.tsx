@@ -22,7 +22,9 @@ export function IntroSection() {
           <p>
             <i>Bootstrap your xmcp app with one command</i>
           </p>
-          <Terminal className="mt-12">npx init-xmcp</Terminal>
+          <Terminal initialDelay={1500} className="mt-12">
+            npx init-xmcp
+          </Terminal>
           <p>
             <i>
               Plug into your existing{" "}

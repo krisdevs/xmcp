@@ -28,9 +28,11 @@ function TerminalContainer({
 
 export function Terminal({
   children,
+  initialDelay = 0,
   className,
 }: {
   children: string;
+  initialDelay?: number;
   className?: string;
 }) {
   const [codeText, setCodeText] = useState("");
@@ -42,7 +44,7 @@ export function Terminal({
   return (
     <TerminalContainer className={className}>
       <div>
-        <TypingEffect>{children}</TypingEffect>
+        <TypingEffect initialDelay={initialDelay}>{children}</TypingEffect>
       </div>
       <CopyButton
         text={codeText}
