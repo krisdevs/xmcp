@@ -30,7 +30,7 @@ const cards = [
 
 export function GetStartedSection() {
   return (
-    <div className="space-y-6">
+    <div className="space-y-12">
       <h2 className="w-full mx-auto text-xl uppercase">Get started</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {cards.map((card, index) => (
