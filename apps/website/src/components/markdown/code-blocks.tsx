@@ -10,6 +10,8 @@ import bash from "@shikijs/langs/bash";
 import json from "@shikijs/langs/json";
 import tsx from "@shikijs/langs/tsx";
 import ayuDark from "@shikijs/themes/ayu-dark";
+import { CopyButton } from "@/components/ui/copy-button";
+import { useEffect, useRef, useState } from "react";
 
 const highlighter = createHighlighterCoreSync({
   langs: [js, ts, bash, json, tsx],
@@ -57,14 +59,28 @@ export function Code({
 }
 
 export function Pre({ children }: { children: React.ReactNode }) {
+  const [codeText, setCodeText] = useState("");
+  const preRef = useRef<HTMLPreElement>(null);
+
+  useEffect(() => {
+    if (preRef.current) {
+      const codeElement = preRef.current.querySelector("code");
+      if (codeElement) {
+        setCodeText(codeElement.textContent || "");
+      }
+    }
+  }, [children]);
+
   return (
     <pre
+      ref={preRef}
       className="my-8 border relative w-auto overflow-x-auto bg-black p-4"
       style={{ borderColor: "#333" }}
     >
       <preContext.Provider value={{ editor: true }}>
         {children}
       </preContext.Provider>
+      <CopyButton text={codeText} className="absolute top-3.5 right-6" />
     </pre>
   );
 }
