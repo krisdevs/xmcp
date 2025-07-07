@@ -19,13 +19,13 @@ export function IntroSection() {
         </p>
         <div className="space-y-4 text-left mt-12">
           <Terminal>npx create-xmcp-app</Terminal>
-          <p>
+          <span className="text-sm">
             <i>Bootstrap your xmcp app with one command</i>
-          </p>
+          </span>
           <Terminal initialDelay={1500} className="mt-12">
             npx init-xmcp
           </Terminal>
-          <span>
+          <span className="text-sm">
             <i>
               Plug into your existing{" "}
               <AnimatedLink
