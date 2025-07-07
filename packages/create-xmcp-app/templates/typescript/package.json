@@ -7,9 +7,7 @@
   },
   "scripts": {
     "build": "xmcp build",
-    "dev": "xmcp dev",
-    "start-stdio": "node dist/stdio.js",
-    "start-http": "node dist/http.js"
+    "dev": "xmcp dev"
   },
   "dependencies": {
     "zod": "3.24.4"

@@ -59,7 +59,7 @@ export function createProject(options: ProjectOptions): void {
   generateConfig(projectPath, transports);
 
   // Update package.json with project configuration
-  updatePackageJson(projectPath, projectName, useLocalXmcp);
+  updatePackageJson(projectPath, projectName, transports, useLocalXmcp);
 
   // Add vercel.json if deployToVercel is true
   if (deployToVercel) {
