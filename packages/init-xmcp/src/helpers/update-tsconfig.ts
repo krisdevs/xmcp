@@ -36,9 +36,9 @@ export function updateTsConfig(projectRoot: string) {
     tsconfig.include = [];
   }
 
-  if (!tsconfig.include.includes("xmcp.d.ts")) {
-    // include xmcp.d.ts in the build
-    tsconfig.include.push("xmcp.d.ts");
+  if (!tsconfig.include.includes("xmcp-env.d.ts")) {
+    // include xmcp-env.d.ts in the build
+    tsconfig.include.push("xmcp-env.d.ts");
   }
 
   fs.writeJsonSync(tsconfigPath, tsconfig, { spaces: 2 });
