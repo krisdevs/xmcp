@@ -35,6 +35,12 @@ export function updatePackageJson(
       "node dist/stdio.js";
   }
 
+  // Add main and files fields for stdio transport
+  if (hasStdio) {
+    packageJson.main = "./dist/stdio.js";
+    packageJson.files = ["dist"];
+  }
+
   if (useLocalXmcp) {
     const xmcpPath = path.resolve(__dirname, "../../../packages/xmcp");
     packageJson.dependencies["xmcp"] = `file:${xmcpPath}`;
