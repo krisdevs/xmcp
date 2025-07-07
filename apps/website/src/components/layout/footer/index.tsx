@@ -5,13 +5,12 @@ export const Footer = () => {
     <footer className="text-center text-sm text-white flex flex-col-reverse sm:flex-row uppercase py-8 px-4 font-mono gap-4 justify-between w-full">
       <div className="flex-1 flex justify-center sm:justify-start">
         <span className="block">
-          © 2025{" "}
           <AnimatedLink
             href="https://basement.studio"
             target="_blank"
             rel="noopener noreferrer"
           >
-            BASEMENT.STUDIO
+            © 2025 BASEMENT.STUDIO
           </AnimatedLink>
         </span>
       </div>
