@@ -1,6 +1,6 @@
+import { AnimatedLink } from "@/components/terminal/animated-link";
 import { XmcpLogo } from "@/components/terminal/logo";
 import { Terminal } from "@/components/terminal/terminal";
-import Link from "next/link";
 
 export function IntroSection() {
   return (
@@ -28,21 +28,21 @@ export function IntroSection() {
           <p>
             <i>
               Plug into your existing{" "}
-              <Link
+              <AnimatedLink
                 href="https://nextjs.org"
                 target="_blank"
-                className="underline text-white"
+                className="text-white normal-case"
               >
                 Next.js
-              </Link>{" "}
+              </AnimatedLink>{" "}
               or{" "}
-              <Link
+              <AnimatedLink
                 href="https://expressjs.com"
                 target="_blank"
-                className="underline text-white"
+                className="text-white normal-case"
               >
                 Express
-              </Link>{" "}
+              </AnimatedLink>{" "}
               app
             </i>
           </p>
