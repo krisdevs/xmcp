@@ -118,7 +118,11 @@ export const metadata: Metadata = {
   },
   openGraph: {
     siteName: "xmcp",
-    images: "/xmcp-og.png",
+    images: {
+      url: "/xmcp-og.png",
+      width: 1200,
+      height: 630,
+    },
     url: "https://xmcp.dev",
     type: "website",
     locale: "en_US",
