@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description: "The documentation for the xmcp framework.",
   openGraph: {
     siteName: "xmcp",
-    images: "/og-image.png",
+    images: "/xmcp-og.png",
     url: "https://xmcp.dev/docs",
     type: "website",
     locale: "en_US",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     card: "summary",
     title: "xmcp — Documentation",
     description: "The documentation for the xmcp framework.",
-    images: "/og-image.png",
+    images: "/xmcp-og.png",
   },
 };
 

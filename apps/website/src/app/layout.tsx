@@ -118,7 +118,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     siteName: "xmcp",
-    images: "/og-image.png",
+    images: "/xmcp-og.png",
     url: "https://xmcp.dev",
     type: "website",
     locale: "en_US",
@@ -129,7 +129,7 @@ export const metadata: Metadata = {
     card: "summary",
     title: "xmcp — The TypeScript MCP framework",
     description: "The framework for building & shipping MCP applications.",
-    images: "/og-image.png",
+    images: "/xmcp-og.png",
   },
   manifest: "/site.webmanifest",
   appleWebApp: {
