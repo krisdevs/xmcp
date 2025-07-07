@@ -12,7 +12,6 @@
     "start-http": "node dist/http.js"
   },
   "dependencies": {
-    "xmcp": "latest",
     "zod": "3.24.4"
   },
   "devDependencies": {
