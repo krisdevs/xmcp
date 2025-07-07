@@ -36,34 +36,12 @@ You will be asked for the project name and then guided through a series of promp
 
 The HTTP transport is your go to choice when you want to deploy your MCP on a server. This can be used to create tools like fetching your database or perform fetch operations.
 
-`xmcp` uses stateless servers. This means that every time you call a tool, a new transport will be instantiated. There is no tracking of sessions or state.
-
-To configure your server for usage in any MCP client, the configuration should be as follows:
-
-```json
-{
-  "mcpServers": {
-    "my-project": {
-      "url": "http://localhost:3002/mcp"
-    }
-  }
-}
-```
-
-The `url` is the endpoint where the MCP server is running. Port defaults to `3002`.
+`xmcp` uses stateless mode. This means that every time you call a tool, a new transport will be instantiated. There is no tracking of sessions or state.
 
 #### Building with STDIO
 
 The STDIO transport is useful when you want to use your MCP server locally, useful for enabling your AI to perform operations on your machine. For example, you can create tools like searching and compressing images on a folder.
 You can also publish the server as a package on NPM.
-
-#### Building with both
-
-You can also build your MCP server with both transports. This is useful when you want to use your MCP server locally and on a server.
-
-```bash
-xmcp build --stdio --http
-```
 
 ## Project structure
 
@@ -84,7 +62,7 @@ my-project/
 
 ### Creating tools
 
-`xmcp` detects files under `tools` directory that you have set on installation and registers them as tools. This path can be configured in the `xmcp.config.ts` file.
+`xmcp` detects files under the `/src/tools/` directory and registers them as tools. This path can be configured in the `xmcp.config.ts` file.
 
 The tool file should export three elements:
 
@@ -169,7 +147,7 @@ node dist/http.js
 
 ## Using tools
 
-At this point, you can configure your MCP server on clients like Cursor.
+At this point, you can configure your MCP server on clients like `Cursor`.
 
 If you're using the HTTP transport, your configuration should look like this:
 
@@ -190,7 +168,7 @@ If you're using the STDIO transport, your configuration for local development sh
   "mcpServers": {
     "my-project": {
       "command": "node",
-      "args": ["/ABSOLUTE/PATH/TO/PARENT/FOLDER/my-project/dist/stdio.js"]
+      "args": ["/ABSOLUTE/PATH/TO/my-project/dist/stdio.js"]
     }
   }
 }
@@ -359,6 +337,93 @@ export default async function search({ query }: InferSchema<typeof schema>) {
 }
 ```
 
+## xmcp.config.ts
+
+You can customize the configuration of your `xmcp` app by creating a `xmcp.config.ts` file.
+
+```typescript
+const config: XmcpConfig = {
+  http: true, // builds your app with the HTTP transport
+  stdio: true, // builds your app with the STDIO transport
+};
+
+export default config;
+```
+
+### Custom tools directory
+
+You can customize the directory where `xmcp` will look for tools by adding the following to your `xmcp.config.ts` file:
+
+```typescript
+const config: XmcpConfig = {
+  tools: {
+    directory: "path/to/tools",
+  },
+};
+
+export default config;
+```
+
+### Customize the HTTP transport
+
+The `http` configuration can be used to configure the HTTP server.
+
+```typescript
+const config: XmcpConfig = {
+  http: {
+    port: 3000,
+    // The endpoint where the MCP server will be available
+    endpoint: "/my-custom-endpoint",
+    bodySizeLimit: 10 * 1024 * 1024,
+    cors: {
+      origin: "*",
+      methods: ["GET", "POST"],
+      allowedHeaders: ["Content-Type"],
+      credentials: true,
+      exposedHeaders: ["Content-Type"],
+      maxAge: 600,
+    },
+  },
+};
+
+export default config;
+```
+
+### Custom webpack configuration
+
+`xmcp` uses webpack and swc to bundle your tools. You can customize the configuration by adding the following to your `xmcp.config.ts` file:
+
+```typescript
+// xmcp.config.ts
+
+const config: XmcpConfig = {
+  webpack: (config) => {
+    // Add raw loader for images to get them as base64
+    config.module?.rules?.push({
+      test: /\.(png|jpe?g|gif|svg|webp)$/i,
+      type: "asset/inline",
+    });
+
+    return config;
+  },
+};
+```
+
+### Experimental features
+
+You can enable experimental features such as the [OAuth](#oauth) provider, or the [Express](#usage-with-express) / [Next.js](#usage-with-nextjs) adapters.
+
+```typescript
+const config: XmcpConfig = {
+  experimental: {
+    adapter: "nextjs",
+    oauth: {
+      // ...OAuth configuration
+    },
+  },
+};
+```
+
 ## Vercel Deployment
 
 xmcp can be deployed to Vercel with the `--vercel` flag. This will create `.vercel` directory with the built output.
@@ -367,6 +432,15 @@ xmcp can be deployed to Vercel with the `--vercel` flag. This will create `.verc
 xmcp build --vercel
 
 vercel deploy --prod --prebuilt
+```
+
+You can also add a `vercel.json` file to configure deployment on vercel:
+
+```json
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "xmcp build --vercel"
+}
 ```
 
 ## Usage with Next.js

@@ -1,18 +1,109 @@
 import type { Metadata } from "next";
-import { Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
 import { Toolbar } from "basehub/next-toolbar";
 import { Footer } from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
+import localFont from "next/font/local";
 
-const geistMono = Geist_Mono({
+const geistMono = localFont({
   variable: "--font-geist-mono",
-  subsets: ["latin"],
+  src: [
+    {
+      path: "./fonts/GeistMono-Thin.woff2",
+      weight: "100",
+      style: "normal",
+    },
+    {
+      path: "./fonts/GeistMono-ThinItalic.woff2",
+      weight: "100",
+      style: "italic",
+    },
+    {
+      path: "./fonts/GeistMono-ExtraLight.woff2",
+      weight: "200",
+      style: "normal",
+    },
+    {
+      path: "./fonts/GeistMono-ExtraLightItalic.woff2",
+      weight: "200",
+      style: "italic",
+    },
+    {
+      path: "./fonts/GeistMono-Light.woff2",
+      weight: "300",
+      style: "normal",
+    },
+    {
+      path: "./fonts/GeistMono-LightItalic.woff2",
+      weight: "300",
+      style: "italic",
+    },
+    {
+      path: "./fonts/GeistMono-Regular.woff2",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "./fonts/GeistMono-Italic.woff2",
+      weight: "400",
+      style: "italic",
+    },
+    {
+      path: "./fonts/GeistMono-Medium.woff2",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "./fonts/GeistMono-MediumItalic.woff2",
+      weight: "500",
+      style: "italic",
+    },
+    {
+      path: "./fonts/GeistMono-SemiBold.woff2",
+      weight: "600",
+      style: "normal",
+    },
+    {
+      path: "./fonts/GeistMono-SemiBoldItalic.woff2",
+      weight: "600",
+      style: "italic",
+    },
+    {
+      path: "./fonts/GeistMono-Bold.woff2",
+      weight: "700",
+      style: "normal",
+    },
+    {
+      path: "./fonts/GeistMono-BoldItalic.woff2",
+      weight: "700",
+      style: "italic",
+    },
+    {
+      path: "./fonts/GeistMono-ExtraBold.woff2",
+      weight: "800",
+      style: "normal",
+    },
+    {
+      path: "./fonts/GeistMono-ExtraBoldItalic.woff2",
+      weight: "800",
+      style: "italic",
+    },
+    {
+      path: "./fonts/GeistMono-Black.woff2",
+      weight: "900",
+      style: "normal",
+    },
+    {
+      path: "./fonts/GeistMono-BlackItalic.woff2",
+      weight: "900",
+      style: "italic",
+    },
+  ],
 });
 
 export const metadata: Metadata = {
-  title: "xmcp | The MCP framework",
+  title: "xmcp — The TypeScript MCP framework",
   description: "The framework for building & shipping MCP applications.",
   icons: {
     icon: [
@@ -31,8 +122,14 @@ export const metadata: Metadata = {
     url: "https://xmcp.dev",
     type: "website",
     locale: "en_US",
-    title: "xmcp | The MCP framework",
+    title: "xmcp — The TypeScript MCP framework",
     description: "The framework for building & shipping MCP applications.",
+  },
+  twitter: {
+    card: "summary",
+    title: "xmcp — The TypeScript MCP framework",
+    description: "The framework for building & shipping MCP applications.",
+    images: "/og-image.png",
   },
   manifest: "/site.webmanifest",
   appleWebApp: {

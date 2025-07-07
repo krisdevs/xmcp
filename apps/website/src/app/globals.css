@@ -64,7 +64,7 @@
     }
 
     .prose a {
-      @apply underline transition-all decoration-neutral-400 dark:decoration-neutral-600 underline-offset-2 decoration-[0.1em];
+      @apply underline transition-all decoration-neutral-400 underline-offset-2 decoration-[0.1em] hover:text-white;
     }
 
     .prose h1 a,

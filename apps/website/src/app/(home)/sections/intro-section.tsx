@@ -9,18 +9,18 @@ export function IntroSection() {
         <div className="relative w-[150px] md:w-[200px] lg:w-[220px] aspect-square flex items-center justify-center mx-auto">
           <XmcpLogo />
         </div>
-        <h2 className="max-w-[30rem] mx-auto text-2xl">
+        <h1 className="max-w-[30rem] mx-auto text-2xl">
           The framework for building & shipping MCP applications
-        </h2>
-        <p className="text-sm text-balance text-white/50">
-          Designed with DX in mind, it simplifies setup and removes friction in
-          just one command — making it easy to build & deploy AI /tools on top
-          of the MCP ecosystem
+        </h1>
+        <p className="text-balance text-[#BABABA] text-[1rem]">
+          Designed with DX in mind, it streamlines development and lowers the
+          barrier to entry for anyone looking to create and deploy powerful
+          tools on top of the Model Context Protocol ecosystem.
         </p>
         <div className="space-y-4 text-left mt-12">
           <Terminal>npx create-xmcp-app</Terminal>
           <p>
-            <i>Bootstrap your MCP server with one command</i>
+            <i>Bootstrap your xmcp app with one command</i>
           </p>
           <Terminal className="mt-12">npx init-xmcp</Terminal>
           <p>

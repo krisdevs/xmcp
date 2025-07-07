@@ -1,11 +1,22 @@
 "use client";
 
 import * as React from "react";
-import { createHighlighter } from "shiki";
 
-const highlighter = await createHighlighter({
-  themes: ["github-dark-high-contrast", "vesper"],
-  langs: ["typescript", "bash", "json", "tsx"],
+import { createHighlighterCoreSync } from "shiki/core";
+import { createJavaScriptRegexEngine } from "shiki/engine/javascript";
+import js from "@shikijs/langs/javascript";
+import ts from "@shikijs/langs/typescript";
+import bash from "@shikijs/langs/bash";
+import json from "@shikijs/langs/json";
+import tsx from "@shikijs/langs/tsx";
+import ayuDark from "@shikijs/themes/ayu-dark";
+import { CopyButton } from "@/components/ui/copy-button";
+import { useEffect, useRef, useState } from "react";
+
+const highlighter = createHighlighterCoreSync({
+  langs: [js, ts, bash, json, tsx],
+  themes: [ayuDark],
+  engine: createJavaScriptRegexEngine(),
 });
 
 const preContext = React.createContext<{ editor: boolean }>({ editor: false });
@@ -30,7 +41,8 @@ export function Code({
   let theme = "none";
 
   if (lang && lang !== "bash") {
-    theme = "github-dark-high-contrast";
+    //theme = "github-dark-high-contrast";
+    theme = "ayu-dark";
   }
 
   const codeHTML = highlighter.codeToHtml(children, {
@@ -39,7 +51,7 @@ export function Code({
   });
   return (
     <code
-      className={`${className} [&>pre]:p-0 [&>pre]:!bg-transparent`}
+      className={`${className} [&>pre]:p-0 [&>pre]:!bg-transparent [&_*]:!text-sm`}
       dangerouslySetInnerHTML={{ __html: codeHTML }}
       {...props}
     />
@@ -47,14 +59,37 @@ export function Code({
 }
 
 export function Pre({ children }: { children: React.ReactNode }) {
+  const [codeText, setCodeText] = useState("");
+  const [hasLanguage, setHasLanguage] = useState(false);
+  const preRef = useRef<HTMLPreElement>(null);
+
+  useEffect(() => {
+    if (preRef.current) {
+      const codeElement = preRef.current.querySelector("code");
+      if (codeElement) {
+        setCodeText(codeElement.textContent || "");
+
+        const className = codeElement.className || "";
+        const hasLangClass =
+          className.includes("language-") &&
+          !className.includes("language-text");
+        setHasLanguage(hasLangClass);
+      }
+    }
+  }, [children]);
+
   return (
     <pre
+      ref={preRef}
       className="my-8 border relative w-auto overflow-x-auto bg-black p-4"
       style={{ borderColor: "#333" }}
     >
       <preContext.Provider value={{ editor: true }}>
         {children}
       </preContext.Provider>
+      {hasLanguage && (
+        <CopyButton text={codeText} className="absolute top-3.5 right-6" />
+      )}
     </pre>
   );
 }
