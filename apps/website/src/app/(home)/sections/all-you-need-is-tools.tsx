@@ -2,7 +2,7 @@ import { Code, Pre } from "@/components/markdown/code-blocks";
 
 export function AllYouNeedIsToolsSection() {
   return (
-    <div className="space-y-12 ">
+    <div className="space-y-16">
       <h2 className="w-full mx-auto text-xl uppercase">
         All you need is /tools
       </h2>
