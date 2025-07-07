@@ -4,7 +4,7 @@ export function AllYouNeedIsToolsSection() {
   return (
     <div className="space-y-[1rem]">
       <h2 className="w-full mx-auto text-xl uppercase">
-        All you need is /tools
+        All you need is tools/
       </h2>
       <p className="text-balance text-[#BABABA] text-[1rem]">
         Declarative, file-system based DX. The easiest way to ship an MCP server
