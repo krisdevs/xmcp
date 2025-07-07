@@ -11,7 +11,7 @@ export default async function Home() {
         <div
           className="flex flex-col"
           style={{
-            gap: "calc(var(--spacing) * 20)",
+            gap: "calc(var(--spacing) * 30)",
           }}
         >
           <AllYouNeedIsToolsSection />
