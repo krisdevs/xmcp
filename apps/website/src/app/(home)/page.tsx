@@ -1,4 +1,5 @@
 import { IntroSection } from "./sections/intro-section";
+import { AllYouNeedIsToolsSection } from "./sections/all-you-need-is-tools";
 import { FeaturesSection } from "./sections/features-section";
 import { GetStartedSection } from "./sections/get-started-section";
 
@@ -13,6 +14,7 @@ export default async function Home() {
             gap: "calc(var(--spacing) * 20)",
           }}
         >
+          <AllYouNeedIsToolsSection />
           <FeaturesSection />
           <GetStartedSection />
         </div>

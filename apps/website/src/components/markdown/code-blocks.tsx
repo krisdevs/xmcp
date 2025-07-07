@@ -11,7 +11,14 @@ import json from "@shikijs/langs/json";
 import tsx from "@shikijs/langs/tsx";
 import ayuDark from "@shikijs/themes/ayu-dark";
 import { CopyButton } from "@/components/ui/copy-button";
-import { useEffect, useRef, useState } from "react";
+import {
+  ComponentProps,
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 const highlighter = createHighlighterCoreSync({
   langs: [js, ts, bash, json, tsx],
@@ -19,14 +26,16 @@ const highlighter = createHighlighterCoreSync({
   engine: createJavaScriptRegexEngine(),
 });
 
-const preContext = React.createContext<{ editor: boolean }>({ editor: false });
+const preContext = createContext<{ editor: boolean }>({ editor: false });
 
 export function Code({
   children,
   className,
   ...props
-}: Omit<React.ComponentProps<"code">, "children"> & { children: string }) {
-  const { editor } = React.useContext(preContext);
+}: Omit<ComponentProps<"code">, "children"> & {
+  children: string;
+}) {
+  const { editor } = useContext(preContext);
 
   if (!editor) {
     return (
