@@ -25,7 +25,7 @@ export function IntroSection() {
           <Terminal initialDelay={1500} className="mt-12">
             npx init-xmcp
           </Terminal>
-          <p>
+          <span>
             <i>
               Plug into your existing{" "}
               <AnimatedLink
@@ -45,7 +45,7 @@ export function IntroSection() {
               </AnimatedLink>{" "}
               app
             </i>
-          </p>
+          </span>
         </div>
       </div>
     </div>
