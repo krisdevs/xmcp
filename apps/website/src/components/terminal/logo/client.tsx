@@ -16,6 +16,10 @@ import { cn } from "@/utils/cn";
 import { create } from "zustand";
 import { clamp } from "three/src/math/MathUtils.js";
 
+const animated = {
+  current: false,
+};
+
 type GLTFResult = GLTF & {
   nodes: {
     Xmcp_1: THREE.Mesh;
@@ -102,7 +106,7 @@ function ThreeLogo({ matcap }: { matcap: string }) {
     `,
     },
     {
-      uReveal: { value: 0 },
+      uReveal: { value: animated.current ? 1 : 0 },
       uMatcap: { value: matcapTexture },
     }
   );
@@ -122,9 +126,14 @@ function ThreeLogo({ matcap }: { matcap: string }) {
   });
 
   useEffect(() => {
+    if (animated.current) return;
+
     animate(reveal, 0.9, {
       duration: 1.5,
       ease: "easeOut",
+      onComplete: () => {
+        animated.current = true;
+      },
     });
   }, [reveal]);
 
