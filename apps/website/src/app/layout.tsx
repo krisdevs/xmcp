@@ -125,12 +125,6 @@ export const metadata: Metadata = {
     title: "xmcp — The TypeScript MCP framework",
     description: "The framework for building & shipping MCP applications.",
   },
-  twitter: {
-    card: "summary_large_image",
-    title: "xmcp — The TypeScript MCP framework",
-    description: "The framework for building & shipping MCP applications.",
-    images: "/xmcp-og.png",
-  },
   manifest: "/site.webmanifest",
   appleWebApp: {
     title: "xmcp",
