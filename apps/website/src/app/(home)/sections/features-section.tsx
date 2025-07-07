@@ -1,7 +1,7 @@
 const features = [
   {
     title: "File System Routing",
-    description: "Tools are auto-registered from a `tools` directory",
+    description: "Tools are auto-registered from a `tools/` directory",
   },
   {
     title: "Hot Reloading",
