@@ -4,21 +4,6 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
   title: "xmcp — Documentation",
   description: "The documentation for the xmcp framework.",
-  openGraph: {
-    siteName: "xmcp",
-    images: "/xmcp-og.png",
-    url: "https://xmcp.dev/docs",
-    type: "website",
-    locale: "en_US",
-    title: "xmcp — Documentation",
-    description: "The documentation for the xmcp framework.",
-  },
-  twitter: {
-    card: "summary",
-    title: "xmcp — Documentation",
-    description: "The documentation for the xmcp framework.",
-    images: "/xmcp-og.png",
-  },
 };
 
 export default function DocsLayout({
