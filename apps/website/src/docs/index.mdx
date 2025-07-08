@@ -34,13 +34,13 @@ You will be asked for the project name and then guided through a series of promp
 
 #### Building with HTTP
 
-The HTTP transport is your go to choice when you want to deploy your MCP on a server. This can be used to create tools like fetching your database or perform fetch operations.
+The HTTP transport is your go-to choice when you want to deploy your MCP on a server. It can be used to create tools that fetch data from your database or perform other fetch operations.
 
 `xmcp` uses stateless mode. This means that every time you call a tool, a new transport will be instantiated. There is no tracking of sessions or state.
 
 #### Building with STDIO
 
-The STDIO transport is useful when you want to use your MCP server locally, useful for enabling your AI to perform operations on your machine. For example, you can create tools like searching and compressing images on a folder.
+The STDIO transport is useful when you want to run your MCP server locally, enabling your AI to perform operations on your machine. For example, you can create tools for searching and compressing images in a folder.
 You can also publish the server as a package on NPM.
 
 ## Project structure
@@ -110,7 +110,7 @@ export default async function greet({ name }: InferSchema<typeof schema>) {
 The schema object defines the tool's parameters with:
 
 - **Key**: Parameter name.
-- **Value**: Zod schema with `.describe()` for documentation. This will be visibile through the inspector.
+- **Value**: Zod schema with `.describe()` for documentation. This will be visible through the inspector.
 - **Purpose**: Type validation and automatic parameter documentation.
 
 #### 2. Metadata
@@ -199,7 +199,7 @@ const middleware: Middleware = async (req, res, next) => {
 export default middleware;
 ```
 
-Middlewares can also be an array of middlewares. Useful for when you need to chain multiple middlewares.
+Middlewares can also be defined as an array. Useful for when you need to chain multiple middlewares.
 
 ```typescript
 // src/middleware.ts
@@ -434,7 +434,7 @@ xmcp build --vercel
 vercel deploy --prod --prebuilt
 ```
 
-You can also add a `vercel.json` file to configure deployment on vercel:
+You can also add a `vercel.json` file to configure deployment on Vercel:
 
 ```json
 {
@@ -453,7 +453,7 @@ You can also add a `vercel.json` file to configure deployment on vercel:
 npx init-xmcp@latest
 ```
 
-After setting up the project, your build and dev command should look like this:
+After setting up the project, your build and dev commands should look like this:
 
 ```json
 {
