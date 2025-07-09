@@ -1,7 +1,6 @@
 import { AnimatedLink } from "@/components/terminal/animated-link";
 import styles from "./progressive-blur.module.css";
 import Link from "next/link";
-import Image from "next/image";
 
 export const Header = () => {
   return (
@@ -35,54 +34,8 @@ export const Header = () => {
         </span>
         <AnimatedLink href="/docs">Docs</AnimatedLink>
       </div>
-      <ProductHuntButton />
       <GithubButton />
     </header>
-  );
-};
-
-const ProductHuntButton = () => {
-  return (
-    <Link
-      href="https://www.producthunt.com/products/xmcp?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-xmcp"
-      target="_blank"
-      className="absolute left-4 top-1/2 -translate-y-1/2 z-100"
-    >
-      <Image
-        src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=989661&theme=dark&t=1752021630747"
-        alt="xmcp - The&#0032;framework&#0032;for&#0032;building&#0032;&#0038;&#0032;shipping&#0032;MCP&#0032;applications | Product Hunt"
-        width="200"
-        height="40"
-        className="hidden sm:block"
-      />
-      <ProductHuntIcon />
-    </Link>
-  );
-};
-
-const ProductHuntIcon = () => {
-  return (
-    <svg
-      width="31"
-      height="31"
-      viewBox="0 0 31 31"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className="block sm:hidden size-5"
-    >
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M31 15.5C31 24.0604 24.0604 31 15.5 31C6.93961 31 0 24.0604 0 15.5C0 6.93961 6.93961 0 15.5 0C24.0604 0 31 6.93961 31 15.5Z"
-        fill="white"
-      />
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M17.4348 15.9561L13.0948 15.9562V11.3062H17.4348C18.7037 11.3062 19.7324 12.347 19.7324 13.6311C19.7324 14.9151 18.7037 15.9561 17.4348 15.9561ZM17.4348 8.20605H10.0312V23.7061H13.0948V19.0562H17.4348C20.3957 19.0562 22.796 16.6272 22.796 13.6311C22.796 10.6349 20.3957 8.20605 17.4348 8.20605Z"
-        fill="#221D21"
-      />
-    </svg>
   );
 };
 
