@@ -152,6 +152,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <meta name="theme-color" content="#000000" />
+      </head>
       <body
         className={`${geistMono.variable} antialiased min-h-[100dvh] flex flex-col max-w-[1400px] font-mono mx-auto`}
       >
