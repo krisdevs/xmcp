@@ -21,7 +21,7 @@ export const Header = () => {
       <div className="z-[6] relative max-w-[800px] w-full flex justify-center items-center px-4 py-8 text-center text-md text-white font-mono gap-8">
         <AnimatedLink href="/">Home</AnimatedLink>
         <span
-          className="bg-clip-text text-transparent [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] text-[1.3em] leading-none relative md:top-[-2px]"
+          className="bg-clip-text text-transparent [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] text-[1.3em] leading-none relative top-[-1px] md:top-[-2px]"
           style={{
             background:
               "linear-gradient(207deg, #CFCFCF 29.21%, #868686 69.52%)",
