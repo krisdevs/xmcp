@@ -39,6 +39,9 @@ export function updatePackageJson(
   if (hasStdio) {
     packageJson.main = "./dist/stdio.js";
     packageJson.files = ["dist"];
+    packageJson.bin = {
+      [projectName]: "./dist/stdio.js",
+    };
   }
 
   if (useLocalXmcp) {
