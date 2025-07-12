@@ -1,4 +1,9 @@
-import { Configuration, DefinePlugin, ProvidePlugin } from "webpack";
+import {
+  Configuration,
+  DefinePlugin,
+  ProvidePlugin,
+  BannerPlugin,
+} from "webpack";
 import path from "path";
 import { distOutputPath, adapterOutputPath } from "@/utils/constants";
 import { compilerContext } from "@/compiler/compiler-context";
@@ -93,6 +98,17 @@ export function getWebpackConfig(xmcpConfig: XmcpParsedConfig): Configuration {
   if (!xmcpConfig.experimental?.adapter) {
     // not needed in adapter mode since it only outputs one file
     config.plugins!.push(new CleanWebpackPlugin());
+  }
+
+  // add shebang to CLI output on stdio mode
+  if (xmcpConfig.stdio) {
+    config.plugins!.push(
+      new BannerPlugin({
+        banner: "#!/usr/bin/env node",
+        raw: true,
+        include: /^stdio\.js$/,
+      })
+    );
   }
 
   return config;

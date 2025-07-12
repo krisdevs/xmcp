@@ -2,6 +2,9 @@
   "name": "stdio-transport",
   "description": "A simple xmcp server with stdio transport",
   "main": "./dist/stdio.js",
+  "bin": {
+    "stdio-transport": "./dist/stdio.js"
+  },
   "files": [
     "dist"
   ],
