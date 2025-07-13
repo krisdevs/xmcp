@@ -287,7 +287,7 @@ export class StatelessStreamableHTTPTransport {
     middlewares?: RequestHandler[]
   ) {
     this.options = {
-      bindToLocalhost: true,
+      bindToLocalhost: !options.host,
       ...options,
     };
     this.app = express();
@@ -407,7 +407,7 @@ export class StatelessStreamableHTTPTransport {
   }
 
   public start(): void {
-    const host = this.options.bindToLocalhost ? "127.0.0.1" : "0.0.0.0";
+    const host = this.options.host || (this.options.bindToLocalhost ? "127.0.0.1" : "0.0.0.0");
 
     this.server.listen(this.port, host, () => {
       console.log(

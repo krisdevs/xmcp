@@ -6,6 +6,7 @@ export interface HttpTransportOptions {
   bodySizeLimit?: string;
   debug?: boolean;
   bindToLocalhost?: boolean;
+  host?: string;
 }
 
 export interface JsonRpcMessage {

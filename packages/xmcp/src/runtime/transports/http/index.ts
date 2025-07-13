@@ -34,6 +34,8 @@ const corsExposedHeaders = HTTP_CORS_EXPOSED_HEADERS as string;
 const corsCredentials = HTTP_CORS_CREDENTIALS as boolean;
 // @ts-expect-error: injected by compiler
 const corsMaxAge = HTTP_CORS_MAX_AGE as number;
+// @ts-expect-error: injected by compiler
+const host = HTTP_HOST as string;
 
 // oauth config
 // @ts-expect-error: injected by compiler
@@ -46,6 +48,7 @@ async function main() {
     bodySizeLimit,
     endpoint,
     stateless,
+    host,
   };
 
   const corsOptions = {

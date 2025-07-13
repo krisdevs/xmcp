@@ -67,6 +67,7 @@ const configSchema = z.object({
         bodySizeLimit: z.number().default(DEFAULT_HTTP_BODY_SIZE_LIMIT),
         debug: z.boolean().default(false),
         endpoint: z.string().default(DEFAULT_HTTP_ENDPOINT),
+        host: z.string().optional(),
         cors: corsConfigSchema.optional(),
       }),
     ])

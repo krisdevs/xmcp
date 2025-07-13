@@ -42,6 +42,7 @@ export function getInjectedVariables(xmcpConfig: XmcpParsedConfig) {
         xmcpConfig["http"].endpoint
       );
       definedVariables.HTTP_STATELESS = DEFAULT_HTTP_STATELESS;
+      definedVariables.HTTP_HOST = JSON.stringify(xmcpConfig["http"].host || "");
       cors = xmcpConfig["http"].cors || {};
     } else {
       // http config is boolean
@@ -51,6 +52,7 @@ export function getInjectedVariables(xmcpConfig: XmcpParsedConfig) {
       );
       definedVariables.HTTP_ENDPOINT = JSON.stringify(DEFAULT_HTTP_ENDPOINT);
       definedVariables.HTTP_STATELESS = DEFAULT_HTTP_STATELESS;
+      definedVariables.HTTP_HOST = JSON.stringify("");
       cors = {};
     }
     // inject cors
