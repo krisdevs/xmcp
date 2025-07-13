@@ -1,6 +1,6 @@
 {
   "name": "xmcp-monorepo",
-  "description": "From the basement.",
+  "description": "Fork of xmcp - From the basement.",
   "author": {
     "name": "Basement Studio",
     "email": "hello@basement.studio",
@@ -16,20 +16,33 @@
       "name": "Matias Gonzalez Fernandez",
       "email": "matiasngf@hotmail.com",
       "url": "https://github.com/matiasngf"
+    },
+    {
+      "name": "Kris Devs",
+      "email": "kris@krisdevs.com",
+      "url": "https://github.com/krisdevs"
     }
   ],
   "keywords": [
     "mcp",
     "modelcontextprotocol",
     "http",
-    "stdio"
+    "stdio",
+    "fork"
   ],
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/basementstudio/xmcp"
+    "url": "https://github.com/krisdevs/xmcp"
   },
   "homepage": "https://xmcp.dev",
+  "bugs": {
+    "url": "https://github.com/krisdevs/xmcp/issues"
+  },
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/basementstudio"
+  },
   "scripts": {
     "website": "turbo run dev --filter=website",
     "xmcp": "turbo run dev --filter=xmcp",
