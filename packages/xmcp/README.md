@@ -13,6 +13,17 @@
 
 </div>
 
+> **⚠️ NOTICE: This is a fork of the original xmcp project**
+>
+> **For production use, please use the official package instead:**
+> ```bash
+> npm install xmcp
+> ```
+> 
+> **Official repository:** https://github.com/basementstudio/xmcp
+> 
+> This fork is for development purposes only and may contain experimental changes that are not suitable for production use.
+
 ## The TypeScript MCP Framework
 
 `xmcp` is a framework for building and shipping MCP applications with TypeScript. Designed with DX in mind, it streamlines development and lowers the barrier to entry for anyone looking to create and deploy powerful tools on top of the Model Context Protocol ecosystem.
